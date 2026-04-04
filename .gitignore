@@ -5,3 +5,4 @@ __pycache__/
 dist/
 build/
 test_report_*.json
+.claude
