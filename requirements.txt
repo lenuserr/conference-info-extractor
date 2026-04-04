@@ -1,0 +1,6 @@
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+jsonschema>=4.20.0
+thefuzz[speedup]>=0.22.0
+ollama>=0.4.0
