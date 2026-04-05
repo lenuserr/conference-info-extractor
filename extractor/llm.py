@@ -1,11 +1,16 @@
 """
-LLM-based extraction via Ollama (local models, no paid APIs).
+LLM-based extraction via local inference backends (Ollama or vLLM).
+No paid APIs — everything runs locally.
 
 Uses chain-of-extraction: split into two passes to reduce hallucinations
 in small models (7-10B parameters).
 
 Pass 1 — "basic": name, acronym, dates, venue, deadlines, publisher
 Pass 2 — "details": topics, keynote speakers
+
+Supported backends:
+  - ollama  (default): Ollama API at http://localhost:11434
+  - vllm:              vLLM OpenAI-compatible server at http://localhost:8000
 """
 
 from __future__ import annotations
@@ -15,13 +20,17 @@ import logging
 import re
 from typing import Any, Dict, Optional
 
+import requests
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# Default Ollama settings
+# Defaults
 # ---------------------------------------------------------------------------
 DEFAULT_MODEL = "mistral:latest"
+DEFAULT_BACKEND = "ollama"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
+DEFAULT_VLLM_URL = "http://localhost:8000"
 
 # ---------------------------------------------------------------------------
 # Prompt templates
@@ -83,16 +92,17 @@ JSON:"""
 
 
 # ---------------------------------------------------------------------------
-# Ollama interaction
+# Backend: Ollama
 # ---------------------------------------------------------------------------
 
 def _call_ollama(
     prompt: str,
-    model: str = DEFAULT_MODEL,
-    base_url: str = DEFAULT_OLLAMA_URL,
+    model: str,
+    base_url: str,
     temperature: float = 0.1,
 ) -> Optional[str]:
     """Send a prompt to Ollama and return the raw text response."""
+    # Try the ollama Python library first
     try:
         import ollama as _ollama_lib
         client = _ollama_lib.Client(host=base_url)
@@ -103,12 +113,11 @@ def _call_ollama(
         )
         return response.get("response", "")
     except ImportError:
-        logger.warning("ollama library not installed, falling back to HTTP")
+        logger.debug("ollama library not installed, falling back to HTTP")
     except Exception as exc:
         logger.warning("ollama library call failed: %s — falling back to HTTP", exc)
 
-    # Fallback: direct HTTP call to Ollama API
-    import requests
+    # Fallback: direct HTTP
     try:
         resp = requests.post(
             f"{base_url}/api/generate",
@@ -118,7 +127,7 @@ def _call_ollama(
                 "stream": False,
                 "options": {"temperature": temperature, "num_predict": 2048},
             },
-            timeout=120,
+            timeout=180,
         )
         resp.raise_for_status()
         return resp.json().get("response", "")
@@ -127,19 +136,76 @@ def _call_ollama(
         return None
 
 
+# ---------------------------------------------------------------------------
+# Backend: vLLM (OpenAI-compatible /v1/completions)
+# ---------------------------------------------------------------------------
+
+def _call_vllm(
+    prompt: str,
+    model: str,
+    base_url: str,
+    temperature: float = 0.1,
+) -> Optional[str]:
+    """Send a prompt to vLLM's OpenAI-compatible completions endpoint."""
+    try:
+        resp = requests.post(
+            f"{base_url}/v1/completions",
+            json={
+                "model": model,
+                "prompt": prompt,
+                "max_tokens": 2048,
+                "temperature": temperature,
+                "stop": ["\n\n\n"],
+            },
+            timeout=180,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        choices = data.get("choices", [])
+        if choices:
+            return choices[0].get("text", "")
+        return None
+    except Exception as exc:
+        logger.error("vLLM call failed: %s", exc)
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Unified call dispatcher
+# ---------------------------------------------------------------------------
+
+def _call_llm(
+    prompt: str,
+    model: str,
+    backend: str,
+    base_url: str,
+    temperature: float = 0.1,
+) -> Optional[str]:
+    """Route to the appropriate backend."""
+    if backend == "ollama":
+        return _call_ollama(prompt, model, base_url, temperature)
+    elif backend == "vllm":
+        return _call_vllm(prompt, model, base_url, temperature)
+    else:
+        raise ValueError(f"Unknown backend: {backend!r}. Use 'ollama' or 'vllm'.")
+
+
+# ---------------------------------------------------------------------------
+# JSON parsing from LLM output
+# ---------------------------------------------------------------------------
+
 def _parse_json_from_response(raw: str) -> Optional[Dict[str, Any]]:
     """Extract JSON object from LLM response, tolerating markdown fences etc."""
     if not raw:
         return None
 
-    # Try direct parse first
     raw = raw.strip()
     try:
         return json.loads(raw)
     except json.JSONDecodeError:
         pass
 
-    # Try to find JSON block in markdown fences
+    # Try markdown fences
     m = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", raw, re.DOTALL)
     if m:
         try:
@@ -147,7 +213,7 @@ def _parse_json_from_response(raw: str) -> Optional[Dict[str, Any]]:
         except json.JSONDecodeError:
             pass
 
-    # Try to find first { ... } block
+    # Find first balanced { ... } block
     depth = 0
     start = None
     for i, ch in enumerate(raw):
@@ -170,16 +236,26 @@ def _parse_json_from_response(raw: str) -> Optional[Dict[str, Any]]:
 # Public API
 # ---------------------------------------------------------------------------
 
+def get_default_url(backend: str) -> str:
+    """Return the default server URL for a given backend."""
+    if backend == "vllm":
+        return DEFAULT_VLLM_URL
+    return DEFAULT_OLLAMA_URL
+
+
 def extract_basic(
     text: str,
     model: str = DEFAULT_MODEL,
-    base_url: str = DEFAULT_OLLAMA_URL,
+    backend: str = DEFAULT_BACKEND,
+    base_url: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 1: extract basic metadata (name, dates, venue, deadlines, publisher).
     """
+    if base_url is None:
+        base_url = get_default_url(backend)
     prompt = _BASIC_PROMPT.format(text=text[:8000])
-    raw = _call_ollama(prompt, model=model, base_url=base_url)
+    raw = _call_llm(prompt, model=model, backend=backend, base_url=base_url)
     result = _parse_json_from_response(raw)
     if result is None:
         logger.warning("Pass 1 (basic) failed to produce valid JSON")
@@ -189,13 +265,16 @@ def extract_basic(
 def extract_details(
     text: str,
     model: str = DEFAULT_MODEL,
-    base_url: str = DEFAULT_OLLAMA_URL,
+    backend: str = DEFAULT_BACKEND,
+    base_url: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 2: extract topics and keynote speakers.
     """
+    if base_url is None:
+        base_url = get_default_url(backend)
     prompt = _DETAILS_PROMPT.format(text=text[:8000])
-    raw = _call_ollama(prompt, model=model, base_url=base_url)
+    raw = _call_llm(prompt, model=model, backend=backend, base_url=base_url)
     result = _parse_json_from_response(raw)
     if result is None:
         logger.warning("Pass 2 (details) failed to produce valid JSON")

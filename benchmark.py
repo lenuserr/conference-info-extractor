@@ -9,14 +9,19 @@ Results are saved into a structured directory:
     │   ├── neurips_cc.json
     │   ├── acit_tech.json
     │   └── ...
-    ├── qwen3_4b/
-    │   ├── neurips_cc.json
+    ├── Qwen__Qwen2_5_7B_Instruct/
     │   └── ...
     └── summary.txt                      # human-readable comparison table
 
 Usage:
+    # Ollama (default)
     python benchmark.py
-    python benchmark.py --models mistral:latest qwen3:4b --urls https://acit.tech https://neurips.cc
+    python benchmark.py --models mistral:latest qwen3:4b
+
+    # vLLM
+    python benchmark.py --backend vllm --models Qwen/Qwen2.5-7B-Instruct
+
+    # From files
     python benchmark.py --models-file models.txt --urls-file urls.txt
     python benchmark.py --outdir my_results -v
 """
@@ -30,10 +35,10 @@ import os
 import re
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from extractor.pipeline import extract_conference
-from extractor.llm import DEFAULT_MODEL, DEFAULT_OLLAMA_URL
+from extractor.llm import DEFAULT_MODEL, DEFAULT_BACKEND
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +110,8 @@ def run_benchmark(
     models: List[str],
     urls: List[str],
     outdir: str,
-    ollama_url: str,
+    backend: str,
+    base_url: str | None,
 ) -> Dict[str, Any]:
     """
     Run extraction for every (model, url) pair.
@@ -116,6 +122,7 @@ def run_benchmark(
 
     report: Dict[str, Any] = {
         "timestamp": timestamp,
+        "backend": backend,
         "models": models,
         "urls": urls,
         "results": [],
@@ -130,12 +137,14 @@ def run_benchmark(
 
         for url in urls:
             current += 1
-            print(f"\n[{current}/{total_combos}] model={model}  url={url}")
+            print(f"\n[{current}/{total_combos}] backend={backend}  model={model}  url={url}")
             print("-" * 60)
 
             t0 = time.time()
             try:
-                result = extract_conference(url, model=model, ollama_url=ollama_url)
+                result = extract_conference(
+                    url, model=model, backend=backend, base_url=base_url,
+                )
                 status = "ok"
                 error = None
             except Exception as exc:
@@ -157,6 +166,7 @@ def run_benchmark(
 
             entry = {
                 "model": model,
+                "backend": backend,
                 "url": url,
                 "status": status,
                 "error": error,
@@ -202,6 +212,7 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
     models = report["models"]
     urls = report["urls"]
     results = report["results"]
+    backend = report.get("backend", "?")
 
     # Build lookup: (model, url) -> entry
     lookup: Dict[tuple, Dict] = {}
@@ -209,12 +220,11 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
         lookup[(r["model"], r["url"])] = r
 
     lines: List[str] = []
-    lines.append(f"Benchmark — {report['timestamp']}")
+    lines.append(f"Benchmark — {report['timestamp']}  (backend: {backend})")
     lines.append("=" * 100)
     lines.append("")
 
     # --- Per-URL comparison table ---
-    # Header
     url_col_w = 40
     model_col_w = 20
     header = f"{'URL':<{url_col_w}}"
@@ -230,7 +240,7 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
         for m in models:
             e = lookup.get((m, url))
             if e is None:
-                cell = "—"
+                cell = "-"
             elif e["status"] != "ok":
                 cell = "ERR"
             else:
@@ -283,16 +293,26 @@ def main() -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # Ollama (default)
   python benchmark.py
   python benchmark.py --models mistral:latest qwen3:4b
-  python benchmark.py --urls https://acit.tech https://neurips.cc
+
+  # vLLM
+  python benchmark.py --backend vllm --models Qwen/Qwen2.5-7B-Instruct meta-llama/Llama-3.1-8B-Instruct
+  python benchmark.py --backend vllm --base-url http://gpu-server:8000
+
+  # From files
   python benchmark.py --models-file models.txt --urls-file urls.txt
   python benchmark.py --outdir my_results -v
         """,
     )
     parser.add_argument(
+        "--backend", "-b", default=DEFAULT_BACKEND, choices=["ollama", "vllm"],
+        help=f"Inference backend (default: {DEFAULT_BACKEND})",
+    )
+    parser.add_argument(
         "--models", nargs="+", default=None,
-        help="List of Ollama model names (default: mistral:latest, qwen3:4b, deepseek-r1:7b)",
+        help="List of model names",
     )
     parser.add_argument(
         "--models-file", default=None,
@@ -300,7 +320,7 @@ Examples:
     )
     parser.add_argument(
         "--urls", nargs="+", default=None,
-        help="List of conference URLs (default: 5 built-in test URLs)",
+        help="List of conference URLs",
     )
     parser.add_argument(
         "--urls-file", default=None,
@@ -311,8 +331,8 @@ Examples:
         help="Output directory (default: results/)",
     )
     parser.add_argument(
-        "--ollama-url", default=DEFAULT_OLLAMA_URL,
-        help=f"Ollama API base URL (default: {DEFAULT_OLLAMA_URL})",
+        "--base-url", default=None,
+        help="Server URL (default: auto per backend — :11434 for ollama, :8000 for vllm)",
     )
     parser.add_argument("--verbose", "-v", action="store_true")
 
@@ -339,12 +359,13 @@ Examples:
     else:
         urls = DEFAULT_URLS
 
-    print(f"Models: {models}")
-    print(f"URLs:   {len(urls)} sites")
-    print(f"Total:  {len(models) * len(urls)} extraction runs")
-    print(f"Output: {args.outdir}/")
+    print(f"Backend: {args.backend}")
+    print(f"Models:  {models}")
+    print(f"URLs:    {len(urls)} sites")
+    print(f"Total:   {len(models) * len(urls)} extraction runs")
+    print(f"Output:  {args.outdir}/")
 
-    run_benchmark(models, urls, args.outdir, args.ollama_url)
+    run_benchmark(models, urls, args.outdir, args.backend, args.base_url)
 
 
 if __name__ == "__main__":

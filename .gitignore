@@ -7,3 +7,5 @@ build/
 test_report_*.json
 results/
 .claude
+models_file.txt
+urls_file.txt

@@ -3,12 +3,16 @@
 CLI entry point for conference metadata extraction.
 
 Usage:
-    python extract.py <URL> [--model MODEL] [--ollama-url URL] [--output FILE]
+    python extract.py <URL> [--backend ollama|vllm] [--model MODEL] [--base-url URL] [--output FILE]
 
 Examples:
+    # Ollama (default)
     python extract.py https://neurips.cc
-    python extract.py https://neurips.cc --model qwen2.5:7b --output neurips.json
-    python extract.py https://neurips.cc --model llama3.1:8b
+    python extract.py https://neurips.cc --model mistral:latest -o neurips.json
+
+    # vLLM
+    python extract.py https://neurips.cc --backend vllm --model Qwen/Qwen2.5-7B-Instruct
+    python extract.py https://neurips.cc --backend vllm --base-url http://gpu-server:8000
 """
 
 from __future__ import annotations
@@ -19,21 +23,25 @@ import logging
 import sys
 
 from extractor.pipeline import extract_conference
-from extractor.llm import DEFAULT_MODEL, DEFAULT_OLLAMA_URL
+from extractor.llm import DEFAULT_MODEL, DEFAULT_BACKEND
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Extract structured metadata from a conference website → JSON",
+        description="Extract structured metadata from a conference website -> JSON",
     )
     parser.add_argument("url", help="Conference website URL")
     parser.add_argument(
-        "--model", default=DEFAULT_MODEL,
-        help=f"Ollama model name (default: {DEFAULT_MODEL})",
+        "--backend", "-b", default=DEFAULT_BACKEND, choices=["ollama", "vllm"],
+        help=f"Inference backend (default: {DEFAULT_BACKEND})",
     )
     parser.add_argument(
-        "--ollama-url", default=DEFAULT_OLLAMA_URL,
-        help=f"Ollama API base URL (default: {DEFAULT_OLLAMA_URL})",
+        "--model", "-m", default=DEFAULT_MODEL,
+        help=f"Model name (default: {DEFAULT_MODEL})",
+    )
+    parser.add_argument(
+        "--base-url", default=None,
+        help="Server URL (default: auto per backend — :11434 for ollama, :8000 for vllm)",
     )
     parser.add_argument(
         "--output", "-o", default=None,
@@ -54,7 +62,8 @@ def main() -> None:
     result = extract_conference(
         url=args.url,
         model=args.model,
-        ollama_url=args.ollama_url,
+        backend=args.backend,
+        base_url=args.base_url,
     )
 
     output_json = json.dumps(result, indent=2, ensure_ascii=False)
@@ -62,7 +71,7 @@ def main() -> None:
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:
             f.write(output_json)
-        print(f"✓ Result saved to {args.output}", file=sys.stderr)
+        print(f"Result saved to {args.output}", file=sys.stderr)
     else:
         print(output_json)
 
