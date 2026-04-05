@@ -15,9 +15,12 @@ Supported backends:
 
 from __future__ import annotations
 
+import atexit
 import json
 import logging
 import re
+import subprocess
+import time
 from typing import Any, Dict, Optional
 
 import requests
@@ -31,6 +34,114 @@ DEFAULT_MODEL = "mistral:latest"
 DEFAULT_BACKEND = "ollama"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
 DEFAULT_VLLM_URL = "http://localhost:8000"
+
+# ---------------------------------------------------------------------------
+# vLLM server auto-management
+# ---------------------------------------------------------------------------
+
+_vllm_process: Optional[subprocess.Popen] = None
+_vllm_current_model: Optional[str] = None  # model the running server is serving
+
+
+def _is_server_up(base_url: str) -> bool:
+    """Check if a vLLM server is responding."""
+    try:
+        resp = requests.get(f"{base_url}/v1/models", timeout=3)
+        return resp.status_code == 200
+    except Exception:
+        return False
+
+
+def _stop_vllm_server() -> None:
+    """Terminate the vLLM server process if we started one."""
+    global _vllm_process, _vllm_current_model
+    if _vllm_process is not None:
+        logger.info("Stopping vLLM server (pid %d, model %s)...", _vllm_process.pid, _vllm_current_model)
+        _vllm_process.terminate()
+        try:
+            _vllm_process.wait(timeout=15)
+        except subprocess.TimeoutExpired:
+            _vllm_process.kill()
+        _vllm_process = None
+        _vllm_current_model = None
+
+
+def ensure_vllm_server(model: str, base_url: str) -> None:
+    """
+    If no vLLM server is reachable at *base_url* **with the right model**,
+    launch ``vllm serve <model>`` as a background process and wait until
+    it's ready.  If the server is already running with a different model,
+    restart it.
+    """
+    global _vllm_process, _vllm_current_model
+
+    # Server we started is running with the correct model — nothing to do
+    if _vllm_process is not None and _vllm_current_model == model and _is_server_up(base_url):
+        logger.debug("vLLM server already running with model %s", model)
+        return
+
+    # External server (not started by us) is running — use it as-is
+    if _vllm_process is None and _is_server_up(base_url):
+        logger.debug("External vLLM server detected at %s, using as-is", base_url)
+        return
+
+    # Need to (re)start: either different model or server is down
+    if _vllm_process is not None:
+        logger.info("Restarting vLLM server: %s -> %s", _vllm_current_model, model)
+        _stop_vllm_server()
+
+    # Parse host/port from base_url
+    from urllib.parse import urlparse
+    parsed = urlparse(base_url)
+    host = parsed.hostname or "0.0.0.0"
+    port = str(parsed.port or 8000)
+
+    cmd = [
+        "vllm", "serve", model,
+        "--host", host,
+        "--port", port,
+    ]
+    logger.info("Starting vLLM server: %s", " ".join(cmd))
+    print(f"Starting vLLM server for model '{model}' on {base_url} ...")
+
+    _vllm_process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
+    _vllm_current_model = model
+    atexit.register(_stop_vllm_server)
+
+    # Wait for the server to become ready
+    max_wait = 300  # seconds — large models can take a while to load
+    poll_interval = 3
+    waited = 0
+    while waited < max_wait:
+        # Check if process crashed
+        ret = _vllm_process.poll()
+        if ret is not None:
+            stderr_output = _vllm_process.stderr.read().decode(errors="replace")[-2000:]
+            _vllm_process = None
+            raise RuntimeError(
+                f"vLLM server exited with code {ret}.\n"
+                f"stderr (last 2000 chars):\n{stderr_output}"
+            )
+        if _is_server_up(base_url):
+            logger.info("vLLM server ready after %ds", waited)
+            print(f"vLLM server ready (took {waited}s)")
+            return
+        time.sleep(poll_interval)
+        waited += poll_interval
+        if waited % 30 == 0:
+            print(f"  Still waiting for vLLM server... ({waited}s)")
+
+    # Timeout — kill and raise
+    _stop_vllm_server()
+    raise RuntimeError(
+        f"vLLM server did not become ready within {max_wait}s. "
+        f"Make sure the model '{model}' is available and you have enough GPU memory."
+    )
+
 
 # ---------------------------------------------------------------------------
 # Prompt templates
@@ -146,7 +257,9 @@ def _call_vllm(
     base_url: str,
     temperature: float = 0.1,
 ) -> Optional[str]:
-    """Send a prompt to vLLM's OpenAI-compatible completions endpoint."""
+    """Send a prompt to vLLM's OpenAI-compatible completions endpoint.
+    Automatically starts a vLLM server if one is not already running."""
+    ensure_vllm_server(model, base_url)
     try:
         resp = requests.post(
             f"{base_url}/v1/completions",
