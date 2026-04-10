@@ -24,6 +24,14 @@ Usage:
     # From files
     python benchmark.py --models-file models.txt --urls-file urls.txt
     python benchmark.py --outdir my_results -v
+
+models.txt format:
+    # One model per line. Lines starting with "#" and blank lines are ignored.
+    # For the vLLM backend, any tokens after the model name are forwarded
+    # verbatim to ``vllm serve`` as CLI flags.
+    mistral:latest
+    Qwen/Qwen3-32B --max-model-len 131072
+    Qwen/Qwen2.5-7B-Instruct --gpu-memory-utilization 0.9 --dtype bfloat16
 """
 
 from __future__ import annotations
@@ -33,9 +41,10 @@ import json
 import logging
 import os
 import re
+import shlex
 import time
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 from extractor.pipeline import extract_conference
 from extractor.llm import DEFAULT_MODEL, DEFAULT_BACKEND
@@ -46,10 +55,12 @@ logger = logging.getLogger(__name__)
 # Defaults
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODELS = [
-    "mistral:latest",
-    "qwen3:4b",
-    "deepseek-r1:7b",
+ModelSpec = Tuple[str, List[str]]  # (model_name, extra_vllm_args)
+
+DEFAULT_MODELS: List[ModelSpec] = [
+    ("mistral:latest", []),
+    ("qwen3:4b", []),
+    ("deepseek-r1:7b", []),
 ]
 
 DEFAULT_URLS = [
@@ -102,12 +113,32 @@ def _read_lines(path: str) -> List[str]:
     return lines
 
 
+def _read_models_file(path: str) -> List[ModelSpec]:
+    """
+    Read a models file where each non-empty, non-comment line has the form:
+
+        <model_name> [vllm serve flag ...]
+
+    Tokens after the model name are forwarded to ``vllm serve`` (ignored for
+    the ollama backend). Parsing uses shell rules (``shlex``), so quoted
+    values are supported.
+    """
+    specs: List[ModelSpec] = []
+    for line in _read_lines(path):
+        parts = shlex.split(line, comments=True)
+        if not parts:
+            continue
+        name, *extra = parts
+        specs.append((name, extra))
+    return specs
+
+
 # ---------------------------------------------------------------------------
 # Core
 # ---------------------------------------------------------------------------
 
 def run_benchmark(
-    models: List[str],
+    models: List[ModelSpec],
     urls: List[str],
     outdir: str,
     backend: str,
@@ -123,7 +154,9 @@ def run_benchmark(
     report: Dict[str, Any] = {
         "timestamp": timestamp,
         "backend": backend,
-        "models": models,
+        "models": [
+            {"name": name, "vllm_extra_args": extra} for name, extra in models
+        ],
         "urls": urls,
         "results": [],
     }
@@ -131,19 +164,22 @@ def run_benchmark(
     total_combos = len(models) * len(urls)
     current = 0
 
-    for model in models:
+    for model, extra_args in models:
         model_dir = os.path.join(outdir, _sanitize_name(model))
         os.makedirs(model_dir, exist_ok=True)
 
+        display_model = model if not extra_args else f"{model} {' '.join(extra_args)}"
+
         for url in urls:
             current += 1
-            print(f"\n[{current}/{total_combos}] backend={backend}  model={model}  url={url}")
+            print(f"\n[{current}/{total_combos}] backend={backend}  model={display_model}  url={url}")
             print("-" * 60)
 
             t0 = time.time()
             try:
                 result = extract_conference(
                     url, model=model, backend=backend, base_url=base_url,
+                    vllm_extra_args=extra_args or None,
                 )
                 status = "ok"
                 error = None
@@ -166,6 +202,7 @@ def run_benchmark(
 
             entry = {
                 "model": model,
+                "vllm_extra_args": extra_args,
                 "backend": backend,
                 "url": url,
                 "status": status,
@@ -209,7 +246,9 @@ def run_benchmark(
 
 def _write_summary(report: Dict[str, Any], outdir: str) -> None:
     """Write a human-readable summary table."""
-    models = report["models"]
+    # report["models"] is a list of {"name": ..., "vllm_extra_args": [...]}.
+    # Summaries are keyed by model name only — extra args are shown once below.
+    models: List[str] = [m["name"] for m in report["models"]]
     urls = report["urls"]
     results = report["results"]
     backend = report.get("backend", "?")
@@ -253,18 +292,21 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
     lines.append("")
 
     # --- Per-model averages ---
+    extra_by_name = {m["name"]: m.get("vllm_extra_args") or [] for m in report["models"]}
     lines.append("Model averages:")
     lines.append("-" * 60)
     for m in models:
         entries = [lookup[(m, u)] for u in urls if (m, u) in lookup and lookup[(m, u)]["status"] == "ok"]
+        extra = extra_by_name.get(m) or []
+        label = m if not extra else f"{m} [{' '.join(extra)}]"
         if not entries:
-            lines.append(f"  {m}: no successful runs")
+            lines.append(f"  {label}: no successful runs")
             continue
         avg_fill = sum(e["fill_pct"] for e in entries) / len(entries)
         avg_time = sum(e["elapsed_sec"] for e in entries) / len(entries)
         total_halluc = sum(len(e["low_confidence_fields"]) for e in entries)
         lines.append(
-            f"  {m}: avg_fill={avg_fill:.1f}%  avg_time={avg_time:.0f}s  "
+            f"  {label}: avg_fill={avg_fill:.1f}%  avg_time={avg_time:.0f}s  "
             f"total_hallucinations={total_halluc}  sites={len(entries)}/{len(urls)}"
         )
 
@@ -344,10 +386,19 @@ Examples:
     )
 
     # Resolve models
+    models: List[ModelSpec]
     if args.models_file:
-        models = _read_lines(args.models_file)
+        models = _read_models_file(args.models_file)
     elif args.models:
-        models = args.models
+        # Each --models entry is parsed with shlex so users can pass
+        # things like --models "Qwen/Qwen3-32B --max-model-len 131072"
+        models = []
+        for raw in args.models:
+            parts = shlex.split(raw)
+            if not parts:
+                continue
+            name, *extra = parts
+            models.append((name, extra))
     else:
         models = DEFAULT_MODELS
 
@@ -360,7 +411,12 @@ Examples:
         urls = DEFAULT_URLS
 
     print(f"Backend: {args.backend}")
-    print(f"Models:  {models}")
+    print("Models:")
+    for name, extra in models:
+        if extra:
+            print(f"  - {name}  [vllm args: {' '.join(extra)}]")
+        else:
+            print(f"  - {name}")
     print(f"URLs:    {len(urls)} sites")
     print(f"Total:   {len(models) * len(urls)} extraction runs")
     print(f"Output:  {args.outdir}/")

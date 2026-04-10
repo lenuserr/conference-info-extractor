@@ -21,7 +21,7 @@ import logging
 import re
 import subprocess
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -41,6 +41,7 @@ DEFAULT_VLLM_URL = "http://localhost:8000"
 
 _vllm_process: Optional[subprocess.Popen] = None
 _vllm_current_model: Optional[str] = None  # model the running server is serving
+_vllm_current_args: tuple = ()  # extra CLI args the running server was started with
 
 
 def _is_server_up(base_url: str) -> bool:
@@ -54,7 +55,7 @@ def _is_server_up(base_url: str) -> bool:
 
 def _stop_vllm_server() -> None:
     """Terminate the vLLM server process if we started one."""
-    global _vllm_process, _vllm_current_model
+    global _vllm_process, _vllm_current_model, _vllm_current_args
     if _vllm_process is not None:
         logger.info("Stopping vLLM server (pid %d, model %s)...", _vllm_process.pid, _vllm_current_model)
         _vllm_process.terminate()
@@ -64,20 +65,32 @@ def _stop_vllm_server() -> None:
             _vllm_process.kill()
         _vllm_process = None
         _vllm_current_model = None
+        _vllm_current_args = ()
 
 
-def ensure_vllm_server(model: str, base_url: str) -> None:
+def ensure_vllm_server(
+    model: str,
+    base_url: str,
+    extra_args: Optional[List[str]] = None,
+) -> None:
     """
-    If no vLLM server is reachable at *base_url* **with the right model**,
-    launch ``vllm serve <model>`` as a background process and wait until
-    it's ready.  If the server is already running with a different model,
-    restart it.
+    If no vLLM server is reachable at *base_url* **with the right model
+    and CLI args**, launch ``vllm serve <model> [extra_args...]`` as a
+    background process and wait until it's ready.  If the server is
+    already running with a different model or different args, restart it.
     """
-    global _vllm_process, _vllm_current_model
+    global _vllm_process, _vllm_current_model, _vllm_current_args
 
-    # Server we started is running with the correct model — nothing to do
-    if _vllm_process is not None and _vllm_current_model == model and _is_server_up(base_url):
-        logger.debug("vLLM server already running with model %s", model)
+    args_tuple = tuple(extra_args or [])
+
+    # Server we started is running with the correct model + args — nothing to do
+    if (
+        _vllm_process is not None
+        and _vllm_current_model == model
+        and _vllm_current_args == args_tuple
+        and _is_server_up(base_url)
+    ):
+        logger.debug("vLLM server already running with model %s and args %s", model, args_tuple)
         return
 
     # External server (not started by us) is running — use it as-is
@@ -85,9 +98,12 @@ def ensure_vllm_server(model: str, base_url: str) -> None:
         logger.debug("External vLLM server detected at %s, using as-is", base_url)
         return
 
-    # Need to (re)start: either different model or server is down
+    # Need to (re)start: model/args changed or server is down
     if _vllm_process is not None:
-        logger.info("Restarting vLLM server: %s -> %s", _vllm_current_model, model)
+        logger.info(
+            "Restarting vLLM server: %s %s -> %s %s",
+            _vllm_current_model, list(_vllm_current_args), model, list(args_tuple),
+        )
         _stop_vllm_server()
 
     # Parse host/port from base_url
@@ -100,9 +116,10 @@ def ensure_vllm_server(model: str, base_url: str) -> None:
         "vllm", "serve", model,
         "--host", host,
         "--port", port,
+        *args_tuple,
     ]
     logger.info("Starting vLLM server: %s", " ".join(cmd))
-    print(f"Starting vLLM server for model '{model}' on {base_url} ...")
+    print(f"Starting vLLM server: {' '.join(cmd)}")
 
     _vllm_process = subprocess.Popen(
         cmd,
@@ -256,10 +273,11 @@ def _call_vllm(
     model: str,
     base_url: str,
     temperature: float = 0.1,
+    vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[str]:
     """Send a prompt to vLLM's OpenAI-compatible completions endpoint.
     Automatically starts a vLLM server if one is not already running."""
-    ensure_vllm_server(model, base_url)
+    ensure_vllm_server(model, base_url, extra_args=vllm_extra_args)
     try:
         resp = requests.post(
             f"{base_url}/v1/completions",
@@ -293,12 +311,13 @@ def _call_llm(
     backend: str,
     base_url: str,
     temperature: float = 0.1,
+    vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[str]:
     """Route to the appropriate backend."""
     if backend == "ollama":
         return _call_ollama(prompt, model, base_url, temperature)
     elif backend == "vllm":
-        return _call_vllm(prompt, model, base_url, temperature)
+        return _call_vllm(prompt, model, base_url, temperature, vllm_extra_args=vllm_extra_args)
     else:
         raise ValueError(f"Unknown backend: {backend!r}. Use 'ollama' or 'vllm'.")
 
@@ -361,6 +380,7 @@ def extract_basic(
     model: str = DEFAULT_MODEL,
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 1: extract basic metadata (name, dates, venue, deadlines, publisher).
@@ -368,7 +388,10 @@ def extract_basic(
     if base_url is None:
         base_url = get_default_url(backend)
     prompt = _BASIC_PROMPT.format(text=text[:8000])
-    raw = _call_llm(prompt, model=model, backend=backend, base_url=base_url)
+    raw = _call_llm(
+        prompt, model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args,
+    )
     result = _parse_json_from_response(raw)
     if result is None:
         logger.warning("Pass 1 (basic) failed to produce valid JSON")
@@ -380,6 +403,7 @@ def extract_details(
     model: str = DEFAULT_MODEL,
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 2: extract topics and keynote speakers.
@@ -387,7 +411,10 @@ def extract_details(
     if base_url is None:
         base_url = get_default_url(backend)
     prompt = _DETAILS_PROMPT.format(text=text[:8000])
-    raw = _call_llm(prompt, model=model, backend=backend, base_url=base_url)
+    raw = _call_llm(
+        prompt, model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args,
+    )
     result = _parse_json_from_response(raw)
     if result is None:
         logger.warning("Pass 2 (details) failed to produce valid JSON")
