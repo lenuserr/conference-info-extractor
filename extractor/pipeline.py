@@ -87,15 +87,18 @@ def extract_conference(
     model: str = DEFAULT_MODEL,
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Full pipeline: scrape → extract → validate → retry → return JSON.
 
     Args:
-        url:      Conference website URL.
-        model:    Model name (e.g. "mistral:latest" for Ollama, "Qwen/Qwen2.5-7B" for vLLM).
-        backend:  "ollama" or "vllm".
-        base_url: Server URL. If None, uses default for the chosen backend.
+        url:             Conference website URL.
+        model:           Model name (e.g. "mistral:latest" for Ollama, "Qwen/Qwen2.5-7B" for vLLM).
+        backend:         "ollama" or "vllm".
+        base_url:        Server URL. If None, uses default for the chosen backend.
+        vllm_extra_args: Extra CLI args forwarded to ``vllm serve`` when the
+                         vLLM backend auto-starts a server (ignored for ollama).
 
     Returns a dict with keys:
       - "data": the extracted conference JSON
@@ -132,8 +135,14 @@ def extract_conference(
         logger.info("Extraction attempt %d/%d with backend=%s model=%s", attempt, MAX_RETRIES, backend, model)
 
         # --- Step 2: LLM extraction (chain-of-extraction) ---
-        basic = extract_basic(full_text, model=model, backend=backend, base_url=base_url)
-        details = extract_details(full_text, model=model, backend=backend, base_url=base_url)
+        basic = extract_basic(
+            full_text, model=model, backend=backend, base_url=base_url,
+            vllm_extra_args=vllm_extra_args,
+        )
+        details = extract_details(
+            full_text, model=model, backend=backend, base_url=base_url,
+            vllm_extra_args=vllm_extra_args,
+        )
 
         if basic is None and details is None:
             logger.warning("Both extraction passes returned None on attempt %d", attempt)
