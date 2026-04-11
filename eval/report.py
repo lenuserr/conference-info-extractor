@@ -55,11 +55,11 @@ def format_summary(models: List[ModelMetrics]) -> str:
 
     # --- Overall precision / recall / F1 ------------------------------------
     lines.append("Overall (micro-averaged across all fields):")
-    lines.append("-" * 110)
+    lines.append("-" * 116)
     lines.append(
         f"{'model':<40} {'P':>6} {'R':>6} {'F1':>6} "
         f"{'TP':>5} {'FN':>5} {'FPw':>5} {'FPh':>5} {'TN':>5} "
-        f"{'halluc%':>8} {'err':>4} {'t,s':>6}"
+        f"{'halluc%':>8} {'err':>4} {'fetch':>6} {'t,s':>6}"
     )
     for m in ranked:
         o = m.overall
@@ -68,8 +68,12 @@ def format_summary(models: List[ModelMetrics]) -> str:
             f"{_fmt_pct(o.precision):>6} {_fmt_pct(o.recall):>6} {_fmt_pct(o.f1):>6} "
             f"{o.tp:>5} {o.fn:>5} {o.fp_wrong:>5} {o.fp_halluc:>5} {o.tn:>5} "
             f"{_fmt_pct(o.hallucination_rate):>8} "
-            f"{m.errors:>4} {m.avg_latency_sec:>6.1f}"
+            f"{m.errors:>4} {m.fetch_failures:>6} {m.avg_latency_sec:>6.1f}"
         )
+    lines.append("")
+    lines.append(
+        "(err = extraction crashes; fetch = scraper failures — both excluded from P/R/F1)"
+    )
     lines.append("")
 
     # --- Per-category breakdown for each model ------------------------------
@@ -111,6 +115,7 @@ def model_metrics_to_dict(m: ModelMetrics) -> Dict[str, Any]:
         "avg_latency_sec": m.avg_latency_sec,
         "avg_attempts": m.avg_attempts,
         "errors": m.errors,
+        "fetch_failures": m.fetch_failures,
         "overall": dump(m.overall),
         "by_category": {k: dump(v) for k, v in m.by_category.items()},
         "by_field": {k: dump(v) for k, v in m.by_field.items()},
