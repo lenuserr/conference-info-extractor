@@ -3,8 +3,11 @@
 Evaluate benchmark results against a gold dataset.
 
 Usage:
-    # Evaluate a finished benchmark run
+    # Evaluate a finished benchmark run (gold as a directory of per-conference files)
     python evaluate.py --results results/ --gold gold/
+
+    # ...or as a single JSON file containing a list of conference entries
+    python evaluate.py --results results/ --gold gold/golden_dataset.json
 
     # Write a JSON report alongside the text one
     python evaluate.py --results results/ --gold gold/ --json-out eval.json
@@ -12,7 +15,15 @@ Usage:
     # Show per-example field-level diff for debugging
     python evaluate.py --results results/ --gold gold/ --debug
 
-Gold file format (one JSON per conference in ``--gold``):
+Gold layout — ``--gold`` accepts either:
+  - a directory of ``*.json`` files, one per conference, or
+  - a single ``.json`` file containing the same shape.
+
+Each JSON file may hold a single conference dict **or** a list of such
+dicts, so ``gold/golden_dataset.json`` with a top-level array of
+conference entries is supported.
+
+Per-conference shape:
 
     {
       "url": "https://neurips.cc",
@@ -79,27 +90,67 @@ def _normalize_url(url: str) -> str:
     return u
 
 
-def load_gold(gold_dir: str) -> Dict[str, Dict[str, Any]]:
-    """Load every ``*.json`` under ``gold_dir``. Key by normalized URL."""
-    gold: Dict[str, Dict[str, Any]] = {}
-    if not os.path.isdir(gold_dir):
-        raise FileNotFoundError(f"Gold directory not found: {gold_dir}")
+def _load_gold_file(path: str, gold: Dict[str, Dict[str, Any]]) -> None:
+    """
+    Load one gold JSON file into ``gold`` (keyed by normalized URL).
 
-    for name in sorted(os.listdir(gold_dir)):
+    The file may contain a single conference dict or a list of them —
+    this lets users keep all gold data in a single file like
+    ``gold/golden_dataset.json`` as well as the per-conference layout.
+    """
+    try:
+        with open(path, encoding="utf-8") as f:
+            doc = json.load(f)
+    except json.JSONDecodeError as exc:
+        logger.warning("Skipping malformed gold file %s: %s", path, exc)
+        return
+
+    if isinstance(doc, dict):
+        entries = [doc]
+    elif isinstance(doc, list):
+        entries = [e for e in doc if isinstance(e, dict)]
+        skipped = len(doc) - len(entries)
+        if skipped:
+            logger.warning(
+                "Gold file %s: skipped %d non-dict element(s) in top-level list",
+                path, skipped,
+            )
+    else:
+        logger.warning(
+            "Gold file %s: top-level must be a dict or list, got %s — skipping",
+            path, type(doc).__name__,
+        )
+        return
+
+    for entry in entries:
+        url = entry.get("url")
+        if not url:
+            logger.warning("Gold entry in %s has no 'url' field, skipping", path)
+            continue
+        gold[_normalize_url(url)] = entry
+
+
+def load_gold(gold_path: str) -> Dict[str, Dict[str, Any]]:
+    """
+    Load gold dataset from ``gold_path``, keyed by normalized URL.
+
+    ``gold_path`` may be either a directory (every ``*.json`` inside is
+    loaded) or a single ``.json`` file. Each loaded file may contain a
+    single conference dict or a list of them.
+    """
+    gold: Dict[str, Dict[str, Any]] = {}
+
+    if os.path.isfile(gold_path):
+        _load_gold_file(gold_path, gold)
+        return gold
+
+    if not os.path.isdir(gold_path):
+        raise FileNotFoundError(f"Gold path not found: {gold_path}")
+
+    for name in sorted(os.listdir(gold_path)):
         if not name.endswith(".json"):
             continue
-        path = os.path.join(gold_dir, name)
-        try:
-            with open(path, encoding="utf-8") as f:
-                doc = json.load(f)
-        except json.JSONDecodeError as exc:
-            logger.warning("Skipping malformed gold file %s: %s", path, exc)
-            continue
-        url = doc.get("url")
-        if not url:
-            logger.warning("Gold file %s has no 'url' field, skipping", path)
-            continue
-        gold[_normalize_url(url)] = doc
+        _load_gold_file(os.path.join(gold_path, name), gold)
     return gold
 
 
@@ -195,7 +246,11 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--results", default="results", help="benchmark results directory")
-    parser.add_argument("--gold", default="gold", help="gold dataset directory")
+    parser.add_argument(
+        "--gold", default="gold",
+        help="gold dataset directory or a single JSON file "
+             "(e.g. gold/golden_dataset.json)",
+    )
     parser.add_argument("--json-out", default=None, help="write JSON report to this path")
     parser.add_argument("--text-out", default=None, help="write text report to this path (default: stdout only)")
     parser.add_argument("--debug", action="store_true", help="print per-example field-level diffs")
@@ -213,9 +268,9 @@ def main() -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     if not gold:
-        print(f"ERROR: no gold files found in {args.gold}/", file=sys.stderr)
+        print(f"ERROR: no gold entries found in {args.gold}", file=sys.stderr)
         return 2
-    print(f"Loaded {len(gold)} gold example(s) from {args.gold}/")
+    print(f"Loaded {len(gold)} gold example(s) from {args.gold}")
 
     try:
         by_model = load_results(args.results)
