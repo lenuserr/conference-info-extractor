@@ -1,0 +1,1311 @@
+[
+  {
+  "url": "https://aiimlab.org/events/ECML_PKDD_2026_WIPE-OUT_2_Workshop_on_Machine_Unlearning_and_Privacy_Preservation",
+  "ground_truth": {
+    "conference": {
+      "full_name": "WIPE-OUT 2026: Machine Unlearning Workshop at ECML-PKDD – 2nd Workshop on Machine Unlearning and Privacy Preservation",
+      "acronym": "WIPE-OUT 2",
+      "edition_number": 2
+    },
+    "dates": {
+      "start_date": "2026-09-07",
+      "end_date": "2026-09-07"
+    },
+    "venue": {
+      "city": "Naples",
+      "country": "Italy"
+    },
+    "deadlines": {
+      "submission": "2026-06-05",
+      "notification": "2026-07-05",
+      "camera_ready": "2026-07-10"
+    },
+    "topics": [
+      "machine unlearning",
+      "privacy preservation",
+      "data privacy",
+      "machine learning security",
+      "unlearning in LLMs",
+      "unlearning in computer vision",
+      "recommender systems",
+      "privacy and compliance",
+      "systems and scalability",
+      "evaluation and benchmarking"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Sijia Liu",
+        "affiliation": "Michigan State University",
+        "country": "United States"
+      }
+    ],
+    "publication": {
+      "publisher": "Springer",
+      "series": "Communications in Computer and Information Science (CCIS)"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "Workshop on Machine Unlearning and Privacy Preservation",
+      "WIPE-OUT 2026",
+      "Machine Unlearning Workshop at ECML-PKDD 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://ipcl.asia/index.html",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Asia Symposium on Intelligent Perception, Computing & Learning for Real-World Systems",
+      "acronym": "IPCL 2026",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-08-19",
+      "end_date": "2026-08-21"
+    },
+    "venue": {
+      "city": "Istanbul",
+      "country": "Türkiye"
+    },
+    "deadlines": {
+      "submission": "2026-05-18",
+      "notification": "2026-06-19",
+      "camera_ready": null
+    },
+    "topics": [
+      "imaging and computational sensing for intelligent perception",
+      "photonics, optics and quantum enablers for AI systems",
+      "sensing-imaging-communications systems",
+      "learning under real-world constraints",
+      "perception-to-decision computing",
+      "deployed systems and benchmarks",
+      "sensor fusion",
+      "edge computing",
+      "medical imaging",
+      "robotics and autonomous systems"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Majdi Mansouri",
+        "affiliation": "Sultan Qaboos University",
+        "country": "Oman"
+      },
+      {
+        "name": "Alireza Daneshkhah",
+        "affiliation": "Emirates Aviation University",
+        "country": "United Arab Emirates"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "IPCL 2026",
+      "Asia Symposium on Intelligent Perception, Computing & Learning for Real-World Systems (IPCL 2026)"
+    ],
+    "venue.city": [],
+    "venue.country": [
+      "Turkey"
+    ]
+  }
+},
+{
+  "url": "https://icre.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 10th International Conference on Reliability Engineering",
+      "acronym": "ICRE 2026",
+      "edition_number": 10
+    },
+    "dates": {
+      "start_date": "2026-07-19",
+      "end_date": "2026-07-21"
+    },
+    "venue": {
+      "city": "Hangzhou",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": "2026-04-10",
+      "notification": "2026-05-05",
+      "camera_ready": "2026-05-20"
+    },
+    "topics": [
+      "reliability engineering",
+      "artificial intelligence for reliability",
+      "fault diagnosis and prognostics",
+      "uncertainty quantification",
+      "health management systems",
+      "industrial AI and maintenance",
+      "digital twin",
+      "aerospace and industrial systems",
+      "renewable energy systems",
+      "risk and resilience analysis"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Francesco Di Maio",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy"
+      },
+      {
+        "name": "Shaoping Wang",
+        "affiliation": "Beihang University",
+        "country": "China"
+      },
+      {
+        "name": "Bin Wang",
+        "affiliation": "Wuhan University of Technology",
+        "country": "China"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICRE 2026",
+      "International Conference on Reliability Engineering 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://nlp2026.org/dscc/index",
+  "ground_truth": {
+    "conference": {
+      "full_name": "7th International Conference on Data Science and Cloud Computing",
+      "acronym": "DSCC 2026",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-04-18",
+      "end_date": "2026-04-19"
+    },
+    "venue": {
+      "city": "Melbourne",
+      "country": "Australia"
+    },
+    "deadlines": {
+      "submission": "2026-04-11",
+      "notification": "2026-04-16",
+      "camera_ready": "2026-04-17"
+    },
+    "topics": [
+      "artificial intelligence and machine learning",
+      "data science and analytics",
+      "computer vision and multimodal AI",
+      "cloud computing and distributed systems",
+      "security and privacy in AI",
+      "edge computing and IoT",
+      "quantum computing",
+      "MLOps and data platforms"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "AIRCC",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "DSCC 2026",
+      "International Conference on Data Science and Cloud Computing 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icaips.org/submission",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 3rd International Conference on Artificial Intelligence and Power Systems",
+      "acronym": "AIPS 2026",
+      "edition_number": 3
+    },
+    "dates": {
+      "start_date": "2026-05-22",
+      "end_date": "2026-05-24"
+    },
+    "venue": {
+      "city": "Quzhou",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": "2026-03-07",
+      "notification": "2026-04-07",
+      "camera_ready": "2026-04-22"
+    },
+    "topics": [
+      "power systems",
+      "artificial intelligence in power systems",
+      "signal processing",
+      "smart grid and energy systems",
+      "fault detection and diagnostics",
+      "load forecasting and optimization",
+      "deep learning and neural networks",
+      "physics-informed neural networks",
+      "energy internet and control systems"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Zhixin Wang",
+        "affiliation": "Shanghai Jiao Tong University",
+        "country": "China"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "AIPS 2026",
+      "International Conference on Artificial Intelligence and Power Systems 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icessd.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on Environmental Science and Sustainable Development",
+      "acronym": "ICESSD 2026",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-06-01",
+      "end_date": "2026-06-03"
+    },
+    "venue": {
+      "city": "Budapest",
+      "country": "Hungary"
+    },
+    "deadlines": {
+      "submission": "2026-04-25",
+      "notification": "2026-05-05",
+      "camera_ready": null
+    },
+    "topics": [
+      "environmental science",
+      "sustainable development",
+      "climate change mitigation and energy transition",
+      "sustainable resource management",
+      "environmental policy and green economy",
+      "pollution control and environmental remediation",
+      "green technologies and innovation",
+      "sustainable agriculture and food systems",
+      "urban sustainability and infrastructure"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Hosam Bayoumi Hamuda",
+        "affiliation": "Obuda University",
+        "country": "Hungary"
+      },
+      {
+        "name": "László Simon",
+        "affiliation": "University of Nyíregyháza",
+        "country": "Hungary"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICESSD 2026",
+      "2026 International Conference on Environmental Science and Sustainable Development",
+      "International Conference on Environmental Science and Sustainable Development (ICESSD 2026)"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://eucsr.org/conference/resilience-inequality-2027-prague",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2nd Prague International Conference on Resilience, Inequality, and Human Development Nexus",
+      "acronym": null,
+      "edition_number": 2
+    },
+    "dates": {
+      "start_date": "2027-07-07",
+      "end_date": "2027-07-08"
+    },
+    "venue": {
+      "city": "Prague",
+      "country": "Czech Republic"
+    },
+    "deadlines": {
+      "submission": "2027-04-07",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "resilience theory and measurement",
+      "social and economic inequality",
+      "human development",
+      "climate resilience and adaptation",
+      "institutional resilience and governance",
+      "community resilience and social capital",
+      "health system resilience",
+      "educational resilience and access",
+      "urban and regional resilience",
+      "crisis response and recovery",
+      "policy frameworks for resilience",
+      "comparative development studies"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "European Centre for Scholarly Research",
+      "series": "Conference proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.sgemvienna.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "SWS Vienna Art Scientific Sessions \"When Science meets Art\"",
+      "acronym": null,
+      "edition_number": 13
+    },
+    "dates": {
+      "start_date": "2026-12-02",
+      "end_date": "2026-12-05"
+    },
+    "venue": {
+      "city": "Vienna",
+      "country": "Austria"
+    },
+    "deadlines": {
+      "submission": "2026-10-20",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "social sciences",
+      "arts and humanities",
+      "science, art and society",
+      "cultural studies",
+      "interdisciplinary research",
+      "digital transformation and society",
+      "law and governance in the digital age",
+      "AI in society",
+      "sustainability and society"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "When Science meets Art",
+      "SWS Vienna Scientific Sessions",
+      "ISCSS 2026 Vienna Sessions"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://dataintelligencecrew.github.io/dbml26/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "5th International Workshop on Databases and Machine Learning",
+      "acronym": "DBML 2026",
+      "edition_number": 5
+    },
+    "dates": {
+      "start_date": "2026-05-04",
+      "end_date": "2026-05-04"
+    },
+    "venue": {
+      "city": "Montréal",
+      "country": "Canada"
+    },
+    "deadlines": {
+      "submission": "2026-02-14",
+      "notification": "2026-04-05",
+      "camera_ready": "2026-04-19"
+    },
+    "topics": [
+      "machine learning for data management",
+      "learned query optimization and indexing",
+      "data cleaning and data integration",
+      "data management for machine learning systems",
+      "vector databases and embeddings",
+      "multimodal data management",
+      "LLMs and RAG for data systems",
+      "data quality and provenance",
+      "ML lifecycle and model serving systems"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "IEEE",
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "DBML 2026",
+      "International Workshop on Databases and Machine Learning 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icpam.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "15th International Conference on Pure and Applied Mathematics",
+      "acronym": "ICPAM 2026",
+      "edition_number": 15
+    },
+    "dates": {
+      "start_date": "2026-07-15",
+      "end_date": "2026-07-18"
+    },
+    "venue": {
+      "city": "London",
+      "country": "UK"
+    },
+    "deadlines": {
+      "submission": "2026-04-25",
+      "notification": "2026-05-15",
+      "camera_ready": null
+    },
+    "topics": [
+      "applied mathematics",
+      "pure mathematics",
+      "numerical analysis",
+      "probability and statistics",
+      "mathematical modeling",
+      "control theory",
+      "computational mathematics",
+      "machine learning and mathematics",
+      "quantum computing",
+      "mathematical physics"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "International Journal of Applied Physics and Mathematics",
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICPAM 2026",
+      "International Conference on Pure and Applied Mathematics 2026"
+    ],
+    "venue.city": [],
+    "venue.country": [
+      "United Kingdom"
+    ]
+  }
+},
+{
+  "url": "https://www.aischolar.com/conference/icpqc2026?invite=wiki",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 2nd International Conference on Physics and Quantum Computing",
+      "acronym": "ICPQC 2026",
+      "edition_number": 2
+    },
+    "dates": {
+      "start_date": "2026-04-17",
+      "end_date": "2026-04-19"
+    },
+    "venue": {
+      "city": "San Francisco",
+      "country": "United States"
+    },
+    "deadlines": {
+      "submission": "2026-04-07",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "quantum computing and information processing",
+      "quantum optics and photonics",
+      "quantum machine learning",
+      "quantum simulation",
+      "quantum algorithms",
+      "quantum communication and networks",
+      "semiconductor and materials physics",
+      "laser and plasma physics",
+      "fault-tolerant quantum computing"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "SPIE",
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICPQC 2026",
+      "International Conference on Physics and Quantum Computing 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://virtual.aistats.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Twenty-Ninth Annual Conference on Artificial Intelligence and Statistics",
+      "acronym": "AISTATS 2026",
+      "edition_number": 29
+    },
+    "dates": {
+      "start_date": "2026-05-02",
+      "end_date": "2026-05-05"
+    },
+    "venue": {
+      "city": "Tangier",
+      "country": "Morocco"
+    },
+    "deadlines": {
+      "submission": "2025-10-02",
+      "notification": "2026-01-22",
+      "camera_ready": "2026-03-31"
+    },
+    "topics": [
+      "machine learning",
+      "artificial intelligence",
+      "statistics",
+      "probabilistic methods",
+      "deep learning",
+      "reinforcement learning",
+      "optimization and learning theory",
+      "causality and fairness",
+      "applications of machine learning"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "Proceedings of Machine Learning Research (PMLR)",
+      "series": "Journal of Machine Learning Research Workshop and Conference Proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "AISTATS 2026",
+      "International Conference on Artificial Intelligence and Statistics 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://aimsconference.org/conferences/2026/index.html",
+  "ground_truth": {
+    "conference": {
+      "full_name": "AIMS Conference on Dynamical Systems, Differential Equations and Applications 2026",
+      "acronym": "AIMS 2026",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-07-06",
+      "end_date": "2026-07-10"
+    },
+    "venue": {
+      "city": "Athens",
+      "country": "Greece"
+    },
+    "deadlines": {
+      "submission": "2026-04-15",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "analysis",
+      "applied and computational analysis",
+      "differential equations",
+      "dynamical systems",
+      "fluid dynamics",
+      "control and optimization",
+      "functional and nonlinear analysis",
+      "harmonic analysis",
+      "approximation theory",
+      "operator theory",
+      "geometry",
+      "number theory",
+      "mathematical physics",
+      "engineering mathematics",
+      "biomathematics",
+      "mathematical finance"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Ben Andrews",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Artur Avila",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Mihalis Dafermos",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Qiang Du",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Adam Kanigowski",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Carlos Kenig",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Pierre-Louis Lions",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Kening Lu",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Panagiotis E. Souganidis",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Hong Wang",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Xiaoyun Wang",
+        "affiliation": null,
+        "country": null
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "AIMS Conference 2026"
+    ],
+    "venue.city": [
+      "Athens"
+    ],
+    "venue.country": [
+      "Greece"
+    ]
+  }
+},
+{
+  "url": "https://www.icbbe.com/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 13th International Conference on Biomedical and Bioinformatics Engineering",
+      "acronym": "ICBBE 2026",
+      "edition_number": 13
+    },
+    "dates": {
+      "start_date": "2026-12-25",
+      "end_date": "2026-12-28"
+    },
+    "venue": {
+      "city": "Hokkaido",
+      "country": "Japan"
+    },
+    "deadlines": {
+      "submission": "2026-07-10",
+      "notification": "2026-07-30",
+      "camera_ready": "2026-08-20"
+    },
+    "topics": [
+      "biomedical engineering",
+      "bioinformatics engineering",
+      "biomedical informatics",
+      "artificial intelligence in biomedicine",
+      "data mining for biomedical data",
+      "brain-computer interfaces",
+      "computational genomics",
+      "single-cell data analysis",
+      "biological sequence analysis",
+      "healthcare data analytics"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Yu Huang",
+        "affiliation": "City University of Hong Kong",
+        "country": "Hong Kong"
+      },
+      {
+        "name": "Hesham H. Ali",
+        "affiliation": "University of Nebraska Omaha",
+        "country": "United States"
+      },
+      {
+        "name": "De-Shuang Huang",
+        "affiliation": "Ningbo Institute of Digital Twin, Eastern Institute of Technology",
+        "country": "China"
+      },
+      {
+        "name": "Heng Song",
+        "affiliation": "Wuhan University",
+        "country": "China"
+      },
+      {
+        "name": "Hao Jiang",
+        "affiliation": "Renmin University of China",
+        "country": "China"
+      },
+      {
+        "name": "Yaoyao Hao",
+        "affiliation": "Zhejiang University",
+        "country": "China"
+      },
+      {
+        "name": "Goh Choon Hian",
+        "affiliation": "Universiti Tunku Abdul Rahman",
+        "country": "Malaysia"
+      },
+      {
+        "name": "Pietro Pinoli",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy"
+      },
+      {
+        "name": "Yujie Pu",
+        "affiliation": "Hong Kong Centre for Cerebro-Cardiovascular Health Engineering",
+        "country": "Hong Kong"
+      },
+      {
+        "name": "Siddhant Yadav",
+        "affiliation": "Mayo Clinic",
+        "country": "United States"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": "International Conference Proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICBBE 2026",
+      "International Conference on Biomedical and Bioinformatics Engineering",
+      "2026 13th International Conference on Biomedical and Bioinformatics Engineering (ICBBE 2026)"
+    ],
+    "venue.city": [
+      "Tokyo"
+    ],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://emails.illinois.edu/newsletter/36/393544136.html",
+  "ground_truth": {
+    "conference": {
+      "full_name": "7th Midwest Single Molecule Workshop",
+      "acronym": "MWSMW 2026",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-07-22",
+      "end_date": "2026-07-24"
+    },
+    "venue": {
+      "city": "Urbana",
+      "country": "United States"
+    },
+    "deadlines": {
+      "submission": "2026-04-15",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "single-molecule biophysics",
+      "single-molecule detection methods",
+      "experimental biophysics",
+      "theoretical biophysics",
+      "fluorescence microscopy",
+      "super-resolution imaging",
+      "optical tweezers",
+      "biomolecular modeling and simulation",
+      "genomic DNA and chromosome biophysics",
+      "single-molecule spectroscopy"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Taekjip Ha",
+        "affiliation": "Boston Children's Hospital",
+        "country": "United States"
+      },
+      {
+        "name": "Yann Chemla",
+        "affiliation": "University of Illinois Urbana-Champaign",
+        "country": "United States"
+      },
+      {
+        "name": "Adrian H. Elcock",
+        "affiliation": "University of Iowa",
+        "country": "United States"
+      },
+      {
+        "name": "Matthew Lew",
+        "affiliation": "WashU",
+        "country": "United States"
+      },
+      {
+        "name": "John F. Marko",
+        "affiliation": "Northwestern",
+        "country": "United States"
+      },
+      {
+        "name": "Jan-Hendrik Spille",
+        "affiliation": "University of Illinois Chicago",
+        "country": "United States"
+      },
+      {
+        "name": "Allison Squires",
+        "affiliation": "University of Chicago",
+        "country": "United States"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "MWSMW 2026",
+      "Midwest Single Molecule Workshop 2026",
+      "7th Midwest Single Molecule Workshop"
+    ],
+    "venue.city": [
+      "Urbana-Champaign",
+      "Champaign"
+    ],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://events.spbu.ru/li-ion-mendeleev",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Topical Problems of Energy Conversion in Lithium Electrochemical Systems",
+      "acronym": null,
+      "edition_number": 19
+    },
+    "dates": {
+      "start_date": "2026-09-14",
+      "end_date": "2026-09-19"
+    },
+    "venue": {
+      "city": "St. Petersburg",
+      "country": "Russia"
+    },
+    "deadlines": {
+      "submission": null,
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "lithium electrochemical systems",
+      "energy conversion",
+      "electrochemical energy storage",
+      "lithium-ion batteries",
+      "power sources",
+      "electrochemistry",
+      "functional materials for energy",
+      "supercapacitors",
+      "solid electrolytes"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Evgeniy V. Antipov",
+        "affiliation": "Lomonosov Moscow State University; Skolkovo Institute of Science and Technology",
+        "country": "Russia"
+      },
+      {
+        "name": "Andrey B. Yaroslavtsev",
+        "affiliation": "Kurnakov Institute of General and Inorganic Chemistry, Russian Academy of Sciences; HSE University",
+        "country": "Russia"
+      },
+      {
+        "name": "Seung-Taek Myung",
+        "affiliation": "Sejong University",
+        "country": "South Korea"
+      },
+      {
+        "name": "Shinichi Komaba",
+        "affiliation": "Tokyo University of Science",
+        "country": "Japan"
+      },
+      {
+        "name": "Zhumabay Bakenov",
+        "affiliation": "Nazarbayev University",
+        "country": "Kazakhstan"
+      },
+      {
+        "name": "Yuping Wu",
+        "affiliation": "Southeast University",
+        "country": "China"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "XIX International Conference on Topical Problems of Energy Conversion in Lithium Electrochemical Systems",
+      "Li-ion Mendeleev 2026"
+    ],
+    "venue.city": [
+      "Saint Petersburg",
+      "Peterhof"
+    ],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icaeb.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on Applied Economics and Business",
+      "acronym": "ICAEB 2026",
+      "edition_number": 10
+    },
+    "dates": {
+      "start_date": "2026-08-23",
+      "end_date": "2026-08-25"
+    },
+    "venue": {
+      "city": "Florence",
+      "country": "Italy"
+    },
+    "deadlines": {
+      "submission": "2026-05-05",
+      "notification": "2026-06-05",
+      "camera_ready": null
+    },
+    "topics": [
+      "applied economics",
+      "business",
+      "finance",
+      "labor economics",
+      "international economics",
+      "public finance",
+      "development economics",
+      "environmental economics",
+      "ecological economics",
+      "managerial economics",
+      "mathematical economics",
+      "resource economics",
+      "transport economics",
+      "welfare economics",
+      "entrepreneurship",
+      "organizational behavior",
+      "corporate governance",
+      "investment",
+      "insurance",
+      "risk management",
+      "project management",
+      "accounting",
+      "management information systems",
+      "marketing",
+      "consumer behavior",
+      "human resource management",
+      "supply chain management",
+      "engineering management"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Matthias Fuchs",
+        "affiliation": "Free University of Bolzano",
+        "country": "Italy"
+      },
+      {
+        "name": "Behzad Behdani",
+        "affiliation": "University of South-Eastern Norway",
+        "country": "Norway"
+      }
+    ],
+    "publication": {
+      "publisher": "Springer Nature",
+      "series": "Springer Proceedings in Business and Economics"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "10th International Conference on Applied Economics and Business",
+      "ICAEB"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://socialsciences.info/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Canadian Conference on Humanities and Social Sciences",
+      "acronym": "HUSO2026",
+      "edition_number": 8
+    },
+    "dates": {
+      "start_date": "2026-10-28",
+      "end_date": "2026-10-29"
+    },
+    "venue": {
+      "city": "Toronto",
+      "country": "Canada"
+    },
+    "deadlines": {
+      "submission": "2026-04-30",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "global business",
+      "finance",
+      "sustainable economies",
+      "public policy",
+      "society and globalization",
+      "technology and digital transformation",
+      "organizational behavior",
+      "ethics and social justice",
+      "entrepreneurship and innovation",
+      "media and communication",
+      "climate and sustainability",
+      "education and learning systems",
+      "AI and automation",
+      "fintech",
+      "cybersecurity",
+      "human resource management"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Sadequl Islam",
+        "affiliation": "Laurentian University",
+        "country": "Canada"
+      },
+      {
+        "name": "Anjali Sahay",
+        "affiliation": "Gannon University",
+        "country": "United States"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "8th Canadian Conference on Humanities and Social Sciences 2026",
+      "Canadian International Conference on Humanities and Social Sciences"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://nlpd2026.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on NLP & Big Data",
+      "acronym": "NLPD 2026",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-07-16",
+      "end_date": "2026-07-17"
+    },
+    "venue": {
+      "city": "London",
+      "country": "United Kingdom"
+    },
+    "deadlines": {
+      "submission": "2026-04-11",
+      "notification": "2026-06-20",
+      "camera_ready": "2026-06-27"
+    },
+    "topics": [
+      "natural language processing",
+      "big data",
+      "deep learning",
+      "information extraction",
+      "information retrieval",
+      "question answering",
+      "semantic web",
+      "ontologies",
+      "social media analytics",
+      "machine learning",
+      "soft computing",
+      "internet of things",
+      "ubiquitous computing",
+      "web computing",
+      "data mining",
+      "corpus analysis",
+      "argumentation mining"
+    ],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": "AIRCC",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "7th International Conference on NLP and Big Data",
+      "NLP & Big Data Conference"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icrconf.com/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on Intelligent Computing and Robotics",
+      "acronym": "ICICR 2026",
+      "edition_number": 3
+    },
+    "dates": {
+      "start_date": "2026-06-12",
+      "end_date": "2026-06-14"
+    },
+    "venue": {
+      "city": "Paris",
+      "country": "France"
+    },
+    "deadlines": {
+      "submission": "2026-04-15",
+      "notification": "2026-05-10",
+      "camera_ready": null
+    },
+    "topics": [
+      "intelligent computing",
+      "machine learning",
+      "deep learning",
+      "data science",
+      "robotics",
+      "automation",
+      "computer vision",
+      "internet of things",
+      "multi-agent systems",
+      "pattern recognition",
+      "control systems",
+      "evolutionary computation",
+      "human-machine interaction",
+      "privacy computing",
+      "swarm intelligence"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute-Alsace",
+        "country": "France"
+      },
+      {
+        "name": "Xiaodong Liu",
+        "affiliation": "Edinburgh Napier University",
+        "country": "United Kingdom"
+      },
+      {
+        "name": "Hamed Taherdoost",
+        "affiliation": "University Canada West",
+        "country": "Canada"
+      },
+      {
+        "name": "Umesh Chandra Pati",
+        "affiliation": "National Institute of Technology",
+        "country": "India"
+      },
+      {
+        "name": "Hongliang Ren",
+        "affiliation": "Chinese University of Hong Kong",
+        "country": "China"
+      },
+      {
+        "name": "Wali Khan Mashwani",
+        "affiliation": "Kohat University of Science and Technology",
+        "country": "Pakistan"
+      },
+      {
+        "name": "Muazzam A. Khan Khattak",
+        "affiliation": "Quaid-i-Azam University",
+        "country": "Pakistan"
+      },
+      {
+        "name": "Pooja Agarwal",
+        "affiliation": "PES University",
+        "country": "India"
+      },
+      {
+        "name": "Madihah Mohd Saudi",
+        "affiliation": "Universiti Sains Islam Malaysia",
+        "country": "Malaysia"
+      },
+      {
+        "name": "Deepika Koundal",
+        "affiliation": "University of Petroleum and Energy Studies",
+        "country": "India"
+      }
+    ],
+    "publication": {
+      "publisher": "IEEE",
+      "series": "IEEE Conference Proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "2026 3rd International Conference on Intelligent Computing and Robotics",
+      "ICICR"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+}
+]
