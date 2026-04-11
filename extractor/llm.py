@@ -6,7 +6,7 @@ Uses chain-of-extraction: split into two passes to reduce hallucinations
 in small models (7-10B parameters).
 
 Pass 1 — "basic": name, acronym, dates, venue, deadlines, publisher
-Pass 2 — "details": topics, keynote speakers
+Pass 2 — "details": topics, keynote speakers, program committee members
 
 Supported backends:
   - ollama  (default): Ollama API at http://localhost:11434
@@ -299,19 +299,30 @@ JSON:"""
 
 _DETAILS_PROMPT = """\
 You are a precise data extraction assistant. From the conference text below,
-extract ONLY the following two things. Return ONLY valid JSON — no markdown, no explanation.
+extract ONLY the following three things. Return ONLY valid JSON — no markdown, no explanation.
 
 1. "topics" — a list of research topics/themes/tracks of this conference.
    Return [] if none are found.
-2. "keynote_speakers" — a list of keynote/invited speakers. Each entry:
+2. "keynote_speakers" — a list of keynote/invited/plenary speakers. Each entry:
    {{"name": "string", "affiliation": "string or null", "country": "string or null"}}
    Return [] if none are found.
+3. "program_committee" — a list of members of the Program Committee (PC),
+   Technical Program Committee (TPC), Organizing Committee, General Chairs,
+   Program Chairs, Track Chairs, Reviewers, and similar roles. Each entry:
+   {{"name": "string", "affiliation": "string or null", "country": "string or null", "role": "string or null"}}
+   "role" is the person's role (e.g. "General Chair", "Program Chair", "PC Member").
+   Do NOT duplicate keynote speakers here unless the site also explicitly lists
+   them as part of the committee.
+   Return [] if no committee members are found.
 
 Required JSON structure:
 {{
   "topics": ["string", ...],
   "keynote_speakers": [
     {{"name": "...", "affiliation": "...", "country": "..."}}
+  ],
+  "program_committee": [
+    {{"name": "...", "affiliation": "...", "country": "...", "role": "..."}}
   ]
 }}
 
@@ -509,7 +520,7 @@ def extract_details(
     vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
-    Pass 2: extract topics and keynote speakers.
+    Pass 2: extract topics, keynote speakers, and program committee members.
     """
     if base_url is None:
         base_url = get_default_url(backend)

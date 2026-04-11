@@ -94,10 +94,12 @@ def _count_fields(data: Dict[str, Any]) -> tuple:
             total += 1
             if val is not None and val != "":
                 filled += 1
-    total += 2  # topics + keynote_speakers
+    total += 3  # topics + keynote_speakers + program_committee
     if data.get("topics"):
         filled += 1
     if data.get("keynote_speakers"):
+        filled += 1
+    if data.get("program_committee"):
         filled += 1
     return filled, total
 

@@ -10,8 +10,8 @@ Field outcomes (scalar fields):
   FP_HALLUC   gold absent,  pred present                (hallucination)
   TN          gold absent,  pred absent                 (correct abstention)
 
-List fields (topics, keynote_speakers) are scored by greedy set matching
-and contribute per-example (tp, fp, fn) counts directly.
+List fields (topics, keynote_speakers, program_committee) are scored by
+greedy set matching and contribute per-example (tp, fp, fn) counts directly.
 
 Precision, recall and F1 are computed as:
 
@@ -80,9 +80,13 @@ SCALAR_FIELDS: List[ScalarField] = [
 LIST_FIELDS: List[ListField] = [
     ListField("topics", "topics", "topics", M.match_topic),
     ListField("keynote_speakers", "keynote_speakers", "speakers", M.match_speaker),
+    ListField("program_committee", "program_committee", "committee", M.match_speaker),
 ]
 
-CATEGORIES = ["dates", "location", "identity", "publication", "topics", "speakers"]
+CATEGORIES = [
+    "dates", "location", "identity", "publication",
+    "topics", "speakers", "committee",
+]
 
 
 # ---------------------------------------------------------------------------

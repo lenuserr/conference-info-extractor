@@ -13,8 +13,9 @@ Each matcher returns True/False. Normalization and fuzziness are type-specific:
   - topic        : normalize + token_sort_ratio >= TOPIC_THRESHOLD
   - speaker name : strip diacritics/titles, token_set_ratio >= NAME_THRESHOLD
 
-For list fields (topics, speakers) use ``greedy_list_match`` which returns
-the per-example (tp, fp, fn) tuple via greedy bipartite matching.
+For list fields (topics, speakers, program committee) use ``greedy_list_match``
+which returns the per-example (tp, fp, fn) tuple via greedy bipartite matching.
+Both speakers and committee members match via ``match_speaker`` (name only).
 """
 
 from __future__ import annotations
