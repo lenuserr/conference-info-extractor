@@ -233,7 +233,7 @@ def ensure_vllm_server(
     atexit.register(_stop_vllm_server)
 
     # Wait for the server to become ready
-    max_wait = 300  # seconds — large models can take a while to load
+    max_wait = 900  # seconds — large models can take a while to load
     poll_interval = 3
     waited = 0
     while waited < max_wait:
@@ -490,7 +490,7 @@ def extract_basic(
     """
     if base_url is None:
         base_url = get_default_url(backend)
-    prompt = _BASIC_PROMPT.format(text=text[:8000])
+    prompt = _BASIC_PROMPT.format(text=text)
     raw = _call_llm(
         prompt, model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
@@ -513,7 +513,7 @@ def extract_details(
     """
     if base_url is None:
         base_url = get_default_url(backend)
-    prompt = _DETAILS_PROMPT.format(text=text[:8000])
+    prompt = _DETAILS_PROMPT.format(text=text)
     raw = _call_llm(
         prompt, model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
