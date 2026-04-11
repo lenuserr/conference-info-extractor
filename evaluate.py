@@ -71,7 +71,7 @@ from typing import Any, Dict, List, Tuple
 from eval.metrics import (
     ExampleResult,
     ModelMetrics,
-    _classify_entry_status,
+    _is_fetch_failure,
     aggregate,
     evaluate_one,
 )
@@ -203,12 +203,13 @@ def evaluate_model(
     Run ``evaluate_one`` for every entry that has a matching gold file.
     Returns aggregated metrics plus the per-example results.
 
-    Entries with a failed fetch (scraper got 0 pages) or an extraction
-    crash are excluded from the scoring pass — they leave the model
-    without input, so counting their empty predictions as misses would
-    unfairly tank recall. ``aggregate`` still sees these entries via
-    ``matched_entries`` so it can report ``fetch_failures`` and
-    ``errors`` counts alongside the scored metrics.
+    Entries with a failed fetch (warnings contain "Could not fetch any
+    pages") or an extraction crash (status != "ok") are excluded from
+    the scoring pass — they leave the model without input, so counting
+    their empty predictions as misses would unfairly tank recall.
+    ``aggregate`` still sees these entries via ``matched_entries`` so
+    it can report ``fetch_failures`` and ``errors`` counts alongside
+    the scored metrics.
     """
     per_example: List[ExampleResult] = []
     matched_entries: List[Dict[str, Any]] = []  # all gold-matched entries
@@ -224,12 +225,11 @@ def evaluate_model(
             continue
         matched_entries.append(entry)
 
-        status = _classify_entry_status(entry)
-        if status == "fetch_failed":
-            fetch_failed.append(url)
-            continue
-        if status == "error":
+        if entry.get("status") == "error":
             crashed.append(url)
+            continue
+        if _is_fetch_failure(entry):
+            fetch_failed.append(url)
             continue
 
         gold_doc = gold[key]

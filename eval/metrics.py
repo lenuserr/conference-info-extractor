@@ -304,23 +304,17 @@ class ModelMetrics:
         return sum(self.by_category[c].f1 for c in cats) / len(cats)
 
 
-def _classify_entry_status(entry: Dict[str, Any]) -> str:
-    """
-    Normalize an entry's status into one of "ok" / "fetch_failed" / "error".
+# Warning string emitted by extractor.pipeline when the scraper returns
+# zero pages. We detect fetch failures by looking for it in the entry's
+# warnings list rather than by status, so that the benchmark.py format
+# stays unchanged and old result files are handled the same way.
+_FETCH_FAILED_WARNING = "Could not fetch any pages"
 
-    ``status == "fetch_failed"`` is the post-hoc marker benchmark.py adds
-    when the scraper returned zero pages. Older runs don't have it — for
-    those we fall back to checking ``pages_fetched == 0`` so backward
-    compatibility is preserved.
-    """
-    status = entry.get("status", "ok")
-    if status == "error":
-        return "error"
-    if status == "fetch_failed":
-        return "fetch_failed"
-    if entry.get("pages_fetched", 1) == 0:
-        return "fetch_failed"
-    return "ok"
+
+def _is_fetch_failure(entry: Dict[str, Any]) -> bool:
+    """True if the entry's warnings indicate the scraper got nothing."""
+    warnings = entry.get("warnings") or []
+    return any(_FETCH_FAILED_WARNING in str(w) for w in warnings)
 
 
 def aggregate(
@@ -350,10 +344,9 @@ def aggregate(
             metrics.by_field.setdefault(fr.path, Counts()).add(c)
 
     if entries:
-        statuses = [_classify_entry_status(e) for e in entries]
-        ok_entries = [e for e, s in zip(entries, statuses) if s == "ok"]
-        metrics.errors = sum(1 for s in statuses if s == "error")
-        metrics.fetch_failures = sum(1 for s in statuses if s == "fetch_failed")
+        ok_entries = [e for e in entries if e.get("status") == "ok"]
+        metrics.errors = len(entries) - len(ok_entries)
+        metrics.fetch_failures = sum(1 for e in entries if _is_fetch_failure(e))
         if ok_entries:
             metrics.avg_latency_sec = sum(e.get("elapsed_sec", 0) for e in ok_entries) / len(ok_entries)
             metrics.avg_attempts = sum(e.get("attempts", 0) for e in ok_entries) / len(ok_entries)
