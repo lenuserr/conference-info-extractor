@@ -472,8 +472,13 @@ def _call_llm(
 # JSON parsing from LLM output
 # ---------------------------------------------------------------------------
 
-def _parse_json_from_response(raw: str) -> Optional[Dict[str, Any]]:
-    """Extract JSON object from LLM response, tolerating markdown fences etc."""
+def _parse_json_from_response(raw: str) -> Optional[Any]:
+    """Extract a JSON value from an LLM response, tolerating markdown fences.
+
+    Returns whatever ``json.loads`` produced — typically a dict, but a bare
+    list is also possible when the model emits a raw array. Callers that
+    require a specific shape must normalize the result themselves.
+    """
     if not raw:
         return None
 
@@ -530,8 +535,16 @@ def _run_pass(
     backend: str,
     base_url: Optional[str],
     vllm_extra_args: Optional[List[str]],
+    list_wrap_key: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Format *prompt_template* with *text*, call the LLM, parse JSON."""
+    """Format *prompt_template* with *text*, call the LLM, parse JSON.
+
+    Normalizes the parsed result to a dict. Some models ignore the
+    documented ``{"keynote_speakers": [...]}`` wrapper and emit a bare JSON
+    array instead; when ``list_wrap_key`` is set, such an array is salvaged
+    by wrapping it as ``{list_wrap_key: [...]}`` rather than being
+    discarded. Anything else (None, non-dict, non-list) yields None.
+    """
     if base_url is None:
         base_url = get_default_url(backend)
     prompt = prompt_template.format(text=text)
@@ -542,7 +555,26 @@ def _run_pass(
     result = _parse_json_from_response(raw)
     if result is None:
         logger.warning("Pass %s failed to produce valid JSON", pass_name)
-    return result
+        return None
+    if isinstance(result, dict):
+        return result
+    if isinstance(result, list):
+        if list_wrap_key is None:
+            logger.warning(
+                "Pass %s returned a bare JSON list but no wrap key is set — discarding",
+                pass_name,
+            )
+            return None
+        logger.warning(
+            "Pass %s returned a bare JSON list; wrapping as %r (%d items)",
+            pass_name, list_wrap_key, len(result),
+        )
+        return {list_wrap_key: result}
+    logger.warning(
+        "Pass %s returned unexpected JSON type %s — discarding",
+        pass_name, type(result).__name__,
+    )
+    return None
 
 
 def extract_basic(
@@ -584,6 +616,7 @@ def extract_speakers(
         pass_name="2 (speakers)",
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
+        list_wrap_key="keynote_speakers",
     )
 
 
@@ -605,4 +638,5 @@ def extract_committee(
         pass_name="3 (committee)",
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
+        list_wrap_key="program_committee",
     )
