@@ -1,5 +1,6 @@
 """
-Main extraction pipeline: scrape → LLM extract (chain) → validate → retry → output.
+Main extraction pipeline: scrape → select target-specific context →
+LLM extract (chain of focused passes) → validate → retry → output.
 """
 
 from __future__ import annotations
@@ -8,7 +9,19 @@ import logging
 from typing import Any, Dict, List, Optional, Tuple
 
 from .scraper import SiteContent, fetch_conference_site
-from .llm import extract_basic, extract_details, DEFAULT_MODEL, DEFAULT_BACKEND, get_default_url
+from .content_selection import (
+    Target,
+    build_context_for_target,
+    describe_selection,
+)
+from .llm import (
+    extract_basic,
+    extract_speakers,
+    extract_committee,
+    DEFAULT_MODEL,
+    DEFAULT_BACKEND,
+    get_default_url,
+)
 from .validator import full_validate
 
 logger = logging.getLogger(__name__)
@@ -19,11 +32,13 @@ MAX_RETRIES = 3
 def _build_output(
     url: str,
     basic: Optional[Dict[str, Any]],
-    details: Optional[Dict[str, Any]],
+    speakers: Optional[Dict[str, Any]],
+    committee: Optional[Dict[str, Any]],
 ) -> Dict[str, Any]:
-    """Merge basic + details into the target JSON structure."""
+    """Merge the three extraction passes into the target JSON structure."""
     b = basic or {}
-    d = details or {}
+    s = speakers or {}
+    c = committee or {}
 
     return {
         "conference": {
@@ -45,9 +60,9 @@ def _build_output(
             "notification": b.get("notification_date"),
             "camera_ready": b.get("camera_ready_date"),
         },
-        "topics": d.get("topics", []),
-        "keynote_speakers": d.get("keynote_speakers", []),
-        "program_committee": d.get("program_committee", []),
+        "topics": b.get("topics", []),
+        "keynote_speakers": s.get("keynote_speakers", []),
+        "program_committee": c.get("program_committee", []),
         "publication": {
             "publisher": b.get("publisher"),
             "series": b.get("series"),
@@ -124,8 +139,29 @@ def extract_conference(
             "meta": {"model": model, "backend": backend, "attempts": 0, "pages_fetched": 0},
         }
 
-    full_text = site.full_text
-    source_text = site.raw_html_main  # for validation
+    source_text = site.raw_html_main  # full site HTML — for hallucination checks
+
+    # --- Step 1.5: Target-aware page selection ---
+    # Each extraction pass gets its own narrow context built from the pages
+    # most likely to contain its information. This replaces the old
+    # "dump site.full_text into every pass" approach and sharply reduces
+    # noise for the narrow list fields (speakers, committee).
+    basic_text = build_context_for_target(site, Target.BASIC)
+    speakers_text = build_context_for_target(site, Target.SPEAKERS)
+    committee_text = build_context_for_target(site, Target.COMMITTEE)
+
+    if logger.isEnabledFor(logging.DEBUG):
+        for target, ranked in describe_selection(site).items():
+            top = ranked[:5]
+            logger.debug(
+                "Page selection for %s (top %d): %s",
+                target.value, len(top),
+                [f"{u} (score={s})" for u, s in top],
+            )
+    logger.info(
+        "Target contexts: basic=%d chars, speakers=%d chars, committee=%d chars",
+        len(basic_text), len(speakers_text), len(committee_text),
+    )
 
     best_result = None
     best_warnings: List[str] = []
@@ -136,21 +172,25 @@ def extract_conference(
         attempts = attempt
         logger.info("Extraction attempt %d/%d with backend=%s model=%s", attempt, MAX_RETRIES, backend, model)
 
-        # --- Step 2: LLM extraction (chain-of-extraction) ---
+        # --- Step 2: LLM extraction (three focused passes) ---
         basic = extract_basic(
-            full_text, model=model, backend=backend, base_url=base_url,
+            basic_text, model=model, backend=backend, base_url=base_url,
             vllm_extra_args=vllm_extra_args,
         )
-        details = extract_details(
-            full_text, model=model, backend=backend, base_url=base_url,
+        speakers = extract_speakers(
+            speakers_text, model=model, backend=backend, base_url=base_url,
+            vllm_extra_args=vllm_extra_args,
+        )
+        committee = extract_committee(
+            committee_text, model=model, backend=backend, base_url=base_url,
             vllm_extra_args=vllm_extra_args,
         )
 
-        if basic is None and details is None:
-            logger.warning("Both extraction passes returned None on attempt %d", attempt)
+        if basic is None and speakers is None and committee is None:
+            logger.warning("All extraction passes returned None on attempt %d", attempt)
             continue
 
-        merged = _build_output(url, basic, details)
+        merged = _build_output(url, basic, speakers, committee)
 
         # --- Step 3: Validate ---
         validated, confidence, warnings = full_validate(merged, source_text)

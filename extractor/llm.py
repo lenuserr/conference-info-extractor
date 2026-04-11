@@ -2,11 +2,15 @@
 LLM-based extraction via local inference backends (Ollama or vLLM).
 No paid APIs — everything runs locally.
 
-Uses chain-of-extraction: split into two passes to reduce hallucinations
-in small models (7-10B parameters).
+Uses chain-of-extraction: split into three focused passes to reduce
+hallucinations in small models (7-10B parameters). Each pass receives a
+target-specific page context built by ``extractor.content_selection``
+rather than the whole scraped site, so the LLM only sees text that's
+actually relevant to the task.
 
-Pass 1 — "basic": name, acronym, dates, venue, deadlines, publisher
-Pass 2 — "details": topics, keynote speakers, program committee members
+Pass 1 — "basic":     identity, dates, venue, deadlines, publication, topics
+Pass 2 — "speakers":  keynote / invited / plenary speakers
+Pass 3 — "committee": program committee / chairs / organizers
 
 Supported backends:
   - ollama  (default): Ollama API at http://localhost:11434
@@ -274,6 +278,8 @@ Return ONLY a valid JSON object — no markdown, no explanation, no extra text.
 If a field cannot be determined from the text, use null for scalars and [] for arrays.
 Dates must be in YYYY-MM-DD format. Country must be the full English name (e.g. "Spain", not "ES").
 edition_number is the numeric edition (e.g. 38 for "38th Annual Conference"), or null.
+"topics" is a list of research topics/themes/tracks covered by the conference
+(e.g. "machine learning", "privacy"). Return [] if none are listed.
 
 Required JSON structure:
 {{
@@ -288,7 +294,8 @@ Required JSON structure:
   "notification_date": "YYYY-MM-DD or null",
   "camera_ready_date": "YYYY-MM-DD or null",
   "publisher": "string or null",
-  "series": "string or null"
+  "series": "string or null",
+  "topics": ["string", ...]
 }}
 
 --- TEXT START ---
@@ -297,30 +304,55 @@ Required JSON structure:
 
 JSON:"""
 
-_DETAILS_PROMPT = """\
+_SPEAKERS_PROMPT = """\
 You are a precise data extraction assistant. From the conference text below,
-extract ONLY the following three things. Return ONLY valid JSON — no markdown, no explanation.
+extract ONLY the list of keynote / invited / plenary speakers. Return ONLY
+valid JSON — no markdown, no explanation, no extra text.
 
-1. "topics" — a list of research topics/themes/tracks of this conference.
-   Return [] if none are found.
-2. "keynote_speakers" — a list of keynote/invited/plenary speakers. Each entry:
-   {{"name": "string", "affiliation": "string or null", "country": "string or null"}}
-   Return [] if none are found.
-3. "program_committee" — a list of members of the Program Committee (PC),
-   Technical Program Committee (TPC), Organizing Committee, General Chairs,
-   Program Chairs, Track Chairs, Reviewers, and similar roles. Each entry:
-   {{"name": "string", "affiliation": "string or null", "country": "string or null", "role": "string or null"}}
-   "role" is the person's role (e.g. "General Chair", "Program Chair", "PC Member").
-   Do NOT duplicate keynote speakers here unless the site also explicitly lists
-   them as part of the committee.
-   Return [] if no committee members are found.
+Each speaker entry:
+  {{"name": "string", "affiliation": "string or null", "country": "string or null"}}
+
+Do NOT include program committee members, general chairs, track chairs, or
+reviewers here — those belong to a separate extraction pass.
+
+Return [] if no keynote/invited speakers are listed in the text.
 
 Required JSON structure:
 {{
-  "topics": ["string", ...],
   "keynote_speakers": [
     {{"name": "...", "affiliation": "...", "country": "..."}}
-  ],
+  ]
+}}
+
+--- TEXT START ---
+{text}
+--- TEXT END ---
+
+JSON:"""
+
+_COMMITTEE_PROMPT = """\
+You are a precise data extraction assistant. From the conference text below,
+extract ONLY the Program Committee / Organizing Committee / Chairs and related
+roles. Return ONLY valid JSON — no markdown, no explanation, no extra text.
+
+Roles that belong here: Program Committee (PC) members, Technical Program
+Committee (TPC) members, Organizing Committee members, General Chairs,
+Program Chairs, Track Chairs, Workshop Chairs, Publicity Chairs, Reviewers,
+Steering Committee, and similar.
+
+Each entry:
+  {{"name": "string", "affiliation": "string or null", "country": "string or null", "role": "string or null"}}
+
+"role" is the person's explicit role on the committee (e.g. "General Chair",
+"Program Chair", "PC Member"). Use null if no specific role is mentioned.
+
+Do NOT include keynote / invited speakers here unless the text also lists
+them as committee members.
+
+Return [] if no committee members are listed in the text.
+
+Required JSON structure:
+{{
   "program_committee": [
     {{"name": "...", "affiliation": "...", "country": "...", "role": "..."}}
   ]
@@ -489,6 +521,30 @@ def get_default_url(backend: str) -> str:
     return DEFAULT_OLLAMA_URL
 
 
+def _run_pass(
+    prompt_template: str,
+    text: str,
+    *,
+    pass_name: str,
+    model: str,
+    backend: str,
+    base_url: Optional[str],
+    vllm_extra_args: Optional[List[str]],
+) -> Optional[Dict[str, Any]]:
+    """Format *prompt_template* with *text*, call the LLM, parse JSON."""
+    if base_url is None:
+        base_url = get_default_url(backend)
+    prompt = prompt_template.format(text=text)
+    raw = _call_llm(
+        prompt, model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args,
+    )
+    result = _parse_json_from_response(raw)
+    if result is None:
+        logger.warning("Pass %s failed to produce valid JSON", pass_name)
+    return result
+
+
 def extract_basic(
     text: str,
     model: str = DEFAULT_MODEL,
@@ -497,22 +553,20 @@ def extract_basic(
     vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
-    Pass 1: extract basic metadata (name, dates, venue, deadlines, publisher).
+    Pass 1: identity, dates, venue, deadlines, publication, topics.
+
+    ``text`` should be the BASIC-target context built by
+    ``content_selection.build_context_for_target(site, Target.BASIC)``.
     """
-    if base_url is None:
-        base_url = get_default_url(backend)
-    prompt = _BASIC_PROMPT.format(text=text)
-    raw = _call_llm(
-        prompt, model=model, backend=backend, base_url=base_url,
+    return _run_pass(
+        _BASIC_PROMPT, text,
+        pass_name="1 (basic)",
+        model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
     )
-    result = _parse_json_from_response(raw)
-    if result is None:
-        logger.warning("Pass 1 (basic) failed to produce valid JSON")
-    return result
 
 
-def extract_details(
+def extract_speakers(
     text: str,
     model: str = DEFAULT_MODEL,
     backend: str = DEFAULT_BACKEND,
@@ -520,16 +574,35 @@ def extract_details(
     vllm_extra_args: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
-    Pass 2: extract topics, keynote speakers, and program committee members.
+    Pass 2: keynote / invited / plenary speakers only.
+
+    ``text`` should be the SPEAKERS-target context built by
+    ``content_selection.build_context_for_target(site, Target.SPEAKERS)``.
     """
-    if base_url is None:
-        base_url = get_default_url(backend)
-    prompt = _DETAILS_PROMPT.format(text=text)
-    raw = _call_llm(
-        prompt, model=model, backend=backend, base_url=base_url,
+    return _run_pass(
+        _SPEAKERS_PROMPT, text,
+        pass_name="2 (speakers)",
+        model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
     )
-    result = _parse_json_from_response(raw)
-    if result is None:
-        logger.warning("Pass 2 (details) failed to produce valid JSON")
-    return result
+
+
+def extract_committee(
+    text: str,
+    model: str = DEFAULT_MODEL,
+    backend: str = DEFAULT_BACKEND,
+    base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
+) -> Optional[Dict[str, Any]]:
+    """
+    Pass 3: program committee / chairs / organizing committee.
+
+    ``text`` should be the COMMITTEE-target context built by
+    ``content_selection.build_context_for_target(site, Target.COMMITTEE)``.
+    """
+    return _run_pass(
+        _COMMITTEE_PROMPT, text,
+        pass_name="3 (committee)",
+        model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args,
+    )
