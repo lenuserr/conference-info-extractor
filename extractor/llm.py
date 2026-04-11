@@ -18,7 +18,9 @@ from __future__ import annotations
 import atexit
 import json
 import logging
+import os
 import re
+import signal
 import subprocess
 import time
 from typing import Any, Dict, List, Optional
@@ -43,6 +45,14 @@ _vllm_process: Optional[subprocess.Popen] = None
 _vllm_current_model: Optional[str] = None  # model the running server is serving
 _vllm_current_args: tuple = ()  # extra CLI args the running server was started with
 
+# Grace period between SIGTERM and SIGKILL escalation. vLLM's shutdown path
+# (releasing CUDA contexts, tearing down distributed workers, freeing IPC
+# shared memory) can easily take 15-30s for large models, so give it some room.
+_VLLM_SIGTERM_GRACE_SEC = 30
+_VLLM_SIGKILL_GRACE_SEC = 10
+
+_POSIX = hasattr(os, "killpg") and hasattr(os, "getpgid")
+
 
 def _is_server_up(base_url: str) -> bool:
     """Check if a vLLM server is responding."""
@@ -53,19 +63,106 @@ def _is_server_up(base_url: str) -> bool:
         return False
 
 
+def _check_gpu_free() -> None:
+    """
+    Best-effort sanity check that GPU memory dropped after stopping vLLM.
+
+    Calls ``nvidia-smi`` and logs a warning if any GPU still reports more
+    than 1 GiB of used memory. Silently skipped if nvidia-smi is absent
+    (non-GPU / non-NVIDIA dev boxes).
+    """
+    try:
+        out = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.CalledProcessError):
+        return  # no nvidia-smi, or it misbehaved — nothing to do
+
+    try:
+        used_mib = [int(x.strip()) for x in out.decode().splitlines() if x.strip()]
+    except ValueError:
+        return
+    leftover = [m for m in used_mib if m > 1024]
+    if leftover:
+        logger.warning(
+            "After stopping vLLM, GPU memory still in use: %s MiB per GPU. "
+            "A worker process may have survived — check `nvidia-smi` and kill "
+            "leftover python processes manually if needed.",
+            used_mib,
+        )
+
+
 def _stop_vllm_server() -> None:
-    """Terminate the vLLM server process if we started one."""
+    """
+    Terminate the vLLM server process if we started one.
+
+    vLLM forks worker subprocesses (engine core, API server, one per
+    tensor-parallel rank, …). Signalling only the launcher leaves those
+    workers orphaned and holding CUDA contexts. We start the server with
+    ``start_new_session=True`` so every child lives in a fresh POSIX
+    session / process group, then SIGTERM (and escalate to SIGKILL) the
+    whole group here so that *all* GPU-holding processes actually exit.
+    """
     global _vllm_process, _vllm_current_model, _vllm_current_args
-    if _vllm_process is not None:
-        logger.info("Stopping vLLM server (pid %d, model %s)...", _vllm_process.pid, _vllm_current_model)
-        _vllm_process.terminate()
+    if _vllm_process is None:
+        return
+
+    pid = _vllm_process.pid
+    logger.info("Stopping vLLM server (pid %d, model %s)...", pid, _vllm_current_model)
+
+    pgid: Optional[int] = None
+    if _POSIX:
         try:
-            _vllm_process.wait(timeout=15)
+            pgid = os.getpgid(pid)
+        except ProcessLookupError:
+            pgid = None
+
+    def _signal_group(sig: int) -> None:
+        if pgid is not None:
+            try:
+                os.killpg(pgid, sig)
+                return
+            except ProcessLookupError:
+                return
+        # Windows / fallback: signal only the launcher
+        try:
+            if sig == signal.SIGKILL:
+                _vllm_process.kill()
+            else:
+                _vllm_process.terminate()
+        except ProcessLookupError:
+            pass
+
+    # Phase 1: polite SIGTERM to the whole group → let vLLM release CUDA cleanly
+    _signal_group(signal.SIGTERM)
+    try:
+        _vllm_process.wait(timeout=_VLLM_SIGTERM_GRACE_SEC)
+    except subprocess.TimeoutExpired:
+        logger.warning(
+            "vLLM did not exit within %ds of SIGTERM; escalating to SIGKILL",
+            _VLLM_SIGTERM_GRACE_SEC,
+        )
+        # Phase 2: force-kill the group
+        _signal_group(signal.SIGKILL)
+        try:
+            _vllm_process.wait(timeout=_VLLM_SIGKILL_GRACE_SEC)
         except subprocess.TimeoutExpired:
-            _vllm_process.kill()
-        _vllm_process = None
-        _vllm_current_model = None
-        _vllm_current_args = ()
+            logger.error(
+                "vLLM server (pid %d) still alive after SIGKILL — "
+                "manual intervention required",
+                pid,
+            )
+
+    _vllm_process = None
+    _vllm_current_model = None
+    _vllm_current_args = ()
+
+    # Give the NVIDIA driver a beat to reap the CUDA contexts of the dead
+    # processes, then sanity-check that memory is actually free.
+    time.sleep(2)
+    _check_gpu_free()
 
 
 def ensure_vllm_server(
@@ -121,12 +218,18 @@ def ensure_vllm_server(
     logger.info("Starting vLLM server: %s", " ".join(cmd))
     print(f"Starting vLLM server: {' '.join(cmd)}")
 
+    # start_new_session=True puts the launcher — and every worker it forks —
+    # into a fresh POSIX session/process group, so _stop_vllm_server can
+    # signal the whole group at once and reliably free GPU memory when we
+    # switch models between benchmark entries. (No-op on Windows.)
     _vllm_process = subprocess.Popen(
         cmd,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
+        start_new_session=True,
     )
     _vllm_current_model = model
+    _vllm_current_args = args_tuple
     atexit.register(_stop_vllm_server)
 
     # Wait for the server to become ready
