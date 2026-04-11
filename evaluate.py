@@ -21,9 +21,10 @@ Gold file format (one JSON per conference in ``--gold``):
         "dates":       {"start_date": "2024-12-10", "end_date": "2024-12-15"},
         "venue":       {"city": "Vancouver", "country": "Canada"},
         "deadlines":   {"submission": "2024-05-22", "notification": null, "camera_ready": null},
-        "topics":          ["machine learning", "deep learning"],
-        "keynote_speakers": [{"name": "Yoshua Bengio", "affiliation": null, "country": null}],
-        "publication":     {"publisher": null, "series": null}
+        "topics":            ["machine learning", "deep learning"],
+        "keynote_speakers":  [{"name": "Yoshua Bengio", "affiliation": null, "country": null}],
+        "program_committee": [{"name": "Jane Doe", "affiliation": "MIT", "country": "United States", "role": "PC Member"}],
+        "publication":       {"publisher": null, "series": null}
       },
       "aliases": {
         "conference.full_name": ["Conference on Neural Information Processing Systems"],

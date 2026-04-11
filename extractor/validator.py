@@ -24,7 +24,10 @@ logger = logging.getLogger(__name__)
 
 CONFERENCE_SCHEMA = {
     "type": "object",
-    "required": ["conference", "dates", "venue", "deadlines", "topics", "keynote_speakers", "publication"],
+    "required": [
+        "conference", "dates", "venue", "deadlines",
+        "topics", "keynote_speakers", "program_committee", "publication",
+    ],
     "properties": {
         "conference": {
             "type": "object",
@@ -67,6 +70,18 @@ CONFERENCE_SCHEMA = {
                     "name": {"type": "string"},
                     "affiliation": {"type": ["string", "null"]},
                     "country": {"type": ["string", "null"]},
+                },
+            },
+        },
+        "program_committee": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "affiliation": {"type": ["string", "null"]},
+                    "country": {"type": ["string", "null"]},
+                    "role": {"type": ["string", "null"]},
                 },
             },
         },
@@ -428,6 +443,17 @@ def verify_against_source(
         else:
             confidence[path] = "low"
 
+    # Program committee: check each name
+    for i, member in enumerate(data.get("program_committee", [])):
+        name = member.get("name", "") if isinstance(member, dict) else ""
+        path = f"program_committee[{i}].name"
+        if name and name.lower() in source_lower:
+            confidence[path] = "high"
+        elif name and _fuzzy_found_in_source(name, source_text, threshold=80):
+            confidence[path] = "medium"
+        else:
+            confidence[path] = "low"
+
     return confidence
 
 
@@ -474,6 +500,20 @@ def nullify_low_confidence(
         else:
             logger.warning("Removing hallucinated speaker: %s", sp.get("name"))
     data["keynote_speakers"] = filtered
+
+    # Remove program committee members whose name is low-confidence
+    committee = data.get("program_committee", [])
+    filtered_pc = []
+    for i, member in enumerate(committee):
+        path = f"program_committee[{i}].name"
+        if confidence.get(path) != "low":
+            filtered_pc.append(member)
+        else:
+            logger.warning(
+                "Removing hallucinated committee member: %s",
+                member.get("name") if isinstance(member, dict) else member,
+            )
+    data["program_committee"] = filtered_pc
 
     return data
 

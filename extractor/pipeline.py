@@ -47,6 +47,7 @@ def _build_output(
         },
         "topics": d.get("topics", []),
         "keynote_speakers": d.get("keynote_speakers", []),
+        "program_committee": d.get("program_committee", []),
         "publication": {
             "publisher": b.get("publisher"),
             "series": b.get("series"),
@@ -78,6 +79,7 @@ def _empty_result(url: str) -> Dict[str, Any]:
         "deadlines": {"submission": None, "notification": None, "camera_ready": None},
         "topics": [],
         "keynote_speakers": [],
+        "program_committee": [],
         "publication": {"publisher": None, "series": None},
     }
 
