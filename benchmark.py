@@ -186,7 +186,10 @@ def run_benchmark(
                 status = "ok"
                 error = None
             except Exception as exc:
-                logger.error("Failed: %s", exc)
+                logger.exception(
+                    "Extraction failed for url=%s model=%s backend=%s",
+                    url, display_model, backend,
+                )
                 result = {"data": {}, "confidence": {}, "warnings": [str(exc)], "meta": {}}
                 status = "error"
                 error = str(exc)
