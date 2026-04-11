@@ -87,6 +87,21 @@ CONFERENCE_SCHEMA = {
 
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
+_MONTH_NAMES: List[Tuple[str, str]] = [
+    ("January", "Jan"),
+    ("February", "Feb"),
+    ("March", "Mar"),
+    ("April", "Apr"),
+    ("May", "May"),
+    ("June", "Jun"),
+    ("July", "Jul"),
+    ("August", "Aug"),
+    ("September", "Sep"),
+    ("October", "Oct"),
+    ("November", "Nov"),
+    ("December", "Dec"),
+]
+
 
 def _parse_date(s: Optional[str]) -> Optional[date]:
     if s and _DATE_RE.match(s):
@@ -95,6 +110,173 @@ def _parse_date(s: Optional[str]) -> Optional[date]:
         except ValueError:
             pass
     return None
+
+
+def _ordinal_suffix(day: int) -> str:
+    if 10 <= day % 100 <= 20:
+        return "th"
+    return {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+
+
+def _generate_date_variants(
+    iso_date: str,
+) -> Tuple[List[str], List[str], str]:
+    """
+    Generate surface-form variants of an ISO date (``YYYY-MM-DD``).
+
+    Returns ``(full_variants, partial_variants, year)``:
+      - ``full_variants``: lowercased complete date strings (year + day + month)
+      - ``partial_variants``: lowercased day+month fragments (e.g. ``"august 19"``),
+        used to recognise date-range text like ``"19-21 August 2026"`` where
+        neither individual date appears as a full substring
+      - ``year``: the year as a 4-digit string, or ``""`` if the input is
+        not a valid ISO date
+    """
+    dt = _parse_date(iso_date)
+    if dt is None:
+        return [], [], ""
+
+    year = f"{dt.year:04d}"
+    month_full, month_abbr = _MONTH_NAMES[dt.month - 1]
+
+    day_int = dt.day
+    month_int = dt.month
+    day_num = str(day_int)               # "19", "5"
+    day_pad = f"{day_int:02d}"           # "19", "05"
+    month_num = str(month_int)           # "8"
+    month_pad = f"{month_int:02d}"       # "08"
+    day_ord = f"{day_int}{_ordinal_suffix(day_int)}"  # "19th", "21st"
+
+    day_forms = {day_num, day_pad, day_ord}
+
+    full: List[str] = []
+
+    # Month-name forms: "August 19, 2026" / "19 August 2026" / "19th of August, 2026"
+    for m_name in (month_full, month_abbr):
+        for d in day_forms:
+            full.append(f"{m_name} {d}, {year}")
+            full.append(f"{m_name} {d} {year}")
+            full.append(f"{d} {m_name} {year}")
+            full.append(f"{d} {m_name}, {year}")
+            full.append(f"{d} of {m_name} {year}")
+            full.append(f"{d} of {m_name}, {year}")
+
+    # Purely numeric forms in the common separators: "-", "/", "."
+    for sep in ("-", "/", "."):
+        full.append(f"{year}{sep}{month_pad}{sep}{day_pad}")
+        full.append(f"{day_pad}{sep}{month_pad}{sep}{year}")
+        full.append(f"{month_pad}{sep}{day_pad}{sep}{year}")
+        # Non-zero-padded variants (e.g. "8/19/2026")
+        if month_num != month_pad or day_num != day_pad:
+            full.append(f"{day_num}{sep}{month_num}{sep}{year}")
+            full.append(f"{month_num}{sep}{day_num}{sep}{year}")
+
+    # Day+month fragments — used as a fallback for date ranges
+    partial: List[str] = []
+    for m_name in (month_full, month_abbr):
+        for d in day_forms:
+            partial.append(f"{m_name} {d}")
+            partial.append(f"{d} {m_name}")
+            partial.append(f"{d} of {m_name}")
+
+    return (
+        [v.lower() for v in full],
+        [p.lower() for p in partial],
+        year,
+    )
+
+
+_MONTH_LOOKUP: Dict[str, int] = {
+    name.lower(): i + 1
+    for i, (full_name, abbr) in enumerate(_MONTH_NAMES)
+    for name in (full_name, abbr)
+}
+
+_MONTH_ALT = "|".join(sorted(_MONTH_LOOKUP.keys(), key=len, reverse=True))
+# Ranges like "August 19-21, 2026" / "August 19 – 21 2026"
+_RANGE_MONTH_FIRST_RE = re.compile(
+    rf"\b({_MONTH_ALT})\s+(\d{{1,2}})\s*[-–—]\s*(\d{{1,2}})\s*,?\s*(\d{{4}})\b",
+    re.IGNORECASE,
+)
+# Ranges like "19-21 August 2026" / "19 – 21 Aug, 2026"
+_RANGE_MONTH_LAST_RE = re.compile(
+    rf"\b(\d{{1,2}})\s*[-–—]\s*(\d{{1,2}})\s+({_MONTH_ALT})\s*,?\s+(\d{{4}})\b",
+    re.IGNORECASE,
+)
+
+
+def _date_in_text_range(iso_date: str, source_text: str) -> bool:
+    """
+    True if *iso_date* is contained in a month-name day-range appearing in
+    *source_text*, e.g. ``"August 19-21, 2026"`` or ``"19-21 August 2026"``.
+    """
+    dt = _parse_date(iso_date)
+    if dt is None:
+        return False
+
+    for m in _RANGE_MONTH_FIRST_RE.finditer(source_text):
+        month_name, d_start, d_end, year_str = m.groups()
+        month_num = _MONTH_LOOKUP.get(month_name.lower())
+        try:
+            if (
+                month_num == dt.month
+                and int(year_str) == dt.year
+                and int(d_start) <= dt.day <= int(d_end)
+            ):
+                return True
+        except ValueError:
+            continue
+
+    for m in _RANGE_MONTH_LAST_RE.finditer(source_text):
+        d_start, d_end, month_name, year_str = m.groups()
+        month_num = _MONTH_LOOKUP.get(month_name.lower())
+        try:
+            if (
+                month_num == dt.month
+                and int(year_str) == dt.year
+                and int(d_start) <= dt.day <= int(d_end)
+            ):
+                return True
+        except ValueError:
+            continue
+
+    return False
+
+
+def _date_found_in_source(iso_date: str, source_text: str) -> bool:
+    """
+    True if *iso_date* (``YYYY-MM-DD``) appears in *source_text* in any
+    common surface form.
+
+    Strategy:
+      1. Generate plausible complete representations (``August 19, 2026``,
+         ``19/08/2026``, ``2026-08-19``, ...) and look for a substring match.
+      2. Look for a month-name day-range that brackets the date
+         (``August 19-21, 2026`` / ``19-21 August 2026``).
+      3. Fallback: year present AND a ``day + month`` fragment anywhere in
+         the text.
+    """
+    if not iso_date or not source_text:
+        return False
+    full, partial, year = _generate_date_variants(iso_date)
+    if not year:
+        return False
+
+    src = source_text.lower()
+
+    for v in full:
+        if v in src:
+            return True
+
+    if _date_in_text_range(iso_date, source_text):
+        return True
+
+    if year in src:
+        for p in partial:
+            if p in src:
+                return True
+
+    return False
 
 
 def _fuzzy_found_in_source(value: str, source_text: str, threshold: int = 70) -> bool:
@@ -203,11 +385,28 @@ def verify_against_source(
         ("publication.publisher", data.get("publication", {}).get("publisher")),
     ]
 
+    # Date fields store normalized ISO dates ("YYYY-MM-DD") but the source
+    # text rarely uses that exact format, so they need format-aware matching.
+    date_paths = {
+        "dates.start_date",
+        "dates.end_date",
+        "deadlines.submission",
+        "deadlines.notification",
+        "deadlines.camera_ready",
+    }
+
     source_lower = source_text.lower() if source_text else ""
 
     for path, value in checks:
         if value is None:
             confidence[path] = "high"  # null is a valid "I don't know"
+            continue
+
+        if path in date_paths:
+            if _date_found_in_source(str(value).strip(), source_text):
+                confidence[path] = "high"
+            else:
+                confidence[path] = "low"
             continue
 
         val_lower = str(value).lower().strip()
