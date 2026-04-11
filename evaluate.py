@@ -68,7 +68,13 @@ import os
 import sys
 from typing import Any, Dict, List, Tuple
 
-from eval.metrics import ExampleResult, ModelMetrics, aggregate, evaluate_one
+from eval.metrics import (
+    ExampleResult,
+    ModelMetrics,
+    _classify_entry_status,
+    aggregate,
+    evaluate_one,
+)
 from eval.report import format_summary, model_metrics_to_dict
 
 logger = logging.getLogger(__name__)
@@ -196,20 +202,39 @@ def evaluate_model(
     """
     Run ``evaluate_one`` for every entry that has a matching gold file.
     Returns aggregated metrics plus the per-example results.
+
+    Entries with a failed fetch (scraper got 0 pages) or an extraction
+    crash are excluded from the scoring pass — they leave the model
+    without input, so counting their empty predictions as misses would
+    unfairly tank recall. ``aggregate`` still sees these entries via
+    ``matched_entries`` so it can report ``fetch_failures`` and
+    ``errors`` counts alongside the scored metrics.
     """
     per_example: List[ExampleResult] = []
-    matched_entries: List[Dict[str, Any]] = []
-    missing: List[str] = []
+    matched_entries: List[Dict[str, Any]] = []  # all gold-matched entries
+    missing: List[str] = []        # entries that had no gold at all
+    fetch_failed: List[str] = []   # gold-matched but scraper got nothing
+    crashed: List[str] = []        # gold-matched but extract_conference raised
 
     for entry in entries:
-        key = _normalize_url(entry.get("url", ""))
+        url = entry.get("url", "?")
+        key = _normalize_url(url)
         if key not in gold:
-            missing.append(entry.get("url", "?"))
+            missing.append(url)
             continue
+        matched_entries.append(entry)
+
+        status = _classify_entry_status(entry)
+        if status == "fetch_failed":
+            fetch_failed.append(url)
+            continue
+        if status == "error":
+            crashed.append(url)
+            continue
+
         gold_doc = gold[key]
         ex = evaluate_one(gold_doc, entry, aliases=gold_doc.get("aliases"))
         per_example.append(ex)
-        matched_entries.append(entry)
 
     metrics = aggregate(model, per_example, entries=matched_entries)
 
@@ -229,9 +254,23 @@ def evaluate_model(
                         )
         if missing:
             print(f"  (skipped {len(missing)} URL(s) with no gold: {missing})")
+        if fetch_failed:
+            print(f"  (excluded {len(fetch_failed)} URL(s) with fetch failures: {fetch_failed})")
+        if crashed:
+            print(f"  (excluded {len(crashed)} URL(s) that crashed: {crashed})")
 
     if missing:
         logger.info("%s: %d URL(s) had no gold — excluded from metrics", model, len(missing))
+    if fetch_failed:
+        logger.info(
+            "%s: %d URL(s) excluded from metrics due to fetch failures: %s",
+            model, len(fetch_failed), fetch_failed,
+        )
+    if crashed:
+        logger.info(
+            "%s: %d URL(s) excluded from metrics due to extraction crashes: %s",
+            model, len(crashed), crashed,
+        )
 
     return metrics, per_example
 

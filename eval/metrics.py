@@ -283,14 +283,17 @@ class ModelMetrics:
     model: str
     backend: str = ""
     vllm_extra_args: List[str] = field(default_factory=list)
-    n_examples: int = 0
+    n_examples: int = 0             # examples actually scored
     overall: Counts = field(default_factory=Counts)
     by_category: Dict[str, Counts] = field(default_factory=dict)
     by_field: Dict[str, Counts] = field(default_factory=dict)
     # Secondary metrics
     avg_latency_sec: float = 0.0
     avg_attempts: float = 0.0
-    errors: int = 0
+    errors: int = 0                 # runs that raised an exception
+    fetch_failures: int = 0         # runs where the scraper got 0 pages —
+                                    # the model had no input, so they're
+                                    # excluded from precision/recall
 
     @property
     def macro_f1_categories(self) -> float:
@@ -299,6 +302,25 @@ class ModelMetrics:
         if not cats:
             return 0.0
         return sum(self.by_category[c].f1 for c in cats) / len(cats)
+
+
+def _classify_entry_status(entry: Dict[str, Any]) -> str:
+    """
+    Normalize an entry's status into one of "ok" / "fetch_failed" / "error".
+
+    ``status == "fetch_failed"`` is the post-hoc marker benchmark.py adds
+    when the scraper returned zero pages. Older runs don't have it — for
+    those we fall back to checking ``pages_fetched == 0`` so backward
+    compatibility is preserved.
+    """
+    status = entry.get("status", "ok")
+    if status == "error":
+        return "error"
+    if status == "fetch_failed":
+        return "fetch_failed"
+    if entry.get("pages_fetched", 1) == 0:
+        return "fetch_failed"
+    return "ok"
 
 
 def aggregate(
@@ -310,6 +332,13 @@ def aggregate(
     Collapse per-example field outcomes into overall / per-category / per-field
     counts.  ``entries`` are the original benchmark result dicts (used for
     latency / attempts / backend metadata); pass None to skip secondary stats.
+
+    ``entries`` should be the full set of benchmark runs that had a
+    matching gold file (including failed ones), so ``errors`` and
+    ``fetch_failures`` are counted accurately. ``example_results`` should
+    only cover runs that were actually scored (i.e. excluding fetch
+    failures and crashes), so the P/R/F1 numbers aren't polluted by runs
+    where the model had no input.
     """
     metrics = ModelMetrics(model=model, n_examples=len(example_results))
 
@@ -321,14 +350,15 @@ def aggregate(
             metrics.by_field.setdefault(fr.path, Counts()).add(c)
 
     if entries:
-        ok_entries = [e for e in entries if e.get("status") == "ok"]
-        metrics.errors = len(entries) - len(ok_entries)
+        statuses = [_classify_entry_status(e) for e in entries]
+        ok_entries = [e for e, s in zip(entries, statuses) if s == "ok"]
+        metrics.errors = sum(1 for s in statuses if s == "error")
+        metrics.fetch_failures = sum(1 for s in statuses if s == "fetch_failed")
         if ok_entries:
             metrics.avg_latency_sec = sum(e.get("elapsed_sec", 0) for e in ok_entries) / len(ok_entries)
             metrics.avg_attempts = sum(e.get("attempts", 0) for e in ok_entries) / len(ok_entries)
         # Backend / extra args (take from first entry)
-        if entries:
-            metrics.backend = entries[0].get("backend", "")
-            metrics.vllm_extra_args = entries[0].get("vllm_extra_args") or []
+        metrics.backend = entries[0].get("backend", "")
+        metrics.vllm_extra_args = entries[0].get("vllm_extra_args") or []
 
     return metrics

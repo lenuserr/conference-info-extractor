@@ -195,6 +195,17 @@ def run_benchmark(
                 error = str(exc)
             elapsed = round(time.time() - t0, 1)
 
+            # Distinguish fetch failures (scraper got nothing) from real
+            # extraction crashes and from successful runs. A fetch failure
+            # leaves the model with no input, so blaming the model for
+            # empty output would tank its metrics — evaluate.py excludes
+            # this status from the per-field counts.
+            if status == "ok" and result.get("meta", {}).get("pages_fetched", 0) == 0:
+                status = "fetch_failed"
+                warnings_list = result.get("warnings") or []
+                error = "; ".join(warnings_list) or "no pages fetched"
+                logger.warning("Fetch failed for %s — marking status=fetch_failed", url)
+
             data = result["data"]
             confidence = result["confidence"]
             warnings = result["warnings"]
@@ -235,6 +246,8 @@ def run_benchmark(
             # Print progress
             if status == "ok":
                 print(f"  -> {fill_pct}% filled, {len(low_fields)} hallucinated, {elapsed}s")
+            elif status == "fetch_failed":
+                print(f"  -> FETCH FAILED: {error} ({elapsed}s)")
             else:
                 print(f"  -> ERROR: {error} ({elapsed}s)")
 
@@ -285,6 +298,8 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
             e = lookup.get((m, url))
             if e is None:
                 cell = "-"
+            elif e["status"] == "fetch_failed":
+                cell = "FETCH"
             elif e["status"] != "ok":
                 cell = "ERR"
             else:
