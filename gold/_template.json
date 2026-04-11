@@ -1,0 +1,35 @@
+{
+  "url": "https://example-conference.org",
+  "notes": "Template gold file. Copy, rename, fill in values verified against the live site. Use null / [] when the field is genuinely absent on the site — that is how the evaluator distinguishes a missed extraction from a correct abstention. Filename is arbitrary; entries are joined to benchmark results by the 'url' field.",
+  "ground_truth": {
+    "conference": {
+      "full_name": null,
+      "acronym": null,
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": null,
+      "end_date": null
+    },
+    "venue": {
+      "city": null,
+      "country": null
+    },
+    "deadlines": {
+      "submission": null,
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [],
+    "keynote_speakers": [],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [],
+    "venue.city": [],
+    "venue.country": []
+  }
+}
