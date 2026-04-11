@@ -1,0 +1,3805 @@
+[
+  {
+  "url": "https://aiimlab.org/events/ECML_PKDD_2026_WIPE-OUT_2_Workshop_on_Machine_Unlearning_and_Privacy_Preservation",
+  "ground_truth": {
+    "conference": {
+      "full_name": "WIPE-OUT 2026: Machine Unlearning Workshop at ECML-PKDD – 2nd Workshop on Machine Unlearning and Privacy Preservation",
+      "acronym": "WIPE-OUT 2",
+      "edition_number": 2
+    },
+    "dates": {
+      "start_date": "2026-09-07",
+      "end_date": "2026-09-07"
+    },
+    "venue": {
+      "city": "Naples",
+      "country": "Italy"
+    },
+    "deadlines": {
+      "submission": "2026-06-05",
+      "notification": "2026-07-05",
+      "camera_ready": "2026-07-10"
+    },
+    "topics": [
+      "machine unlearning",
+      "privacy preservation",
+      "data privacy",
+      "machine learning security",
+      "unlearning in LLMs",
+      "unlearning in computer vision",
+      "recommender systems",
+      "privacy and compliance",
+      "systems and scalability",
+      "evaluation and benchmarking"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Sijia Liu",
+        "affiliation": "Michigan State University",
+        "country": "United States"
+      }
+    ],
+    "program_committee": [
+      {"name": "Hongzhi Yin", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Ximing Lu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Wei Yuan", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Jiaao Chen", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Jiancheng Liu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "S. Welleck", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Xiaojun Xu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Diyi Yang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Sijia Liu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Liwei Jiang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Shashwat Goel", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Pratyush Maini", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Jinghan Jia", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Jack Hessel", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "P. Kumaraguru", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Zhili Feng", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Mohan S. Kankanhalli", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Lianhui Qin", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Ronen Eldan", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Avi Schwarzschild", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Vikram S Chundawat", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Peter West", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "M. Russinovich", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Zachary Chase Lipton", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Ayush K Tarun", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Prithviraj Ammanabrolu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "O. Milenkovic", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "J. Kolter", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Gaowen Liu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yejin Choi", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Eli Chien", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Parikshit Ram", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Murari Mandal", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Phi-Le Nguyen", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yi Liu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Chen Wu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Tomasz Korbak", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Alan Wee-Chung Liew", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Lei Xu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Sencun Zhu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Kejian Shi", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yuguang Yao", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Xingliang Yuan", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "P. Mitra", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Angelica Chen", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Sungmin Cha", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Cong Wang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Ambrish Rawat", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Rasika Bhalerao", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Moontae Lee", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yimeng Zhang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "S. Kadhe", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "C. L. Buckley", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Nicolas Papernot", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yiwen Jiang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Alice Gatti", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Jason Phang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Joel Jang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Shenglong Liu", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Rishub Tamirisa", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Sam Bowman", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Dongkeun Yoon", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Tao Zhao", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Bhrugu Bharathi", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Ethan Perez", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Sohee Yang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Wei Li", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Andy Zou", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Q. Nguyen", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Lajanugen Logeswaran", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Xianzhou Gao", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Mantas Mazeika", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yihua Zhang", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Minjoon Seo", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Matthew Jagielski", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "P. Triantafillou", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "T. Huynh", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Eleni Triantafillou", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Chongyu Fan", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Nathalie Baracaldo", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "T. Nguyen", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Yuanshun Yao", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "M. Kurmanji", "affiliation": null, "country": null, "role": "PC Member"},
+      {"name": "Stephen Casper", "affiliation": null, "country": null, "role": "PC Member"}
+    ],
+    "publication": {
+      "publisher": "Springer",
+      "series": "Communications in Computer and Information Science (CCIS)"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "Workshop on Machine Unlearning and Privacy Preservation",
+      "WIPE-OUT 2026",
+      "Machine Unlearning Workshop at ECML-PKDD 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://ipcl.asia/index.html",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Asia Symposium on Intelligent Perception, Computing & Learning for Real-World Systems",
+      "acronym": "IPCL 2026",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-08-19",
+      "end_date": "2026-08-21"
+    },
+    "venue": {
+      "city": "Istanbul",
+      "country": "Türkiye"
+    },
+    "deadlines": {
+      "submission": "2026-05-18",
+      "notification": "2026-06-19",
+      "camera_ready": null
+    },
+    "topics": [
+      "imaging and computational sensing for intelligent perception",
+      "photonics, optics and quantum enablers for AI systems",
+      "sensing-imaging-communications systems",
+      "learning under real-world constraints",
+      "perception-to-decision computing",
+      "deployed systems and benchmarks",
+      "sensor fusion",
+      "edge computing",
+      "medical imaging",
+      "robotics and autonomous systems"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Majdi Mansouri",
+        "affiliation": "Sultan Qaboos University",
+        "country": "Oman"
+      },
+      {
+        "name": "Alireza Daneshkhah",
+        "affiliation": "Emirates Aviation University",
+        "country": "United Arab Emirates"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Mengqi Ji",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Program Committee Chair"
+      },
+      {
+        "name": "Alireza Daneshkhah",
+        "affiliation": "Emirates Aviation University",
+        "country": "UAE",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "An Dinh Le",
+        "affiliation": "University of California, San Diego",
+        "country": "USA",
+        "role": "Publicity Chair"
+      },
+
+      {"name": "Hadeel Kassim Wadi Aljobouri", "affiliation": "Al-Nahrain University", "country": "Iraq", "role": "PC Member"},
+      {"name": "Abdulbasit Al-Azzawi", "affiliation": "University of Diyala-Diyala", "country": "Iraq", "role": "PC Member"},
+      {"name": "Ainur Akhmediyarova", "affiliation": "Satbayev University", "country": "Kazakhstan", "role": "PC Member"},
+      {"name": "Yousri Attia Mohamed Abouelenein", "affiliation": "Damietta University", "country": "Egypt", "role": "PC Member"},
+      {"name": "Wagdi Rashad Ali Bin-Hady", "affiliation": "Hadhramout University", "country": "Yemen", "role": "PC Member"},
+      {"name": "Giuseppe Ciaburro", "affiliation": "Pegaso University", "country": "Italy", "role": "PC Member"},
+      {"name": "Yan Chen", "affiliation": "Ruhr University Bochum", "country": "Germany", "role": "PC Member"},
+      {"name": "Yining Chen", "affiliation": "Zhejiang University", "country": "China", "role": "PC Member"},
+      {"name": "Jiaxin Cai", "affiliation": "Xiamen University of Technology", "country": "China", "role": "PC Member"},
+      {"name": "Amira Echtioui", "affiliation": "University of Carthage", "country": "Tunisia", "role": "PC Member"},
+      {"name": "Xiyou Fu", "affiliation": "Shenzhen University", "country": "China", "role": "PC Member"},
+      {"name": "Sheng Feng", "affiliation": "Shaoxing University", "country": "China", "role": "PC Member"},
+      {"name": "Shukor Sanim Mohd Fauzi", "affiliation": "Universiti Teknologi Mara - Uitm", "country": "Malaysia", "role": "PC Member"},
+      {"name": "Krishnendu Guha", "affiliation": "University College Cork (UCC)", "country": "Ireland", "role": "PC Member"},
+      {"name": "Jifeng Guo", "affiliation": "Beihang University", "country": "China", "role": "PC Member"},
+      {"name": "Minh Long Hoang", "affiliation": "University of Parma", "country": "Italy", "role": "PC Member"},
+      {"name": "Bang Huang", "affiliation": "King Abdullah University of Science and Technology (KAUST)", "country": "UAE", "role": "PC Member"},
+      {"name": "Abdullah Ayub Khan", "affiliation": "Bahria University, Karachi Campus", "country": "Pakistan", "role": "PC Member"},
+      {"name": "Eylem Kılıç", "affiliation": "Van Yüzüncü Yıl University", "country": "Türkiye", "role": "PC Member"},
+      {"name": "Mohsen Kazemian", "affiliation": "University of Applied Sciences and Arts", "country": "Germany", "role": "PC Member"},
+      {"name": "Siwei Lou", "affiliation": "Zhejiang University", "country": "China", "role": "PC Member"},
+      {"name": "Qian Li", "affiliation": "Xi’an Jiaotong University", "country": "China", "role": "PC Member"},
+      {"name": "Majdi Mansouri", "affiliation": "Sultan Qaboos University", "country": "Oman", "role": "PC Member"},
+      {"name": "P. Murugeswari", "affiliation": "Karpagam College of Engineering, Coimbatore", "country": "India", "role": "PC Member"},
+      {"name": "Aleksandar Milenkovic", "affiliation": "University of Nis", "country": "Serbia", "role": "PC Member"},
+      {"name": "Dobrea Dan Marius", "affiliation": "\"Gheorghe Asachi\" Technical University of Iasi", "country": "Romania", "role": "PC Member"},
+      {"name": "Saša Milojević", "affiliation": "Faculty of Engineering University of Kragujevac", "country": "Serbia", "role": "PC Member"},
+      {"name": "Muhammad Tariq Mahmood", "affiliation": "Korea University of Technology and Education", "country": "Korea", "role": "PC Member"},
+      {"name": "Muhammad Nouman Noor", "affiliation": "National University of Computer & Emerging Sciences, Islamabad Campus", "country": "Pakistan", "role": "PC Member"},
+      {"name": "B. Prabadevi", "affiliation": "M S Ramaiah University of Applied Sciences", "country": "India", "role": "PC Member"},
+      {"name": "Rabia Saleem", "affiliation": "University of Leicester", "country": "UK", "role": "PC Member"},
+      {"name": "Ling-Feng Shi", "affiliation": "Xidian University", "country": "China", "role": "PC Member"},
+      {"name": "Massimo Salvi", "affiliation": "Polytechnic University of Turin", "country": "Italy", "role": "PC Member"},
+      {"name": "Manmeet Mahinderjit Singh", "affiliation": "University Sains Malaysia", "country": "Malaysia", "role": "PC Member"},
+      {"name": "Jing Shi", "affiliation": "University of Cincinnati", "country": "USA", "role": "PC Member"},
+      {"name": "Sina Sarfarazi", "affiliation": "University of Naples Federico II", "country": "Italy", "role": "PC Member"},
+      {"name": "He Wang", "affiliation": "University of Chinese Academy of Sciences (UCAS)", "country": "China", "role": "PC Member"},
+      {"name": "Qichun Zhang", "affiliation": "Buckinghamshire New University", "country": "UK", "role": "PC Member"}
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "IPCL 2026",
+      "Asia Symposium on Intelligent Perception, Computing & Learning for Real-World Systems (IPCL 2026)"
+    ],
+    "venue.city": [],
+    "venue.country": [
+      "Turkey"
+    ]
+  }
+},
+{
+  "url": "https://icre.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 10th International Conference on Reliability Engineering",
+      "acronym": "ICRE 2026",
+      "edition_number": 10
+    },
+    "dates": {
+      "start_date": "2026-07-19",
+      "end_date": "2026-07-21"
+    },
+    "venue": {
+      "city": "Hangzhou",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": "2026-04-10",
+      "notification": "2026-05-05",
+      "camera_ready": "2026-05-20"
+    },
+    "topics": [
+      "reliability engineering",
+      "artificial intelligence for reliability",
+      "fault diagnosis and prognostics",
+      "uncertainty quantification",
+      "health management systems",
+      "industrial AI and maintenance",
+      "digital twin",
+      "aerospace and industrial systems",
+      "renewable energy systems",
+      "risk and resilience analysis"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Francesco Di Maio",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy"
+      },
+      {
+        "name": "Shaoping Wang",
+        "affiliation": "Beihang University",
+        "country": "China"
+      },
+      {
+        "name": "Bin Wang",
+        "affiliation": "Wuhan University of Technology",
+        "country": "China"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Enrico Zio",
+        "affiliation": "Mines Paris-PSL University; Politecnico di Milano",
+        "country": "France / Italy",
+        "role": "General Chair"
+      },
+      {
+        "name": "R. Kang",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "General Chair"
+      },
+
+      {
+        "name": "Janet Lin",
+        "affiliation": "Mälardalen University",
+        "country": "Sweden",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Piero Baraldi",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Francesco Di Maio",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Wei Wang",
+        "affiliation": "City University of Hong Kong",
+        "country": "China",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Zhiguo Zeng",
+        "affiliation": "Centralesupélec, Université Paris-Saclay",
+        "country": "France",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Yiping Fang",
+        "affiliation": "Centralesupélec, Université Paris-Saclay",
+        "country": "France",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Sameer Al-Dahidi",
+        "affiliation": "German Jordanian University",
+        "country": "Jordan",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Guofu Zhai",
+        "affiliation": "Harbin Institute of Technology",
+        "country": "China",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "David Coit",
+        "affiliation": "Rutgers University",
+        "country": "USA",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Shaoping Wang",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Liudong Xing",
+        "affiliation": "University of Massachusetts",
+        "country": "USA",
+        "role": "Advisory Committee"
+      },
+      {
+        "name": "Mohammad Pourgol",
+        "affiliation": "University of Maryland",
+        "country": "USA",
+        "role": "Advisory Committee"
+      },
+
+      {
+        "name": "Yang Hu",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "Ibrahim Ahmed",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "Masoud Naseri",
+        "affiliation": "Tromso University",
+        "country": "Norway",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "Zhen Chen",
+        "affiliation": "Shanghai Jiao Tong University",
+        "country": "China",
+        "role": "Technical Program Committee Chair"
+      },
+
+      {
+        "name": "Tianpei Zu",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Organizing Chair"
+      },
+      {
+        "name": "Huixing Meng",
+        "affiliation": "Beijing Institute of Technology",
+        "country": "China",
+        "role": "Organizing Chair"
+      },
+
+      {
+        "name": "Yuhan Kang",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Yixuan Wu",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Junnan Yang",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Xiaoyu Jiang",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Zhouteng Ye",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Hao Yu",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Di Su",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Yanhui Lin",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Jie Liu",
+        "affiliation": null,
+        "country": null,
+        "role": "Organizing Committee Member"
+      },
+
+      {
+        "name": "Chenyang Lai",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy",
+        "role": "Publicity Co-chair"
+      },
+      {
+        "name": "Yixuan Wu",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Publicity Co-chair"
+      },
+      {
+        "name": "Chao Zhao",
+        "affiliation": "Northeastern University",
+        "country": "China",
+        "role": "Publicity Co-chair"
+      },
+
+      {
+        "name": "Yang Li",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Lanxiang Liu",
+        "affiliation": "Harbin Institute of Technology",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Danyang Han",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Publication Chair"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICRE 2026",
+      "International Conference on Reliability Engineering 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://nlp2026.org/dscc/index",
+  "ground_truth": {
+    "conference": {
+      "full_name": "7th International Conference on Data Science and Cloud Computing",
+      "acronym": "DSCC 2026",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-04-18",
+      "end_date": "2026-04-19"
+    },
+    "venue": {
+      "city": "Melbourne",
+      "country": "Australia"
+    },
+    "deadlines": {
+      "submission": "2026-04-11",
+      "notification": "2026-04-16",
+      "camera_ready": "2026-04-17"
+    },
+    "topics": [
+      "artificial intelligence and machine learning",
+      "data science and analytics",
+      "computer vision and multimodal AI",
+      "cloud computing and distributed systems",
+      "security and privacy in AI",
+      "edge computing and IoT",
+      "quantum computing",
+      "MLOps and data platforms"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {"name": "Amal Azeroual", "affiliation": "Center of Guidance and Educational Planning", "country": "Morocco", "role": "PC Member"},
+      {"name": "Atanu Nag", "affiliation": "IFTM University", "country": "India", "role": "PC Member"},
+      {"name": "Alex Mathew", "affiliation": "Bethany College", "country": "USA", "role": "PC Member"},
+      {"name": "Ali H. Wheeb", "affiliation": "University of Baghdad", "country": "Iraq", "role": "PC Member"},
+      {"name": "Alireza Valipour Baboli", "affiliation": "University Technical and Vocational, Babol", "country": "Iran", "role": "PC Member"},
+      {"name": "Anand Nayyar", "affiliation": "Duy Tan University", "country": "Vietnam", "role": "PC Member"},
+      {"name": "Adelaide Figueiredo", "affiliation": "University of Porto", "country": "Portugal", "role": "PC Member"},
+      {"name": "Assem Moussa", "affiliation": "lambustech university", "country": "Egypt", "role": "PC Member"},
+      {"name": "Bhagyashree S R", "affiliation": "ATME College of Engineering", "country": "India", "role": "PC Member"},
+      {"name": "Chien-Chang Chou", "affiliation": "National Kaohsiung University of Science and Technology", "country": "Taiwan", "role": "PC Member"},
+      {"name": "Christian Mancas", "affiliation": "Ovidius University at Constanta", "country": "Romania", "role": "PC Member"},
+      {"name": "Dariusz Jacek Jakobczak", "affiliation": "Koszalin University of Technology", "country": "Poland", "role": "PC Member"},
+      {"name": "Deepali Gupta", "affiliation": "Chitkara University, Punjab", "country": "India", "role": "PC Member"},
+      {"name": "Dongping Tian", "affiliation": "Baoji University of Arts and Sciences", "country": "China", "role": "PC Member"},
+      {"name": "Francesco Zirilli", "affiliation": "Sapienza Università di Roma (retired)", "country": "Italy", "role": "PC Member"},
+      {"name": "Ghani Albaali", "affiliation": "Princess Sumaya University for Technology", "country": "Jordan", "role": "PC Member"},
+      {"name": "Gajendra Sharma", "affiliation": "Kathmandu University", "country": "Nepal", "role": "PC Member"},
+      {"name": "Harikumar Rajaguru", "affiliation": "Bannari Amman Institute of Technology", "country": "India", "role": "PC Member"},
+      {"name": "Haruna Abdu", "affiliation": "Federal University Lokoja", "country": "Nigeria", "role": "PC Member"},
+      {"name": "Hedayat Omidvar", "affiliation": "Research & Technology Dept", "country": "Iran", "role": "PC Member"},
+      {"name": "Isa Maleki", "affiliation": "Islamic Azad University", "country": "Iran", "role": "PC Member"},
+      {"name": "Jagadeesh HS", "affiliation": "M. Visvesvaraya Institute of Technology", "country": "India", "role": "PC Member"},
+      {"name": "Jue-Sam Chou", "affiliation": "Nanhua University", "country": "Taiwan", "role": "PC Member"},
+      {"name": "Jawad K. Ali", "affiliation": "University of Technology", "country": "Iraq", "role": "PC Member"},
+      {"name": "Kamel Hussein Rahouma", "affiliation": "Minia University", "country": "Egypt", "role": "PC Member"},
+      {"name": "Kousik Dasgupta", "affiliation": "Kalyani Government Engineering College", "country": "India", "role": "PC Member"},
+      {"name": "Loc Nguyen", "affiliation": "Loc Nguyen's Academic Network", "country": "Vietnam", "role": "PC Member"},
+      {"name": "Leila Ben Ayed", "affiliation": "University of Manouba", "country": "Tunisia", "role": "PC Member"},
+      {"name": "Luisa Maria Arvide Cambra", "affiliation": "University of Almeria", "country": "Spain", "role": "PC Member"},
+      {"name": "Mohammed Alchaita", "affiliation": "Al-Rasheed Private University for Science and Technology", "country": "Syria", "role": "PC Member"},
+      {"name": "Mustafa S. Abd", "affiliation": "Baghdad University", "country": "Iraq", "role": "PC Member"},
+      {"name": "Nu Nu War", "affiliation": "University of Co-operative and Management", "country": "Myanmar", "role": "PC Member"},
+      {"name": "Narasimhan", "affiliation": "Elizabeth City State University", "country": "USA", "role": "PC Member"},
+      {"name": "Oleksii K. Tyshchenko", "affiliation": "University of Ostrava", "country": "Czech Republic", "role": "PC Member"},
+      {"name": "Osakue S. Omoera", "affiliation": "University of Nigeria, Abuja", "country": "Nigeria", "role": "PC Member"},
+      {"name": "Priyadarshini Radhakrishnan", "affiliation": "Columbus, Ohio", "country": "USA", "role": "PC Member"},
+      {"name": "Pascal Lorenz", "affiliation": "University of Haute Alsace", "country": "France", "role": "PC Member"},
+      {"name": "Ramakrishnan", "affiliation": "Drmgr Educational And Research Institute", "country": "India", "role": "PC Member"},
+      {"name": "Shicheng Zu", "affiliation": "Huawei Technologies", "country": "China", "role": "PC Member"},
+      {"name": "Siham Benhadou", "affiliation": "Université Hassan II", "country": "Morocco", "role": "PC Member"},
+      {"name": "Siddhartha Bhattacharyya", "affiliation": "VSB Technical University of Ostrava", "country": "Czech Republic", "role": "PC Member"},
+      {"name": "Tasher Ali Sheikh", "affiliation": "Assam down town University", "country": "India", "role": "PC Member"},
+      {"name": "Venkata Ramesh Induru", "affiliation": "Piorion Solutions Inc", "country": "USA", "role": "PC Member"},
+      {"name": "Yashwant Kumar Kolli", "affiliation": "Cognizant Technology Solutions US Corp", "country": "USA", "role": "PC Member"},
+      {"name": "Yousef Farhaoui", "affiliation": "University Moulay Ismail", "country": "Morocco", "role": "PC Member"},
+      {"name": "Zayar Aung", "affiliation": "Tomsk State University", "country": "Russia", "role": "PC Member"}
+    ],
+    "publication": {
+      "publisher": "AIRCC",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "DSCC 2026",
+      "International Conference on Data Science and Cloud Computing 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icaips.org/submission",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 3rd International Conference on Artificial Intelligence and Power Systems",
+      "acronym": "AIPS 2026",
+      "edition_number": 3
+    },
+    "dates": {
+      "start_date": "2026-05-22",
+      "end_date": "2026-05-24"
+    },
+    "venue": {
+      "city": "Quzhou",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": "2026-03-07",
+      "notification": "2026-04-07",
+      "camera_ready": "2026-04-22"
+    },
+    "topics": [
+      "power systems",
+      "artificial intelligence in power systems",
+      "signal processing",
+      "smart grid and energy systems",
+      "fault detection and diagnostics",
+      "load forecasting and optimization",
+      "deep learning and neural networks",
+      "physics-informed neural networks",
+      "energy internet and control systems"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Zhixin Wang",
+        "affiliation": "Shanghai Jiao Tong University",
+        "country": "China"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Zhiyun Lin",
+        "affiliation": "Southern University of Science and Technology",
+        "country": "China",
+        "role": "General Chair"
+      },
+      {
+        "name": "Zhixin Wang",
+        "affiliation": "Shanghai Jiao Tong University",
+        "country": "China",
+        "role": "General Chair"
+      },
+
+      {
+        "name": "Junhua Zhao",
+        "affiliation": "The Chinese University of Hong Kong, Shenzhen",
+        "country": "China",
+        "role": "Program Committee Chair"
+      },
+      {
+        "name": "Mingming Zhang",
+        "affiliation": "Harbin Institute of Technology, Shenzhen",
+        "country": "China",
+        "role": "Program Committee Chair"
+      },
+
+      {
+        "name": "Baoquan Wei",
+        "affiliation": "East China Jiaotong University",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+
+      {
+        "name": "Hong Ye",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Local Arrangement Chair"
+      },
+
+      {
+        "name": "Xiaolong Zhou",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Organizing Committee Chair"
+      },
+      {
+        "name": "Guofei Chai",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Organizing Committee Chair"
+      },
+
+      {
+        "name": "Zhiqiang Chen",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Jian Hou",
+        "affiliation": "Zhejiang Sci-Tech University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Xiaogang Huang",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Mingjie Jiang",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Minghang Duan",
+        "affiliation": "Quzhou University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+
+      {
+        "name": "Min Wang",
+        "affiliation": "Southwest Petroleum University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Qing Yang",
+        "affiliation": "Southwest Petroleum University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Wenhe Xia",
+        "affiliation": "Southwest Petroleum University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Yong Jia",
+        "affiliation": "Chengdu University of Technology",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Guangle Yao",
+        "affiliation": "Chengdu University of Technology",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Xiantai Gou",
+        "affiliation": "Southwest Jiaotong University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Akash Saxena",
+        "affiliation": "Central University of Haryana",
+        "country": "India",
+        "role": "PC Member"
+      },
+      {
+        "name": "Ismail Musirin",
+        "affiliation": "Universiti Teknologi MARA",
+        "country": "Malaysia",
+        "role": "PC Member"
+      },
+      {
+        "name": "Yiming Zhang",
+        "affiliation": "Fuzhou University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Zhihong Tian",
+        "affiliation": "Guangzhou University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Warwick Powell",
+        "affiliation": "Queensland University of Technology",
+        "country": "Australia",
+        "role": "PC Member"
+      },
+      {
+        "name": "Chuan Qin",
+        "affiliation": "University of Shanghai for Science and Technology",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Osama Mohammed",
+        "affiliation": "Florida International University",
+        "country": "USA",
+        "role": "PC Member"
+      },
+      {
+        "name": "Hang Yu",
+        "affiliation": "Shanghai University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Panos Pardalos",
+        "affiliation": "University of Florida",
+        "country": "USA",
+        "role": "PC Member"
+      },
+      {
+        "name": "Gheorghe Grigoras",
+        "affiliation": "Technical University of Iasi",
+        "country": "Romania",
+        "role": "PC Member"
+      },
+      {
+        "name": "Robert M Cuzner",
+        "affiliation": "University of Wisconsin-Milwaukee",
+        "country": "USA",
+        "role": "PC Member"
+      },
+      {
+        "name": "Hua Li",
+        "affiliation": "Nanyang Technological University",
+        "country": "Singapore",
+        "role": "PC Member"
+      },
+      {
+        "name": "Hartmut Hinz",
+        "affiliation": "Frankfurt University of Applied Sciences",
+        "country": "Germany",
+        "role": "PC Member"
+      },
+      {
+        "name": "Joe Dong",
+        "affiliation": "The University of Sydney",
+        "country": "Australia",
+        "role": "PC Member"
+      },
+      {
+        "name": "James Marco",
+        "affiliation": "University of Warwick",
+        "country": "UK",
+        "role": "PC Member"
+      },
+      {
+        "name": "Tao Lin",
+        "affiliation": "Wuhan University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Anwar P P Abdul Majeed",
+        "affiliation": "Sunway University",
+        "country": "Malaysia",
+        "role": "PC Member"
+      },
+      {
+        "name": "Zhibin Yu",
+        "affiliation": "Southwest Jiaotong University",
+        "country": "China",
+        "role": "PC Member"
+      },
+      {
+        "name": "Haina Rong",
+        "affiliation": "Southwest Jiaotong University",
+        "country": "China",
+        "role": "PC Member"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "AIPS 2026",
+      "International Conference on Artificial Intelligence and Power Systems 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icessd.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on Environmental Science and Sustainable Development",
+      "acronym": "ICESSD 2026",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-06-01",
+      "end_date": "2026-06-03"
+    },
+    "venue": {
+      "city": "Budapest",
+      "country": "Hungary"
+    },
+    "deadlines": {
+      "submission": "2026-04-25",
+      "notification": "2026-05-05",
+      "camera_ready": null
+    },
+    "topics": [
+      "environmental science",
+      "sustainable development",
+      "climate change mitigation and energy transition",
+      "sustainable resource management",
+      "environmental policy and green economy",
+      "pollution control and environmental remediation",
+      "green technologies and innovation",
+      "sustainable agriculture and food systems",
+      "urban sustainability and infrastructure"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Hosam Bayoumi Hamuda",
+        "affiliation": "Obuda University",
+        "country": "Hungary"
+      },
+      {
+        "name": "László Simon",
+        "affiliation": "University of Nyíregyháza",
+        "country": "Hungary"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Hosam Bayoumi Hamuda",
+        "affiliation": "Obuda University",
+        "country": "Hungary",
+        "role": "Conference Co-Chair"
+      },
+      {
+        "name": "László Simon",
+        "affiliation": "University of Nyíregyháza",
+        "country": "Hungary",
+        "role": "Conference Co-Chair"
+      },
+
+      {
+        "name": "António Albuquerque",
+        "affiliation": "University of Beira Interior",
+        "country": "Portugal",
+        "role": "International Scientific Committee"
+      },
+      {
+        "name": "Christopher Koroneos",
+        "affiliation": "University of Western Attica",
+        "country": "Greece",
+        "role": "International Scientific Committee"
+      },
+      {
+        "name": "Efrem Curcio",
+        "affiliation": "University of Calabria",
+        "country": "Italy",
+        "role": "International Scientific Committee"
+      },
+      {
+        "name": "Florica Manea",
+        "affiliation": "Politehnica University of Timisoara",
+        "country": "Romania",
+        "role": "International Scientific Committee"
+      },
+
+      {
+        "name": "Arif Karabuğa",
+        "affiliation": "Istanbul Atlas University",
+        "country": "Turkey",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Aziza Aftab Memon",
+        "affiliation": "Mehran University of Engineering and Technology",
+        "country": "Pakistan",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Azize Ayol",
+        "affiliation": "Dokuz Eylul University",
+        "country": "Turkey",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Boutheina Ben Fraj",
+        "affiliation": "Research and Technology Center of Energy (CRTEn)",
+        "country": "Tunisia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Catarina Raquel Leite Amorim",
+        "affiliation": "Universidade Católica Portuguesa",
+        "country": "Portugal",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Henrique Vicente",
+        "affiliation": "University of Évora",
+        "country": "Portugal",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Katarzyna Miszta-Kruk",
+        "affiliation": "Warsaw University of Technology",
+        "country": "Poland",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Kholil Kholil",
+        "affiliation": "Sahid University Jakarta",
+        "country": "Indonesia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Lee Hwang Sheng",
+        "affiliation": "Universiti Tunku Abdul Rahman (UTAR)",
+        "country": "Malaysia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Madhusha Sudasinghe",
+        "affiliation": "University of Colombo",
+        "country": "Sri Lanka",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Mahmoud M. Abdel Daiem",
+        "affiliation": "Shaqra University",
+        "country": "Saudi Arabia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Masita Mohammad",
+        "affiliation": "Universiti Kebangsaan Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Muhammad Abdul Qyyum",
+        "affiliation": "Sultan Qaboos University",
+        "country": "Oman",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Mohammad Arif Kamal",
+        "affiliation": "Aligarh Muslim University",
+        "country": "India",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Naima Belhaneche-Bensemra",
+        "affiliation": "Ecole Nationale Polytechnique",
+        "country": "Algeria",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Sandhya Babel",
+        "affiliation": "Thammasat University",
+        "country": "Thailand",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Saowanee Wijitkosum",
+        "affiliation": "Chulalongkorn University",
+        "country": "Thailand",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Sofiah Hamzah",
+        "affiliation": "Universiti Malaysia Terengganu",
+        "country": "Malaysia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Suaad Ridha",
+        "affiliation": "Mustansiriyah University",
+        "country": "Iraq",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Sunita Varjani",
+        "affiliation": "University of Petroleum and Energy Studies",
+        "country": "India",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Syed Hafizur Rahman",
+        "affiliation": "Jahangirnagar University",
+        "country": "Bangladesh",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Wan Azlina Wan Ab Karim Ghani",
+        "affiliation": "Universiti Putra Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Program Committee"
+      },
+      {
+        "name": "Weeranut Intagun",
+        "affiliation": "Silpakorn University",
+        "country": "Thailand",
+        "role": "Technical Program Committee"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICESSD 2026",
+      "2026 International Conference on Environmental Science and Sustainable Development",
+      "International Conference on Environmental Science and Sustainable Development (ICESSD 2026)"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://eucsr.org/conference/resilience-inequality-2027-prague",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2nd Prague International Conference on Resilience, Inequality, and Human Development Nexus",
+      "acronym": null,
+      "edition_number": 2
+    },
+    "dates": {
+      "start_date": "2027-07-07",
+      "end_date": "2027-07-08"
+    },
+    "venue": {
+      "city": "Prague",
+      "country": "Czech Republic"
+    },
+    "deadlines": {
+      "submission": "2027-04-07",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "resilience theory and measurement",
+      "social and economic inequality",
+      "human development",
+      "climate resilience and adaptation",
+      "institutional resilience and governance",
+      "community resilience and social capital",
+      "health system resilience",
+      "educational resilience and access",
+      "urban and regional resilience",
+      "crisis response and recovery",
+      "policy frameworks for resilience",
+      "comparative development studies"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [],
+    "publication": {
+      "publisher": "European Centre for Scholarly Research",
+      "series": "Conference proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.sgemvienna.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "SWS Vienna Art Scientific Sessions \"When Science meets Art\"",
+      "acronym": null,
+      "edition_number": 13
+    },
+    "dates": {
+      "start_date": "2026-12-02",
+      "end_date": "2026-12-05"
+    },
+    "venue": {
+      "city": "Vienna",
+      "country": "Austria"
+    },
+    "deadlines": {
+      "submission": "2026-10-20",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "social sciences",
+      "arts and humanities",
+      "science, art and society",
+      "cultural studies",
+      "interdisciplinary research",
+      "digital transformation and society",
+      "law and governance in the digital age",
+      "AI in society",
+      "sustainability and society"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "When Science meets Art",
+      "SWS Vienna Scientific Sessions",
+      "ISCSS 2026 Vienna Sessions"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://dataintelligencecrew.github.io/dbml26/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "5th International Workshop on Databases and Machine Learning",
+      "acronym": "DBML 2026",
+      "edition_number": 5
+    },
+    "dates": {
+      "start_date": "2026-05-04",
+      "end_date": "2026-05-04"
+    },
+    "venue": {
+      "city": "Montréal",
+      "country": "Canada"
+    },
+    "deadlines": {
+      "submission": "2026-02-14",
+      "notification": "2026-04-05",
+      "camera_ready": "2026-04-19"
+    },
+    "topics": [
+      "machine learning for data management",
+      "learned query optimization and indexing",
+      "data cleaning and data integration",
+      "data management for machine learning systems",
+      "vector databases and embeddings",
+      "multimodal data management",
+      "LLMs and RAG for data systems",
+      "data quality and provenance",
+      "ML lifecycle and model serving systems"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+  {
+    "name": "Amine Mhedhbi",
+    "affiliation": "Polytechnique Montréal",
+    "country": "Canada",
+    "role": "PC Member"
+  },
+  {
+    "name": "Gerardo Vitagliano",
+    "affiliation": "MIT CSAIL",
+    "country": "United States",
+    "role": "PC Member"
+  },
+  {
+    "name": "Roee Shraga",
+    "affiliation": "WPI",
+    "country": "United States",
+    "role": "PC Member"
+  },
+  {
+    "name": "Xue Li",
+    "affiliation": null,
+    "country": null,
+    "role": "PC Member"
+  }
+],
+    "publication": {
+      "publisher": "IEEE",
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "DBML 2026",
+      "International Workshop on Databases and Machine Learning 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icpam.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "15th International Conference on Pure and Applied Mathematics",
+      "acronym": "ICPAM 2026",
+      "edition_number": 15
+    },
+    "dates": {
+      "start_date": "2026-07-15",
+      "end_date": "2026-07-18"
+    },
+    "venue": {
+      "city": "London",
+      "country": "UK"
+    },
+    "deadlines": {
+      "submission": "2026-04-25",
+      "notification": "2026-05-15",
+      "camera_ready": null
+    },
+    "topics": [
+      "applied mathematics",
+      "pure mathematics",
+      "numerical analysis",
+      "probability and statistics",
+      "mathematical modeling",
+      "control theory",
+      "computational mathematics",
+      "machine learning and mathematics",
+      "quantum computing",
+      "mathematical physics"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [],
+    "publication": {
+      "publisher": "International Journal of Applied Physics and Mathematics",
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICPAM 2026",
+      "International Conference on Pure and Applied Mathematics 2026"
+    ],
+    "venue.city": [],
+    "venue.country": [
+      "United Kingdom"
+    ]
+  }
+},
+{
+  "url": "https://www.aischolar.com/conference/icpqc2026?invite=wiki",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 2nd International Conference on Physics and Quantum Computing",
+      "acronym": "ICPQC 2026",
+      "edition_number": 2
+    },
+    "dates": {
+      "start_date": "2026-04-17",
+      "end_date": "2026-04-19"
+    },
+    "venue": {
+      "city": "San Francisco",
+      "country": "United States"
+    },
+    "deadlines": {
+      "submission": "2026-04-07",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "quantum computing and information processing",
+      "quantum optics and photonics",
+      "quantum machine learning",
+      "quantum simulation",
+      "quantum algorithms",
+      "quantum communication and networks",
+      "semiconductor and materials physics",
+      "laser and plasma physics",
+      "fault-tolerant quantum computing"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [],
+    "publication": {
+      "publisher": "SPIE",
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICPQC 2026",
+      "International Conference on Physics and Quantum Computing 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://virtual.aistats.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Twenty-Ninth Annual Conference on Artificial Intelligence and Statistics",
+      "acronym": "AISTATS 2026",
+      "edition_number": 29
+    },
+    "dates": {
+      "start_date": "2026-05-02",
+      "end_date": "2026-05-05"
+    },
+    "venue": {
+      "city": "Tangier",
+      "country": "Morocco"
+    },
+    "deadlines": {
+      "submission": "2025-10-02",
+      "notification": "2026-01-22",
+      "camera_ready": "2026-03-31"
+    },
+    "topics": [
+      "machine learning",
+      "artificial intelligence",
+      "statistics",
+      "probabilistic methods",
+      "deep learning",
+      "reinforcement learning",
+      "optimization and learning theory",
+      "causality and fairness",
+      "applications of machine learning"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+  {
+    "name": "Emtiyaz Khan",
+    "affiliation": "RIKEN Center for AIP",
+    "country": "Japan",
+    "role": "General Chair"
+  },
+  {
+    "name": "Yingzhen Li",
+    "affiliation": "Imperial College London",
+    "country": "United Kingdom",
+    "role": "General Chair"
+  },
+  {
+    "name": "Arno Solin",
+    "affiliation": "Aalto University",
+    "country": "Finland",
+    "role": "Program Chair"
+  },
+  {
+    "name": "Aaditya Ramdas",
+    "affiliation": "Carnegie Mellon University",
+    "country": "United States",
+    "role": "Program Chair"
+  },
+  {
+    "name": "Yo Joong Choe",
+    "affiliation": "INSEAD",
+    "country": "France",
+    "role": "Workflow Chair"
+  },
+  {
+    "name": "Prakhar Verma",
+    "affiliation": "Aalto University",
+    "country": "Finland",
+    "role": "Workflow Chair"
+  },
+  {
+    "name": "Claire Vernade",
+    "affiliation": "University of Technology Nuremberg",
+    "country": "Germany",
+    "role": "Workshop Chair"
+  },
+  {
+    "name": "Quentin Berthet",
+    "affiliation": "Google DeepMind",
+    "country": "United Kingdom",
+    "role": "Workshop Chair"
+  },
+  {
+    "name": "Shubhada Agrawal",
+    "affiliation": "Indian Institute of Science, Bangalore",
+    "country": "India",
+    "role": "Inclusivity Chair"
+  },
+  {
+    "name": "Kamélia Daudel",
+    "affiliation": "ESSEC Business School",
+    "country": "France",
+    "role": "Journal-to-Conference Chair"
+  },
+  {
+    "name": "Pierre Alquier",
+    "affiliation": "ESSEC Business School",
+    "country": "France",
+    "role": "Journal-to-Conference Chair"
+  },
+  {
+    "name": "Vincent Fortuin",
+    "affiliation": "Helmholtz AI & TU Munich",
+    "country": "Germany",
+    "role": "Sponsorship Chair"
+  },
+  {
+    "name": "Agustinus Kristiadi",
+    "affiliation": "Western University & Vector Institute",
+    "country": "Canada",
+    "role": "Sponsorship Chair"
+  },
+  {
+    "name": "Souhaib BEN TAIEB",
+    "affiliation": "MBZUAI & UMONS",
+    "country": null,
+    "role": "Local Chair"
+  },
+  {
+    "name": "Abir Harrasse",
+    "affiliation": "Martian Learning Inc.",
+    "country": null,
+    "role": "Local Chair"
+  },
+  {
+    "name": "Salem Lahlou",
+    "affiliation": "MBZUAI",
+    "country": "United Arab Emirates",
+    "role": "Local Chair"
+  },
+  {
+    "name": "Martin Trapp",
+    "affiliation": "KTH Royal Institute of Technology",
+    "country": "Sweden",
+    "role": "Publication Chair"
+  },
+  {
+    "name": "Susan Perry",
+    "affiliation": "AISTATS",
+    "country": null,
+    "role": "Logistics Chair"
+  },
+  {
+    "name": "Max Wiesner",
+    "affiliation": "AIStats",
+    "country": null,
+    "role": "Logistics Chair"
+  },
+  {
+    "name": "Mary Ellen Perry",
+    "affiliation": "AISTATS",
+    "country": null,
+    "role": "Logistics Chair"
+  }
+],
+    "publication": {
+      "publisher": "Proceedings of Machine Learning Research (PMLR)",
+      "series": "Journal of Machine Learning Research Workshop and Conference Proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "AISTATS 2026",
+      "International Conference on Artificial Intelligence and Statistics 2026"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://aimsconference.org/conferences/2026/index.html",
+  "ground_truth": {
+    "conference": {
+      "full_name": "AIMS Conference on Dynamical Systems, Differential Equations and Applications 2026",
+      "acronym": "AIMS 2026",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-07-06",
+      "end_date": "2026-07-10"
+    },
+    "venue": {
+      "city": "Athens",
+      "country": "Greece"
+    },
+    "deadlines": {
+      "submission": "2026-04-15",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "analysis",
+      "applied and computational analysis",
+      "differential equations",
+      "dynamical systems",
+      "fluid dynamics",
+      "control and optimization",
+      "functional and nonlinear analysis",
+      "harmonic analysis",
+      "approximation theory",
+      "operator theory",
+      "geometry",
+      "number theory",
+      "mathematical physics",
+      "engineering mathematics",
+      "biomathematics",
+      "mathematical finance"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Ben Andrews",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Artur Avila",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Mihalis Dafermos",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Qiang Du",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Adam Kanigowski",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Carlos Kenig",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Pierre-Louis Lions",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Kening Lu",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Panagiotis E. Souganidis",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Hong Wang",
+        "affiliation": null,
+        "country": null
+      },
+      {
+        "name": "Xiaoyun Wang",
+        "affiliation": null,
+        "country": null
+      }
+    ],
+    "program_committee": [
+  {
+    "name": "Shouchuan Hu",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Chair"
+  },
+  {
+    "name": "Gang Bao",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Peter Bates",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "William Bray",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Alberto Bressan",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Ingrid Daubechies",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Yihong Du",
+    "affiliation": "University of New England",
+    "country": "Australia",
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Helge Holden",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Svetlana Jitomirskaya",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Panayotis Kevrekidis",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Nader Masmoudi",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Alain Miranville",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Shige Peng",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+  {
+    "name": "Juncheng Wei",
+    "affiliation": null,
+    "country": null,
+    "role": "Scientific Committee Member"
+  },
+
+  {
+    "name": "Ben Andrews",
+    "affiliation": "Australian National University",
+    "country": "Australia",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Weizhu Bao",
+    "affiliation": "National University of Singapore",
+    "country": "Singapore",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Mihalis Dafermos",
+    "affiliation": "Princeton University",
+    "country": "United States",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Qiang Du",
+    "affiliation": "Columbia University",
+    "country": "United States",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Yihong Du",
+    "affiliation": "University of New England",
+    "country": "Australia",
+    "role": "Thematic Session Committee Co-Chair"
+  },
+  {
+    "name": "Mikhail Feldman",
+    "affiliation": "University of Wisconsin-Madison",
+    "country": "United States",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Francois Hamel",
+    "affiliation": "University of Aix Marseille",
+    "country": "France",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Shouchuan Hu",
+    "affiliation": "Missouri State University",
+    "country": "United States",
+    "role": "Thematic Session Committee Co-Chair"
+  },
+  {
+    "name": "Haizhong Li",
+    "affiliation": "Tsinghua University",
+    "country": "China",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Giorgos Moschidis",
+    "affiliation": "Swiss Federal Technology Institute of Lausanne",
+    "country": "Switzerland",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Lionel Roques",
+    "affiliation": "INRAE Avignon",
+    "country": "France",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Susanna Terracini",
+    "affiliation": "University of Turin",
+    "country": "Italy",
+    "role": "Thematic Session Committee Member"
+  },
+  {
+    "name": "Dehua Wang",
+    "affiliation": "University of Pittsburgh",
+    "country": "United States",
+    "role": "Thematic Session Committee Member"
+  },
+
+  {
+    "name": "Xin Lu",
+    "affiliation": null,
+    "country": null,
+    "role": "Program Committee Chair"
+  },
+  {
+    "name": "Wei Feng",
+    "affiliation": null,
+    "country": null,
+    "role": "Program Committee Member"
+  },
+  {
+    "name": "Michael Freeze",
+    "affiliation": null,
+    "country": null,
+    "role": "Program Committee Member"
+  },
+  {
+    "name": "Malia Hu",
+    "affiliation": null,
+    "country": null,
+    "role": "Program Committee Member"
+  },
+  {
+    "name": "Le Qiao",
+    "affiliation": null,
+    "country": null,
+    "role": "Program Committee Member"
+  },
+
+  {
+    "name": "Georgia Karali",
+    "affiliation": null,
+    "country": null,
+    "role": "Organizing Committee Chair"
+  }
+],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "AIMS Conference 2026"
+    ],
+    "venue.city": [
+      "Athens"
+    ],
+    "venue.country": [
+      "Greece"
+    ]
+  }
+},
+{
+  "url": "https://www.icbbe.com/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "2026 13th International Conference on Biomedical and Bioinformatics Engineering",
+      "acronym": "ICBBE 2026",
+      "edition_number": 13
+    },
+    "dates": {
+      "start_date": "2026-12-25",
+      "end_date": "2026-12-28"
+    },
+    "venue": {
+      "city": "Hokkaido",
+      "country": "Japan"
+    },
+    "deadlines": {
+      "submission": "2026-07-10",
+      "notification": "2026-07-30",
+      "camera_ready": "2026-08-20"
+    },
+    "topics": [
+      "biomedical engineering",
+      "bioinformatics engineering",
+      "biomedical informatics",
+      "artificial intelligence in biomedicine",
+      "data mining for biomedical data",
+      "brain-computer interfaces",
+      "computational genomics",
+      "single-cell data analysis",
+      "biological sequence analysis",
+      "healthcare data analytics"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Yu Huang",
+        "affiliation": "City University of Hong Kong",
+        "country": "Hong Kong"
+      },
+      {
+        "name": "Hesham H. Ali",
+        "affiliation": "University of Nebraska Omaha",
+        "country": "United States"
+      },
+      {
+        "name": "De-Shuang Huang",
+        "affiliation": "Ningbo Institute of Digital Twin, Eastern Institute of Technology",
+        "country": "China"
+      },
+      {
+        "name": "Heng Song",
+        "affiliation": "Wuhan University",
+        "country": "China"
+      },
+      {
+        "name": "Hao Jiang",
+        "affiliation": "Renmin University of China",
+        "country": "China"
+      },
+      {
+        "name": "Yaoyao Hao",
+        "affiliation": "Zhejiang University",
+        "country": "China"
+      },
+      {
+        "name": "Goh Choon Hian",
+        "affiliation": "Universiti Tunku Abdul Rahman",
+        "country": "Malaysia"
+      },
+      {
+        "name": "Pietro Pinoli",
+        "affiliation": "Politecnico di Milano",
+        "country": "Italy"
+      },
+      {
+        "name": "Yujie Pu",
+        "affiliation": "Hong Kong Centre for Cerebro-Cardiovascular Health Engineering",
+        "country": "Hong Kong"
+      },
+      {
+        "name": "Siddhant Yadav",
+        "affiliation": "Mayo Clinic",
+        "country": "United States"
+      }
+    ],
+    "program_committee": [
+  {
+    "name": "Kenta Nakai",
+    "affiliation": "The University of Tokyo",
+    "country": "Japan",
+    "role": "General Chair"
+  },
+  {
+    "name": "Ikuko Nishikawa",
+    "affiliation": "Ritsumeikan University",
+    "country": "Japan",
+    "role": "General Chair"
+  },
+  {
+    "name": "Kuo-Yuan Hwa",
+    "affiliation": "National Taipei University of Technology",
+    "country": "Taiwan",
+    "role": "General Chair"
+  },
+
+  {
+    "name": "Qingli Li",
+    "affiliation": "East China Normal University",
+    "country": "China",
+    "role": "Program Chair"
+  },
+  {
+    "name": "Sung-Joon Park",
+    "affiliation": "The University of Tokyo",
+    "country": "Japan",
+    "role": "Program Chair"
+  },
+
+  {
+    "name": "Yukako Tohsato",
+    "affiliation": "Ritsumeikan University",
+    "country": "Japan",
+    "role": "Publicity Chair"
+  },
+  {
+    "name": "Goh Choon Hian",
+    "affiliation": "Universiti Tunku Abdul Rahman (UTAR)",
+    "country": "Malaysia",
+    "role": "Publicity Chair"
+  },
+
+  {
+    "name": "Nagendra Kumar Kaushik",
+    "affiliation": "Kwangwoon University",
+    "country": "South Korea",
+    "role": "Steering Committee Member"
+  },
+  {
+    "name": "Ming Chen",
+    "affiliation": "Zhejiang University",
+    "country": "China",
+    "role": "Steering Committee Member"
+  },
+  {
+    "name": "Jie Luo",
+    "affiliation": "Shanghai Jiao Tong University",
+    "country": "China",
+    "role": "Steering Committee Member"
+  },
+
+  {
+    "name": "Hideo Matsuda",
+    "affiliation": "Osaka University",
+    "country": "Japan",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Juan Liu",
+    "affiliation": "Wuhan University",
+    "country": "China",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Seongho Kim",
+    "affiliation": "Wayne State University",
+    "country": "United States",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Junichi Hoshino",
+    "affiliation": "University of Tsukuba",
+    "country": "Japan",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Henry Horng-Shing Lu",
+    "affiliation": "National Yang Ming Chiao Tung University",
+    "country": "Taiwan",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Hao Jiang",
+    "affiliation": "Renmin University of China",
+    "country": "China",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Alexander Polyakov",
+    "affiliation": "Sevastopol State University",
+    "country": "Russia",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Miguel Morgado",
+    "affiliation": "University of Coimbra",
+    "country": "Portugal",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Hui Yu",
+    "affiliation": "Tianjin University",
+    "country": "China",
+    "role": "Technical Program Committee Member"
+  },
+  {
+    "name": "Yanqing Ji",
+    "affiliation": "Gonzaga University",
+    "country": "United States",
+    "role": "Technical Program Committee Member"
+  }
+],
+    "publication": {
+      "publisher": null,
+      "series": "International Conference Proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "ICBBE 2026",
+      "International Conference on Biomedical and Bioinformatics Engineering",
+      "2026 13th International Conference on Biomedical and Bioinformatics Engineering (ICBBE 2026)"
+    ],
+    "venue.city": [
+      "Tokyo"
+    ],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://emails.illinois.edu/newsletter/36/393544136.html",
+  "ground_truth": {
+    "conference": {
+      "full_name": "7th Midwest Single Molecule Workshop",
+      "acronym": "MWSMW 2026",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-07-22",
+      "end_date": "2026-07-24"
+    },
+    "venue": {
+      "city": "Urbana",
+      "country": "United States"
+    },
+    "deadlines": {
+      "submission": "2026-04-15",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "single-molecule biophysics",
+      "single-molecule detection methods",
+      "experimental biophysics",
+      "theoretical biophysics",
+      "fluorescence microscopy",
+      "super-resolution imaging",
+      "optical tweezers",
+      "biomolecular modeling and simulation",
+      "genomic DNA and chromosome biophysics",
+      "single-molecule spectroscopy"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Taekjip Ha",
+        "affiliation": "Boston Children's Hospital",
+        "country": "United States"
+      },
+      {
+        "name": "Yann Chemla",
+        "affiliation": "University of Illinois Urbana-Champaign",
+        "country": "United States"
+      },
+      {
+        "name": "Adrian H. Elcock",
+        "affiliation": "University of Iowa",
+        "country": "United States"
+      },
+      {
+        "name": "Matthew Lew",
+        "affiliation": "WashU",
+        "country": "United States"
+      },
+      {
+        "name": "John F. Marko",
+        "affiliation": "Northwestern",
+        "country": "United States"
+      },
+      {
+        "name": "Jan-Hendrik Spille",
+        "affiliation": "University of Illinois Chicago",
+        "country": "United States"
+      },
+      {
+        "name": "Allison Squires",
+        "affiliation": "University of Chicago",
+        "country": "United States"
+      }
+    ],
+    "program_committee": [],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "MWSMW 2026",
+      "Midwest Single Molecule Workshop 2026",
+      "7th Midwest Single Molecule Workshop"
+    ],
+    "venue.city": [
+      "Urbana-Champaign",
+      "Champaign"
+    ],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://events.spbu.ru/li-ion-mendeleev",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Topical Problems of Energy Conversion in Lithium Electrochemical Systems",
+      "acronym": null,
+      "edition_number": 19
+    },
+    "dates": {
+      "start_date": "2026-09-14",
+      "end_date": "2026-09-19"
+    },
+    "venue": {
+      "city": "St. Petersburg",
+      "country": "Russia"
+    },
+    "deadlines": {
+      "submission": null,
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "lithium electrochemical systems",
+      "energy conversion",
+      "electrochemical energy storage",
+      "lithium-ion batteries",
+      "power sources",
+      "electrochemistry",
+      "functional materials for energy",
+      "supercapacitors",
+      "solid electrolytes"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Evgeniy V. Antipov",
+        "affiliation": "Lomonosov Moscow State University; Skolkovo Institute of Science and Technology",
+        "country": "Russia"
+      },
+      {
+        "name": "Andrey B. Yaroslavtsev",
+        "affiliation": "Kurnakov Institute of General and Inorganic Chemistry, Russian Academy of Sciences; HSE University",
+        "country": "Russia"
+      },
+      {
+        "name": "Seung-Taek Myung",
+        "affiliation": "Sejong University",
+        "country": "South Korea"
+      },
+      {
+        "name": "Shinichi Komaba",
+        "affiliation": "Tokyo University of Science",
+        "country": "Japan"
+      },
+      {
+        "name": "Zhumabay Bakenov",
+        "affiliation": "Nazarbayev University",
+        "country": "Kazakhstan"
+      },
+      {
+        "name": "Yuping Wu",
+        "affiliation": "Southeast University",
+        "country": "China"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Evgeny Antipov",
+        "affiliation": "Lomonosov Moscow State University",
+        "country": "Russia",
+        "role": "Program Committee Chair"
+      },
+      {
+        "name": "Alexander Skundin",
+        "affiliation": "A.N. Frumkin Institute of Physical Chemistry and Electrochemistry RAS",
+        "country": "Russia",
+        "role": "Program Committee Chair"
+      },
+      {
+        "name": "Oleg Levin",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Program Committee Chair"
+      },
+
+      {
+        "name": "Artem Abakumov",
+        "affiliation": "Skolkovo Institute of Science and Technology",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Dmitry Agafonov",
+        "affiliation": "St. Petersburg State Institute of Technology",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Olga Bushkova",
+        "affiliation": "Institute of Solid State Chemistry of the Ural Branch of the Russian Academy of Sciences",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Vasily Zhdanov",
+        "affiliation": "Ioffe Physical-Technical Institute",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yuri Zaikov",
+        "affiliation": "Institute of High-Temperature Electrochemistry, Ural Branch, Russian Academy of Sciences",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Daniil Itkis",
+        "affiliation": "Lomonosov Moscow State University",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Vladimir Kolosnitsyn",
+        "affiliation": "Ufa Institute of Chemistry of the Russian Academy of Sciences",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Veniamin Kondratyev",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Tatiana Kulova",
+        "affiliation": "Frumkin Institute of Physical Chemistry and Electrochemistry of the Russian Academy of Sciences",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Sergey Likhonosov",
+        "affiliation": "PJSC Saturn",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Andrey Yaroslavtsev",
+        "affiliation": "Kurnakov Institute of General and Inorganic Chemistry, Russian Academy of Sciences",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Zhumabay Bakenov",
+        "affiliation": "Nazarbayev University",
+        "country": "Kazakhstan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Keith Stevenson",
+        "affiliation": "Skolkovo Institute of Science and Technology",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Denis Kornilov",
+        "affiliation": "JSC Avex",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "M. Yu. Maksimov",
+        "affiliation": "Peter the Great St. Petersburg Polytechnic University",
+        "country": "Russia",
+        "role": "Program Committee Member"
+      },
+
+      {
+        "name": "Irina Balova",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Chair"
+      },
+
+      {
+        "name": "Mariia Dmitrenko",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Scientific Secretary"
+      },
+      {
+        "name": "Alexey Volkov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Scientific Secretary"
+      },
+
+      {
+        "name": "Elena Alekseeva",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Anastasia Penkova",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Nikita Bogachev",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Dmitrii Anishchenko",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Anton Domnin",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Petr Korusenko",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Arseniy Kalnin",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Vasiliy Potapenkov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Ksenia Kharisova",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Yulia Ilyinykh",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Stephanie Kolesnik",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Georgii Misikov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Vladimir Mikhaylov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Troyana Kissler",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Nazar Moshnenko",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Nikolai Rostovskii",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Anastasiia Podurets",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Anna Kuzminova",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Ilia Filippov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Artemiy Samarov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Svetlana Baykova",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Sergey Baykov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Elina Alikparova",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Kirill Barbayanov",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Danil Krutin",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      },
+      {
+        "name": "Maria Ledovskaya",
+        "affiliation": "St. Petersburg State University",
+        "country": "Russia",
+        "role": "Organising Committee Member"
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "XIX International Conference on Topical Problems of Energy Conversion in Lithium Electrochemical Systems",
+      "Li-ion Mendeleev 2026"
+    ],
+    "venue.city": [
+      "Saint Petersburg",
+      "Peterhof"
+    ],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icaeb.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on Applied Economics and Business",
+      "acronym": "ICAEB 2026",
+      "edition_number": 10
+    },
+    "dates": {
+      "start_date": "2026-08-23",
+      "end_date": "2026-08-25"
+    },
+    "venue": {
+      "city": "Florence",
+      "country": "Italy"
+    },
+    "deadlines": {
+      "submission": "2026-05-05",
+      "notification": "2026-06-05",
+      "camera_ready": null
+    },
+    "topics": [
+      "applied economics",
+      "business",
+      "finance",
+      "labor economics",
+      "international economics",
+      "public finance",
+      "development economics",
+      "environmental economics",
+      "ecological economics",
+      "managerial economics",
+      "mathematical economics",
+      "resource economics",
+      "transport economics",
+      "welfare economics",
+      "entrepreneurship",
+      "organizational behavior",
+      "corporate governance",
+      "investment",
+      "insurance",
+      "risk management",
+      "project management",
+      "accounting",
+      "management information systems",
+      "marketing",
+      "consumer behavior",
+      "human resource management",
+      "supply chain management",
+      "engineering management"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Matthias Fuchs",
+        "affiliation": "Free University of Bolzano",
+        "country": "Italy"
+      },
+      {
+        "name": "Behzad Behdani",
+        "affiliation": "University of South-Eastern Norway",
+        "country": "Norway"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Atour Taghipour",
+        "affiliation": "University of Le Havre",
+        "country": "France",
+        "role": "Conference Chair"
+      },
+      {
+        "name": "Matthias Fuchs",
+        "affiliation": "Free University of Bolzano",
+        "country": "Italy",
+        "role": "Conference Co-chair"
+      },
+
+      {
+        "name": "William (Bill) C. Gartner",
+        "affiliation": "University of Minnesota",
+        "country": "USA",
+        "role": "Program Chair"
+      },
+      {
+        "name": "Tung-Zong Chang",
+        "affiliation": "Metropolitan State University of Denver",
+        "country": "USA",
+        "role": "Program Chair"
+      },
+      {
+        "name": "Irene Kamberidou",
+        "affiliation": "National and Kapodistrian University of Athens (NKUA)",
+        "country": "Greece",
+        "role": "Program Chair"
+      },
+      {
+        "name": "David Bejou",
+        "affiliation": "SUNY Empire State University",
+        "country": "USA",
+        "role": "Program Chair"
+      },
+      {
+        "name": "Behzad Behdani",
+        "affiliation": "University of South-Eastern Norway",
+        "country": "Norway",
+        "role": "Program Chair"
+      },
+
+      {
+        "name": "Federico Del Giorgio Solfa",
+        "affiliation": "National University of La Plata",
+        "country": "Argentina",
+        "role": "Publicity Chair"
+      },
+      {
+        "name": "María del Carmen Valls Martínez",
+        "affiliation": "University of Almeria",
+        "country": "Spain",
+        "role": "Publicity Chair"
+      },
+
+      {
+        "name": "A. Can Inci",
+        "affiliation": "Bryant University",
+        "country": "USA",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Abdelhak Senadjki",
+        "affiliation": "Universiti Tunku Abdul Rahman",
+        "country": "Malaysia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Md. Abul Kalam Azad",
+        "affiliation": "Islamic University of Technology (IUT)",
+        "country": "Bangladesh",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Ahmad Adnan Hussein Toumeh",
+        "affiliation": "al-Zaytoonah University of Jordan",
+        "country": "Jordan",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Ahmed Rashad ElMelegy",
+        "affiliation": "Gulf University for Science and Technology",
+        "country": "Kuwait",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Amina Aouini",
+        "affiliation": "University of Sfax",
+        "country": "Tunisia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Ana Filipa Roque",
+        "affiliation": "Polytechnic of Coimbra | ISCAC - Coimbra Business School",
+        "country": "Portugal",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Arkadiusz Piwowar",
+        "affiliation": "Wroclaw University of Economics",
+        "country": "Poland",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Au Yong Hui Nee",
+        "affiliation": "Universiti Tunku Abdul Rahman",
+        "country": "Malaysia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Ayşen Edirneligil",
+        "affiliation": "Selcuk University",
+        "country": "Türkiye",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Azam Bejou",
+        "affiliation": "West Virginia State University",
+        "country": "USA",
+        "role": "Technical Program Committee Member"
+      },
+
+      {
+        "name": "Cheng-Feng Hu",
+        "affiliation": "National Chiayi University",
+        "country": "Taiwan",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Daniela Cristina Momete",
+        "affiliation": "Politehnica University of Bucharest",
+        "country": "Romania",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Dyuti Banerjee",
+        "affiliation": "Monash University",
+        "country": "Australia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Eirini Kamenidou",
+        "affiliation": "International Hellenic University",
+        "country": "Greece",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Eka Devidze",
+        "affiliation": "International Black Sea University",
+        "country": "Georgia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Fawaz Khaled",
+        "affiliation": "Oxford Brookes University",
+        "country": "UK",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Guanming He",
+        "affiliation": "Durham University Business School",
+        "country": "UK",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Grigoris Zarotiadis",
+        "affiliation": "Aristotle University of Thessaloniki",
+        "country": "Greece",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Ivan Todorov",
+        "affiliation": "South-West University \"Neofit Rilski\"",
+        "country": "Bulgaria",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Joanna Stawska",
+        "affiliation": "University of Lodz",
+        "country": "Poland",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "José António Porfírio",
+        "affiliation": "Universidade Aberta",
+        "country": "Portugal",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Larisa Ivascu",
+        "affiliation": "Politehnica University of Timisoara",
+        "country": "Romania",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Nguyen Thi Kim Oanh",
+        "affiliation": "Vietnam National University, Hanoi",
+        "country": "Vietnam",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Rita Yi Man Li",
+        "affiliation": "Hong Kong Shue Yan University",
+        "country": "China",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Stylianos Asimakopoulos",
+        "affiliation": "Brunel University",
+        "country": "UK",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "T. Ramayah",
+        "affiliation": "Universiti Sains Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Taoufik Bouraoui",
+        "affiliation": "Rennes School of Business",
+        "country": "France",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Taufiq Choudhry",
+        "affiliation": "University of Southampton",
+        "country": "UK",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Ubaldo Comite",
+        "affiliation": "University of Calabria",
+        "country": "Italy",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Wei Xu",
+        "affiliation": "Shenyang University of Technology",
+        "country": "China",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Yasri Yasri",
+        "affiliation": "Universitas Negeri Padang",
+        "country": "Indonesia",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Younes Gholizadeh",
+        "affiliation": "Ankara University",
+        "country": "Turkey",
+        "role": "Technical Program Committee Member"
+      },
+      {
+        "name": "Zachariah John A Belmonte",
+        "affiliation": "Technological University of the Philippines",
+        "country": "Philippines",
+        "role": "Technical Program Committee Member"
+      }
+    ],
+    "publication": {
+      "publisher": "Springer Nature",
+      "series": "Springer Proceedings in Business and Economics"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "10th International Conference on Applied Economics and Business",
+      "ICAEB"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://socialsciences.info/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "Canadian Conference on Humanities and Social Sciences",
+      "acronym": "HUSO2026",
+      "edition_number": 8
+    },
+    "dates": {
+      "start_date": "2026-10-28",
+      "end_date": "2026-10-29"
+    },
+    "venue": {
+      "city": "Toronto",
+      "country": "Canada"
+    },
+    "deadlines": {
+      "submission": "2026-04-30",
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "global business",
+      "finance",
+      "sustainable economies",
+      "public policy",
+      "society and globalization",
+      "technology and digital transformation",
+      "organizational behavior",
+      "ethics and social justice",
+      "entrepreneurship and innovation",
+      "media and communication",
+      "climate and sustainability",
+      "education and learning systems",
+      "AI and automation",
+      "fintech",
+      "cybersecurity",
+      "human resource management"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Sadequl Islam",
+        "affiliation": "Laurentian University",
+        "country": "Canada"
+      },
+      {
+        "name": "Anjali Sahay",
+        "affiliation": "Gannon University",
+        "country": "United States"
+      }
+    ],
+    "program_committee": [],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "8th Canadian Conference on Humanities and Social Sciences 2026",
+      "Canadian International Conference on Humanities and Social Sciences"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://nlpd2026.org/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on NLP & Big Data",
+      "acronym": "NLPD 2026",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-07-16",
+      "end_date": "2026-07-17"
+    },
+    "venue": {
+      "city": "London",
+      "country": "United Kingdom"
+    },
+    "deadlines": {
+      "submission": "2026-04-11",
+      "notification": "2026-06-20",
+      "camera_ready": "2026-06-27"
+    },
+    "topics": [
+      "natural language processing",
+      "big data",
+      "deep learning",
+      "information extraction",
+      "information retrieval",
+      "question answering",
+      "semantic web",
+      "ontologies",
+      "social media analytics",
+      "machine learning",
+      "soft computing",
+      "internet of things",
+      "ubiquitous computing",
+      "web computing",
+      "data mining",
+      "corpus analysis",
+      "argumentation mining"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Adda Boualem",
+        "affiliation": "Ibn Khaldoun University",
+        "country": "Algeria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ali Karim Sayed",
+        "affiliation": "Mumbai University and MSBTE",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Balaji Govindarajan",
+        "affiliation": "SRM IST",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Bhanu Handa",
+        "affiliation": "Dell",
+        "country": "USA",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Boda Nageswara Rao",
+        "affiliation": "Multipurpose Awareness Society",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Chandra Shekhar Pareek",
+        "affiliation": "Independent Researcher",
+        "country": "USA",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Chien-Chang Chou",
+        "affiliation": "National Kaohsiung University of Science and Technology",
+        "country": "Taiwan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "David Idris",
+        "affiliation": "Glemad",
+        "country": "Nigeria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Dennis Mahuni",
+        "affiliation": "University of Zimbabwe",
+        "country": "Zimbabwe",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ekpo Bassey",
+        "affiliation": "University of Cross River State",
+        "country": "Nigeria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Fatlind Mazreku",
+        "affiliation": "University of Prizren",
+        "country": "Kosovo",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Gajendra Sharma",
+        "affiliation": "Kathmandu University",
+        "country": "Nepal",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Gaurav Sahu",
+        "affiliation": "B K Birla Institute of Engineering & Technology",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Haneen Dweik",
+        "affiliation": "Sup’com University",
+        "country": "Tunisia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Israa Shaker Tawfic",
+        "affiliation": "Ministry of Science and Technology",
+        "country": "Iraq",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Jeff Sterling Ngami Kamagoua",
+        "affiliation": "University of Yaoundé I",
+        "country": "Cameroon",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Jose Silva",
+        "affiliation": "CINAMIL",
+        "country": "Portugal",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Joy Selasi Agbesi",
+        "affiliation": "Meta",
+        "country": "USA",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Lukman Lawali",
+        "affiliation": "Zamfara State University",
+        "country": "Nigeria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mahabub Sultan",
+        "affiliation": "Buffalo State University",
+        "country": "USA",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Marivic Mitschek",
+        "affiliation": "De La Salle University",
+        "country": "Philippines",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mohammed Alchaita",
+        "affiliation": "Al-Rasheed Private University for Science and Technology (RU)",
+        "country": "Syria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Muhammad Abdullahi",
+        "affiliation": "University of Maiduguri",
+        "country": "Nigeria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Naina Parmar",
+        "affiliation": "CHARUSAT University",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Naresh",
+        "affiliation": "College of Arts and Sciences",
+        "country": "Oman",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Neelama G",
+        "affiliation": "Deemed to be University",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Neha Singh",
+        "affiliation": "ISBM College of Engineering",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Nitin Vishnoi",
+        "affiliation": "ESGCI",
+        "country": "USA",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Phi Nguyen",
+        "affiliation": "Hong Bang International University (HIU)",
+        "country": "Vietnam",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ricardo Augusto Manfredini",
+        "affiliation": "Instituto Federal de Educação",
+        "country": "Brazil",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ruksar Fatima",
+        "affiliation": "Khaja Bandanawaz University",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Sameeksha",
+        "affiliation": "Thapar University",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Sonam Mittal",
+        "affiliation": "B K Birla Institute of Engineering and Technology",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Steve Barongo Mong'are",
+        "affiliation": "Murang'a University of Technology",
+        "country": "Kenya",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yas Alsultanny",
+        "affiliation": "Uruk University",
+        "country": "Iraq",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yew Kee Wong Eric",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "China",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yogita Bhise",
+        "affiliation": "K.K. Wagh Institute of Engineering",
+        "country": "India",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Zaed Bin Monir Atib",
+        "affiliation": "Independent University",
+        "country": "Bangladesh",
+        "role": "Program Committee Member"
+      }
+    ],
+    "publication": {
+      "publisher": "AIRCC",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "7th International Conference on NLP and Big Data",
+      "NLP & Big Data Conference"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+},
+{
+  "url": "https://www.icrconf.com/",
+  "ground_truth": {
+    "conference": {
+      "full_name": "International Conference on Intelligent Computing and Robotics",
+      "acronym": "ICICR 2026",
+      "edition_number": 3
+    },
+    "dates": {
+      "start_date": "2026-06-12",
+      "end_date": "2026-06-14"
+    },
+    "venue": {
+      "city": "Paris",
+      "country": "France"
+    },
+    "deadlines": {
+      "submission": "2026-04-15",
+      "notification": "2026-05-10",
+      "camera_ready": null
+    },
+    "topics": [
+      "intelligent computing",
+      "machine learning",
+      "deep learning",
+      "data science",
+      "robotics",
+      "automation",
+      "computer vision",
+      "internet of things",
+      "multi-agent systems",
+      "pattern recognition",
+      "control systems",
+      "evolutionary computation",
+      "human-machine interaction",
+      "privacy computing",
+      "swarm intelligence"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute-Alsace",
+        "country": "France"
+      },
+      {
+        "name": "Xiaodong Liu",
+        "affiliation": "Edinburgh Napier University",
+        "country": "United Kingdom"
+      },
+      {
+        "name": "Hamed Taherdoost",
+        "affiliation": "University Canada West",
+        "country": "Canada"
+      },
+      {
+        "name": "Umesh Chandra Pati",
+        "affiliation": "National Institute of Technology",
+        "country": "India"
+      },
+      {
+        "name": "Hongliang Ren",
+        "affiliation": "Chinese University of Hong Kong",
+        "country": "China"
+      },
+      {
+        "name": "Wali Khan Mashwani",
+        "affiliation": "Kohat University of Science and Technology",
+        "country": "Pakistan"
+      },
+      {
+        "name": "Muazzam A. Khan Khattak",
+        "affiliation": "Quaid-i-Azam University",
+        "country": "Pakistan"
+      },
+      {
+        "name": "Pooja Agarwal",
+        "affiliation": "PES University",
+        "country": "India"
+      },
+      {
+        "name": "Madihah Mohd Saudi",
+        "affiliation": "Universiti Sains Islam Malaysia",
+        "country": "Malaysia"
+      },
+      {
+        "name": "Deepika Koundal",
+        "affiliation": "University of Petroleum and Energy Studies",
+        "country": "India"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Ljiljana Trajkovic",
+        "affiliation": "Simon Fraser University",
+        "country": "Canada",
+        "role": "General Chair"
+      },
+      {
+        "name": "Chun-Yi Su",
+        "affiliation": "Concordia University",
+        "country": "Canada",
+        "role": "General Chair"
+      },
+
+      {
+        "name": "Debao Zhou",
+        "affiliation": "University of Minnesota Duluth",
+        "country": "USA",
+        "role": "Co-Chair"
+      },
+      {
+        "name": "Jinsong Wu",
+        "affiliation": "University of Chile",
+        "country": "Chile",
+        "role": "Co-Chair"
+      },
+      {
+        "name": "Smain Femmam",
+        "affiliation": "UHA University",
+        "country": "France",
+        "role": "Co-Chair"
+      },
+      {
+        "name": "Sos Agaian",
+        "affiliation": "City University of New York",
+        "country": "USA",
+        "role": "Co-Chair"
+      },
+      {
+        "name": "Zhihan Lv",
+        "affiliation": "Uppsala University",
+        "country": "Sweden",
+        "role": "Co-Chair"
+      },
+
+      {
+        "name": "Gordana Jovanovic Dolecek",
+        "affiliation": "Institute INAOE",
+        "country": "Mexico",
+        "role": "Organizing Committee Chair"
+      },
+      {
+        "name": "Rong Fei",
+        "affiliation": "Xi'an University of Technology",
+        "country": "China",
+        "role": "Organizing Committee Chair"
+      },
+      {
+        "name": "Xinguo Yu",
+        "affiliation": "Central China Normal University",
+        "country": "China",
+        "role": "Organizing Committee Chair"
+      },
+
+      {
+        "name": "Aarti Amod Agarkar",
+        "affiliation": "Vishwakarma Institute of Technology",
+        "country": "India",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Arun Balodi",
+        "affiliation": "Dayananda Sagar University",
+        "country": "India",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Balkrishna Rasiklal Yadav",
+        "affiliation": "Tang and company",
+        "country": "USA",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Dilip Kumar Pratihar",
+        "affiliation": "Indian Institute of Technology Kharagpur",
+        "country": "India",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Jasmine Seng Kah Phooi",
+        "affiliation": "UNITAR International University",
+        "country": "Malaysia",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Jinfeng Wang",
+        "affiliation": "Zhengzhou University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "João Manuel R. S. Tavares",
+        "affiliation": "Universidade do Porto",
+        "country": "Portugal",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Larbi Boubchir",
+        "affiliation": "University of Paris 8",
+        "country": "France",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Liang Li",
+        "affiliation": "Xihua University",
+        "country": "China",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Lorna Uden",
+        "affiliation": "Staffordshire University",
+        "country": "UK",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Luisa Maria Arvide Cambra",
+        "affiliation": "University of Almeria",
+        "country": "Spain",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Madihah Mohd Saudi",
+        "affiliation": "Universiti Sains Islam Malaysia",
+        "country": "Malaysia",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Maki Habib",
+        "affiliation": "The American University in Cairo",
+        "country": "Egypt",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Marius Branzila",
+        "affiliation": "Gheorghe Asachi Technical University of Iași",
+        "country": "Romania",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Maziah Mohamad",
+        "affiliation": "Universiti Teknologi Malaysia",
+        "country": "Malaysia",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Muazzam Ali Khan Khattak",
+        "affiliation": "Quaid-i-Azam University",
+        "country": "Pakistan",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Muhammad Adil",
+        "affiliation": "Central Connecticut State University",
+        "country": "USA",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Nebojsa Bacanin-Dzakula",
+        "affiliation": "Singidunum University",
+        "country": "Serbia",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Nilgun Baydogan",
+        "affiliation": "Istanbul Technical University",
+        "country": "Turkey",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Qasem Abu Al-Haija",
+        "affiliation": "Jordan University of Science and Technology",
+        "country": "Jordan",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Shabir Ahmad Parah",
+        "affiliation": "University of Kashmir",
+        "country": "India",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Sudan Jha",
+        "affiliation": "Kathmandu University",
+        "country": "Nepal",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Valentina Emilia Balas",
+        "affiliation": "Aurel Vlaicu University of Arad",
+        "country": "Romania",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Vatsal Gupta",
+        "affiliation": "Apple Inc.",
+        "country": "USA",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Vijayaprabhuvel Rajavel",
+        "affiliation": "HCL America Inc.",
+        "country": "USA",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Vijay Bhaskar Semwal",
+        "affiliation": "Maulana Azad National Institute of Technology",
+        "country": "India",
+        "role": "Organizing Committee Member"
+      },
+      {
+        "name": "Yousef Farhaoui",
+        "affiliation": "Moulay Ismail University",
+        "country": "Morocco",
+        "role": "Organizing Committee Member"
+      },
+
+      {
+        "name": "Jingsha He",
+        "affiliation": "Beijing University of Technology",
+        "country": "China",
+        "role": "Publicity Chair"
+      },
+
+      {
+        "name": "Jixin Ma",
+        "affiliation": "University of Greenwich",
+        "country": "UK",
+        "role": "Technical Committee Chair"
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute Alsace",
+        "country": "France",
+        "role": "Technical Committee Chair"
+      },
+      {
+        "name": "Xiaodong Liu",
+        "affiliation": "Edinburgh Napier University",
+        "country": "UK",
+        "role": "Technical Committee Chair"
+      },
+
+      {
+        "name": "Adrian David Cheok",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Anggun Fitrian",
+        "affiliation": "Institut Teknologi Telkom Purwokerto",
+        "country": "Indonesia",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Chao Zeng",
+        "affiliation": "University of Liverpool",
+        "country": "UK",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Chinmay Chakraborty",
+        "affiliation": "Birla Institute of Technology",
+        "country": "India",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Deepika Koundal",
+        "affiliation": "University of Petroleum and Energy Studies",
+        "country": "India",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Duc Truong Pham",
+        "affiliation": "The University of Birmingham",
+        "country": "UK",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Grigorios N. Beligiannis",
+        "affiliation": "University of Patras",
+        "country": "Greece",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Gyu Myoung Lee",
+        "affiliation": "Liverpool John Moores University",
+        "country": "UK",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Hamed Taherdoost",
+        "affiliation": "University Canada West",
+        "country": "Canada",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Hongliang Ren",
+        "affiliation": "The Chinese University of Hong Kong",
+        "country": "China",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Javier Gozalvez",
+        "affiliation": "Universidad Miguel Hernandez de Elche",
+        "country": "Spain",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Luigi Fortuna",
+        "affiliation": "University of Catania",
+        "country": "Italy",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Mojtaba Ahmadieh Khanesar",
+        "affiliation": "University of Nottingham",
+        "country": "UK",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Pooja Agarwal",
+        "affiliation": "PES University",
+        "country": "India",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Prabhat K. Mahanti",
+        "affiliation": "University of New Brunswick",
+        "country": "Canada",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Radu-Emil Precup",
+        "affiliation": "Politehnica University of Timisoara",
+        "country": "Romania",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Ravipudi Venkata Rao",
+        "affiliation": "S. V. National Institute of Technology",
+        "country": "India",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Shobhit Agrawal",
+        "affiliation": "Dell Technologies",
+        "country": "USA",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Songmei Yu",
+        "affiliation": "Felician University",
+        "country": "USA",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Umesh C. Pati",
+        "affiliation": "National Institute of Technology",
+        "country": "India",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Wali Khan Mashwani",
+        "affiliation": "Kohat University of Science and Technology",
+        "country": "Pakistan",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Wei Xu",
+        "affiliation": "Huazhong University of Science and Technology",
+        "country": "China",
+        "role": "Technical Committee Member"
+      },
+      {
+        "name": "Yonggui Kao",
+        "affiliation": "Harbin Institute of Technology",
+        "country": "China",
+        "role": "Technical Committee Member"
+      }
+    ],
+    "publication": {
+      "publisher": "IEEE",
+      "series": "IEEE Conference Proceedings"
+    }
+  },
+  "aliases": {
+    "conference.full_name": [
+      "2026 3rd International Conference on Intelligent Computing and Robotics",
+      "ICICR"
+    ],
+    "venue.city": [],
+    "venue.country": []
+  }
+}
+]
