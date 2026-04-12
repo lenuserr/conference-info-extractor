@@ -536,6 +536,7 @@ def _run_pass(
     base_url: Optional[str],
     vllm_extra_args: Optional[List[str]],
     list_wrap_key: Optional[str] = None,
+    prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """Format *prompt_template* with *text*, call the LLM, parse JSON.
 
@@ -544,14 +545,35 @@ def _run_pass(
     array instead; when ``list_wrap_key`` is set, such an array is salvaged
     by wrapping it as ``{list_wrap_key: [...]}`` rather than being
     discarded. Anything else (None, non-dict, non-list) yields None.
+
+    When ``prompts_dir`` is set, the fully rendered prompt and the raw LLM
+    response are saved to that directory for debugging.
     """
     if base_url is None:
         base_url = get_default_url(backend)
     prompt = prompt_template.format(text=text)
+
+    if prompts_dir:
+        import os
+        os.makedirs(prompts_dir, exist_ok=True)
+        # Sanitize pass_name for filename: "1 (basic)" → "1_basic"
+        safe_name = pass_name.replace(" ", "_").replace("(", "").replace(")", "")
+        prompt_path = os.path.join(prompts_dir, f"{safe_name}_prompt.txt")
+        with open(prompt_path, "w", encoding="utf-8") as f:
+            f.write(prompt)
+        logger.debug("Saved prompt to %s", prompt_path)
+
     raw = _call_llm(
         prompt, model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
     )
+
+    if prompts_dir and raw:
+        response_path = os.path.join(prompts_dir, f"{safe_name}_response.txt")
+        with open(response_path, "w", encoding="utf-8") as f:
+            f.write(raw)
+        logger.debug("Saved LLM response to %s", response_path)
+
     result = _parse_json_from_response(raw)
     if result is None:
         logger.warning("Pass %s failed to produce valid JSON", pass_name)
@@ -583,6 +605,7 @@ def extract_basic(
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 1: identity, dates, venue, deadlines, publication, topics.
@@ -595,6 +618,7 @@ def extract_basic(
         pass_name="1 (basic)",
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
+        prompts_dir=prompts_dir,
     )
 
 
@@ -604,6 +628,7 @@ def extract_speakers(
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 2: keynote / invited / plenary speakers only.
@@ -617,6 +642,7 @@ def extract_speakers(
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         list_wrap_key="keynote_speakers",
+        prompts_dir=prompts_dir,
     )
 
 
@@ -626,6 +652,7 @@ def extract_committee(
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 3: program committee / chairs / organizing committee.
@@ -639,4 +666,5 @@ def extract_committee(
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         list_wrap_key="program_committee",
+        prompts_dir=prompts_dir,
     )
