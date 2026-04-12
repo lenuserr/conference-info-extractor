@@ -145,6 +145,7 @@ def run_benchmark(
     outdir: str,
     backend: str,
     base_url: str | None,
+    save_prompts: bool = False,
 ) -> Dict[str, Any]:
     """
     Run extraction for every (model, url) pair.
@@ -178,10 +179,15 @@ def run_benchmark(
             print("-" * 60)
 
             t0 = time.time()
+            prompts_dir = None
+            if save_prompts:
+                url_name = _sanitize_name(url)
+                prompts_dir = os.path.join(model_dir, f"{url_name}_prompts")
             try:
                 result = extract_conference(
                     url, model=model, backend=backend, base_url=base_url,
                     vllm_extra_args=extra_args or None,
+                    prompts_dir=prompts_dir,
                 )
                 status = "ok"
                 error = None
@@ -381,6 +387,11 @@ Examples:
         "--base-url", default=None,
         help="Server URL (default: auto per backend — :11434 for ollama, :8000 for vllm)",
     )
+    parser.add_argument(
+        "--save-prompts", action="store_true",
+        help="Save rendered prompts and raw LLM responses for each site "
+             "(written to <outdir>/<model>/<url>_prompts/)",
+    )
     parser.add_argument("--verbose", "-v", action="store_true")
 
     args = parser.parse_args()
@@ -426,7 +437,8 @@ Examples:
     print(f"Total:   {len(models) * len(urls)} extraction runs")
     print(f"Output:  {args.outdir}/")
 
-    run_benchmark(models, urls, args.outdir, args.backend, args.base_url)
+    run_benchmark(models, urls, args.outdir, args.backend, args.base_url,
+                  save_prompts=args.save_prompts)
 
 
 if __name__ == "__main__":

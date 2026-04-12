@@ -105,6 +105,7 @@ def extract_conference(
     backend: str = DEFAULT_BACKEND,
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Full pipeline: scrape → extract → validate → retry → return JSON.
@@ -116,6 +117,8 @@ def extract_conference(
         base_url:        Server URL. If None, uses default for the chosen backend.
         vllm_extra_args: Extra CLI args forwarded to ``vllm serve`` when the
                          vLLM backend auto-starts a server (ignored for ollama).
+        prompts_dir:     If set, save the rendered prompts and raw LLM
+                         responses to this directory for debugging.
 
     Returns a dict with keys:
       - "data": the extracted conference JSON
@@ -175,15 +178,15 @@ def extract_conference(
         # --- Step 2: LLM extraction (three focused passes) ---
         basic = extract_basic(
             basic_text, model=model, backend=backend, base_url=base_url,
-            vllm_extra_args=vllm_extra_args,
+            vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
         )
         speakers = extract_speakers(
             speakers_text, model=model, backend=backend, base_url=base_url,
-            vllm_extra_args=vllm_extra_args,
+            vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
         )
         committee = extract_committee(
             committee_text, model=model, backend=backend, base_url=base_url,
-            vllm_extra_args=vllm_extra_args,
+            vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
         )
 
         if basic is None and speakers is None and committee is None:
