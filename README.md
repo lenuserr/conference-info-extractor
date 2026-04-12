@@ -100,6 +100,15 @@
 
 ---
 
+## 🌐 Источники данных о конференциях
+
+* [WikiCFP](http://www.wikicfp.com/cfp/) — агрегатор Call for Papers
+* [Conference Alerts](https://conferencealerts.com/) — каталог конференций по всему миру
+* [Conference Index](https://conferenceindex.org/) — индекс академических конференций
+* [WASET](https://waset.org/conferences) — база международных конференций
+
+---
+
 ## ⚙️ Технологии (план)
 
 * Python
