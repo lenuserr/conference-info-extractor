@@ -24,11 +24,18 @@ _SUBPAGE_KEYWORDS = [
 ]
 
 # Tags/classes/ids that are navigation/chrome — not useful content
-_STRIP_TAGS = {"script", "style", "nav", "footer", "header", "noscript", "svg", "iframe"}
+_STRIP_TAGS = {"script", "style", "nav", "footer", "noscript", "svg", "iframe"}
+# Tags that should only be stripped when they contain a small portion of the page
+_CONDITIONAL_STRIP_TAGS = {"header"}
+_CONDITIONAL_STRIP_RATIO = 0.3  # strip only if tag text < 30% of total text
+
 _STRIP_CLASS_RE = re.compile(
-    r"nav|menu|footer|sidebar|cookie|banner|popup|modal|breadcrumb|social|share",
+    r"\b(?:nav(?:bar|igation)?|menu|foot(?:er)?|sidebar|cookie|banner|popup|modal"
+    r"|breadcrumb|social[-_]?(?:media|link|icon|share)|share[-_]?(?:bar|button))\b",
     re.I,
 )
+# Structural elements that must never be removed by class/id stripping
+_PROTECTED_TAGS = {"body", "html", "main", "article", "section"}
 
 # Maximum pages to crawl per conference site
 MAX_SUBPAGES = 8
@@ -86,24 +93,58 @@ def _get(url: str, timeout: int = REQUEST_TIMEOUT) -> Optional[requests.Response
     return None
 
 
+def _table_to_text(table) -> str:
+    """Convert an HTML table to a readable text representation."""
+    rows = []
+    for tr in table.find_all("tr"):
+        cells = [td.get_text(strip=True) for td in tr.find_all(["td", "th"])]
+        if any(cells):
+            rows.append(" | ".join(cells))
+    return "\n".join(rows)
+
+
 def _clean_html(soup: BeautifulSoup) -> str:
-    """Remove boilerplate elements and return cleaned plain text."""
+    """Remove boilerplate elements and return cleaned text with structure."""
     # Remove unwanted tags entirely
     for tag in soup.find_all(_STRIP_TAGS):
         tag.decompose()
+
+    # Conditionally strip tags (header) only when they hold a small portion
+    total_text_len = len(soup.get_text(strip=True))
+    if total_text_len > 0:
+        for tag_name in _CONDITIONAL_STRIP_TAGS:
+            for tag in soup.find_all(tag_name):
+                tag_text_len = len(tag.get_text(strip=True))
+                if tag_text_len / total_text_len < _CONDITIONAL_STRIP_RATIO:
+                    tag.decompose()
 
     # Remove HTML comments
     for comment in soup.find_all(string=lambda t: isinstance(t, Comment)):
         comment.extract()
 
-    # Remove elements with navigation/footer-like class or id
+    # Remove elements with navigation/footer-like class or id,
+    # but never remove structural/container elements or large content blocks
+    remaining_text_len = len(soup.get_text(strip=True))
     for el in soup.find_all(True):
+        if el.name in _PROTECTED_TAGS:
+            continue
         if el.attrs is None:
             continue
         cls = " ".join(el.get("class", []))
         el_id = el.get("id", "") or ""
         if _STRIP_CLASS_RE.search(cls) or _STRIP_CLASS_RE.search(el_id):
+            el_text_len = len(el.get_text(strip=True))
+            # Don't remove elements that hold most of the remaining content
+            if remaining_text_len > 0 and el_text_len / remaining_text_len > _CONDITIONAL_STRIP_RATIO:
+                continue
+            remaining_text_len -= el_text_len
             el.decompose()
+
+    # Convert tables to structured text before extracting plain text
+    for table in soup.find_all("table"):
+        table_text = _table_to_text(table)
+        if table_text:
+            table.replace_with(soup.new_string("\n" + table_text + "\n"))
 
     text = soup.get_text(separator="\n", strip=True)
     # Collapse multiple blank lines
