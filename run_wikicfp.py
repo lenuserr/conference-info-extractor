@@ -44,8 +44,8 @@ logger = logging.getLogger(__name__)
 
 ModelSpec = Tuple[str, List[str]]  # (model_name, extra_vllm_args)
 
-DEFAULT_INPUT = "wikicfp_conferences.json"
-DEFAULT_OUTPUT = "wikicfp_results.json"
+DEFAULT_INPUT = "data/wikicfp_conferences.json"
+DEFAULT_OUTPUT = "data/wikicfp_results.json"
 
 
 def _load_input(path: str) -> List[Dict[str, Any]]:
