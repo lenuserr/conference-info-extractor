@@ -1,6 +1,7 @@
 requests>=2.31.0
 beautifulsoup4>=4.12.0
 lxml>=4.9.0
+trafilatura>=2.0.0
 jsonschema>=4.20.0
 thefuzz[speedup]>=0.22.0
 ollama>=0.4.0
@@ -16,3 +17,7 @@ pip uninstall pandas numpy -y
 pip install --force-reinstall --no-cache-dir pandas numpy
 
 token: hf_token
+
+playwright>=1.40.0
+playwright install
+playwright install-deps chromium
