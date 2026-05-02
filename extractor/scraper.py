@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 import re
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -40,6 +40,7 @@ class PageContent:
     url: str
     title: str
     text: str
+    link_text: str = ""  # anchor text of the <a> that led to this page
 
 
 @dataclass
@@ -182,8 +183,12 @@ def _is_junk_link(url: str) -> bool:
     return bool(_JUNK_PATH_RE.search(path))
 
 
-def _discover_subpages(soup: BeautifulSoup, base_url: str) -> List[str]:
+def _discover_subpages(soup: BeautifulSoup, base_url: str) -> List[Tuple[str, str]]:
     """Find all internal links on the page, excluding obvious junk.
+
+    Returns a list of ``(url, link_text)`` tuples.  The ``link_text`` is
+    the visible text inside the ``<a>`` tag (e.g. "Call for Papers",
+    "Program Committee") — invaluable for downstream page classification.
 
     Unlike the previous keyword-allowlist approach, this collects *every*
     same-domain link that isn't clearly non-content (login, assets, binary
@@ -192,7 +197,7 @@ def _discover_subpages(soup: BeautifulSoup, base_url: str) -> List[str]:
     duplicating that logic here was both redundant and lossy.
     """
     seen: Set[str] = set()
-    results: List[str] = []
+    results: List[Tuple[str, str]] = []
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
         # Skip anchors, mailto, javascript
@@ -206,7 +211,8 @@ def _discover_subpages(soup: BeautifulSoup, base_url: str) -> List[str]:
         seen.add(full)
         if _is_junk_link(full):
             continue
-        results.append(full)
+        anchor_text = a.get_text(strip=True)
+        results.append((full, anchor_text))
     return results
 
 
@@ -240,11 +246,11 @@ def fetch_conference_site(url: str) -> SiteContent:
     site.pages.append(main_page)
 
     # 2. Discover and fetch subpages
-    subpage_urls = _discover_subpages(soup, url)
-    logger.info("Discovered %d subpage candidates for %s", len(subpage_urls), url)
+    subpage_links = _discover_subpages(soup, url)
+    logger.info("Discovered %d subpage candidates for %s", len(subpage_links), url)
 
     visited: Set[str] = {url}
-    for sub_url in subpage_urls:
+    for sub_url, anchor_text in subpage_links:
         if sub_url in visited:
             continue
         visited.add(sub_url)
@@ -256,6 +262,7 @@ def fetch_conference_site(url: str) -> SiteContent:
             url=sub_url,
             title=_extract_title(sub_soup),
             text=_clean_html(BeautifulSoup(sub_resp.text, "lxml")),
+            link_text=anchor_text,
         )
         site.pages.append(page)
         # Also keep raw HTML for validation

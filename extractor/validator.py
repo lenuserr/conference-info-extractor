@@ -1,10 +1,12 @@
 """
 Validation layer for extracted conference metadata.
 
-1. JSON Schema validation
-2. Date logic checks (ordering)
-3. Source verification (fuzzy match against original HTML text)
-4. Confidence scoring per field
+Validates LLM output against the context that was sent to it (not raw HTML).
+Called after each LLM call in the pipeline.
+
+1. Source verification — check extracted values appear in the LLM context
+2. Date validation — parse all dates from context, normalize, compare
+3. Nullification — remove fields not found in context (likely hallucinated)
 """
 
 from __future__ import annotations
@@ -12,95 +14,16 @@ from __future__ import annotations
 import logging
 import re
 from datetime import date, datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from thefuzz import fuzz
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# JSON Schema (simplified inline — avoids extra dependency complexity)
-# ---------------------------------------------------------------------------
-
-CONFERENCE_SCHEMA = {
-    "type": "object",
-    "required": [
-        "conference", "dates", "venue", "deadlines",
-        "topics", "keynote_speakers", "program_committee", "publication",
-    ],
-    "properties": {
-        "conference": {
-            "type": "object",
-            "required": ["full_name", "acronym", "url", "edition_number"],
-            "properties": {
-                "full_name": {"type": "string"},
-                "acronym": {"type": "string"},
-                "url": {"type": "string"},
-                "edition_number": {"type": ["integer", "null"]},
-            },
-        },
-        "dates": {
-            "type": "object",
-            "properties": {
-                "start_date": {"type": ["string", "null"]},
-                "end_date": {"type": ["string", "null"]},
-            },
-        },
-        "venue": {
-            "type": "object",
-            "properties": {
-                "city": {"type": ["string", "null"]},
-                "country": {"type": ["string", "null"]},
-            },
-        },
-        "deadlines": {
-            "type": "object",
-            "properties": {
-                "submission": {"type": ["string", "null"]},
-                "notification": {"type": ["string", "null"]},
-                "camera_ready": {"type": ["string", "null"]},
-            },
-        },
-        "topics": {"type": "array", "items": {"type": "string"}},
-        "keynote_speakers": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "affiliation": {"type": ["string", "null"]},
-                    "country": {"type": ["string", "null"]},
-                },
-            },
-        },
-        "program_committee": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "affiliation": {"type": ["string", "null"]},
-                    "country": {"type": ["string", "null"]},
-                    "role": {"type": ["string", "null"]},
-                },
-            },
-        },
-        "publication": {
-            "type": "object",
-            "properties": {
-                "publisher": {"type": ["string", "null"]},
-                "series": {"type": ["string", "null"]},
-            },
-        },
-    },
-}
-
 
 # ---------------------------------------------------------------------------
-# Helpers
+# Date parsing from free text
 # ---------------------------------------------------------------------------
-
-_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 _MONTH_NAMES: List[Tuple[str, str]] = [
     ("January", "Jan"),
@@ -117,9 +40,18 @@ _MONTH_NAMES: List[Tuple[str, str]] = [
     ("December", "Dec"),
 ]
 
+_MONTH_LOOKUP: Dict[str, int] = {
+    name.lower(): i + 1
+    for i, (full_name, abbr) in enumerate(_MONTH_NAMES)
+    for name in (full_name, abbr)
+}
 
-def _parse_date(s: Optional[str]) -> Optional[date]:
-    if s and _DATE_RE.match(s):
+_ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _parse_iso_date(s: Optional[str]) -> Optional[date]:
+    """Parse a YYYY-MM-DD string into a date object."""
+    if s and _ISO_DATE_RE.match(s):
         try:
             return datetime.strptime(s, "%Y-%m-%d").date()
         except ValueError:
@@ -127,185 +59,142 @@ def _parse_date(s: Optional[str]) -> Optional[date]:
     return None
 
 
-def _ordinal_suffix(day: int) -> str:
-    if 10 <= day % 100 <= 20:
-        return "th"
-    return {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
-
-
-def _generate_date_variants(
-    iso_date: str,
-) -> Tuple[List[str], List[str], str]:
+def _extract_dates_from_text(text: str) -> Set[date]:
     """
-    Generate surface-form variants of an ISO date (``YYYY-MM-DD``).
+    Extract all dates from free text in any common format and return
+    them as a set of normalized date objects.
 
-    Returns ``(full_variants, partial_variants, year)``:
-      - ``full_variants``: lowercased complete date strings (year + day + month)
-      - ``partial_variants``: lowercased day+month fragments (e.g. ``"august 19"``),
-        used to recognise date-range text like ``"19-21 August 2026"`` where
-        neither individual date appears as a full substring
-      - ``year``: the year as a 4-digit string, or ``""`` if the input is
-        not a valid ISO date
+    Handles:
+    - "August 19, 2026", "Aug 19 2026", "19 August 2026", "19th August 2026"
+    - "August 19-21, 2026" → {Aug 19, Aug 20, Aug 21}
+    - "19 ~ 22 May, 2026" → {May 19, May 20, May 21, May 22}
+    - "2026-08-19", "19/08/2026", "08/19/2026", "2026.08.19"
+    - "2026/05/21"
     """
-    dt = _parse_date(iso_date)
-    if dt is None:
-        return [], [], ""
+    dates: Set[date] = set()
+    if not text:
+        return dates
 
-    year = f"{dt.year:04d}"
-    month_full, month_abbr = _MONTH_NAMES[dt.month - 1]
+    month_alt = "|".join(sorted(_MONTH_LOOKUP.keys(), key=len, reverse=True))
 
-    day_int = dt.day
-    month_int = dt.month
-    day_num = str(day_int)               # "19", "5"
-    day_pad = f"{day_int:02d}"           # "19", "05"
-    month_num = str(month_int)           # "8"
-    month_pad = f"{month_int:02d}"       # "08"
-    day_ord = f"{day_int}{_ordinal_suffix(day_int)}"  # "19th", "21st"
-
-    day_forms = {day_num, day_pad, day_ord}
-
-    full: List[str] = []
-
-    # Month-name forms: "August 19, 2026" / "19 August 2026" / "19th of August, 2026"
-    for m_name in (month_full, month_abbr):
-        for d in day_forms:
-            full.append(f"{m_name} {d}, {year}")
-            full.append(f"{m_name} {d} {year}")
-            full.append(f"{d} {m_name} {year}")
-            full.append(f"{d} {m_name}, {year}")
-            full.append(f"{d} of {m_name} {year}")
-            full.append(f"{d} of {m_name}, {year}")
-
-    # Purely numeric forms in the common separators: "-", "/", "."
-    for sep in ("-", "/", "."):
-        full.append(f"{year}{sep}{month_pad}{sep}{day_pad}")
-        full.append(f"{day_pad}{sep}{month_pad}{sep}{year}")
-        full.append(f"{month_pad}{sep}{day_pad}{sep}{year}")
-        # Non-zero-padded variants (e.g. "8/19/2026")
-        if month_num != month_pad or day_num != day_pad:
-            full.append(f"{day_num}{sep}{month_num}{sep}{year}")
-            full.append(f"{month_num}{sep}{day_num}{sep}{year}")
-
-    # Day+month fragments — used as a fallback for date ranges
-    partial: List[str] = []
-    for m_name in (month_full, month_abbr):
-        for d in day_forms:
-            partial.append(f"{m_name} {d}")
-            partial.append(f"{d} {m_name}")
-            partial.append(f"{d} of {m_name}")
-
-    return (
-        [v.lower() for v in full],
-        [p.lower() for p in partial],
-        year,
+    # Pattern 1: "Month Day[-–—~]Day[,] Year" — date ranges with month first
+    # e.g. "August 19-21, 2026", "May 21 ~ 22, 2026"
+    p_range_month_first = re.compile(
+        rf"\b({month_alt})\.?\s+(\d{{1,2}})(?:st|nd|rd|th)?"
+        rf"\s*[-–—~]\s*"
+        rf"(\d{{1,2}})(?:st|nd|rd|th)?\s*,?\s*(\d{{4}})\b",
+        re.IGNORECASE,
     )
+    for m in p_range_month_first.finditer(text):
+        month_name, d_start, d_end, year = m.groups()
+        month_num = _MONTH_LOOKUP.get(month_name.lower().rstrip("."))
+        if month_num:
+            for day in range(int(d_start), int(d_end) + 1):
+                try:
+                    dates.add(date(int(year), month_num, day))
+                except ValueError:
+                    pass
+
+    # Pattern 2: "Day[-–—~]Day Month[,] Year" — date ranges with month last
+    # e.g. "19-21 August 2026", "19 ~ 22 May, 2026"
+    p_range_month_last = re.compile(
+        rf"\b(\d{{1,2}})(?:st|nd|rd|th)?"
+        rf"\s*[-–—~]\s*"
+        rf"(\d{{1,2}})(?:st|nd|rd|th)?\s+({month_alt})\.?\s*,?\s*(\d{{4}})\b",
+        re.IGNORECASE,
+    )
+    for m in p_range_month_last.finditer(text):
+        d_start, d_end, month_name, year = m.groups()
+        month_num = _MONTH_LOOKUP.get(month_name.lower().rstrip("."))
+        if month_num:
+            for day in range(int(d_start), int(d_end) + 1):
+                try:
+                    dates.add(date(int(year), month_num, day))
+                except ValueError:
+                    pass
+
+    # Pattern 3: "Month Day[,] Year" — single date with month name first
+    # e.g. "August 19, 2026", "Aug 19 2026"
+    p_single_month_first = re.compile(
+        rf"\b({month_alt})\.?\s+(\d{{1,2}})(?:st|nd|rd|th)?\s*,?\s*(\d{{4}})\b",
+        re.IGNORECASE,
+    )
+    for m in p_single_month_first.finditer(text):
+        month_name, day, year = m.groups()
+        month_num = _MONTH_LOOKUP.get(month_name.lower().rstrip("."))
+        if month_num:
+            try:
+                dates.add(date(int(year), month_num, int(day)))
+            except ValueError:
+                pass
+
+    # Pattern 4: "Day Month[,] Year" — single date with month name last
+    # e.g. "19 August 2026", "19th of August, 2026"
+    p_single_month_last = re.compile(
+        rf"\b(\d{{1,2}})(?:st|nd|rd|th)?\s+(?:of\s+)?({month_alt})\.?\s*,?\s*(\d{{4}})\b",
+        re.IGNORECASE,
+    )
+    for m in p_single_month_last.finditer(text):
+        day, month_name, year = m.groups()
+        month_num = _MONTH_LOOKUP.get(month_name.lower().rstrip("."))
+        if month_num:
+            try:
+                dates.add(date(int(year), month_num, int(day)))
+            except ValueError:
+                pass
+
+    # Pattern 5: ISO and numeric formats
+    # "2026-08-19", "2026/08/19", "2026.08.19"
+    p_iso = re.compile(r"\b(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\b")
+    for m in p_iso.finditer(text):
+        year, month, day = m.groups()
+        try:
+            dates.add(date(int(year), int(month), int(day)))
+        except ValueError:
+            pass
+
+    # "19/08/2026", "08/19/2026", "19.08.2026" — ambiguous, try both
+    p_dmy = re.compile(r"\b(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})\b")
+    for m in p_dmy.finditer(text):
+        a, b, year = m.groups()
+        # Try day/month/year
+        try:
+            dates.add(date(int(year), int(b), int(a)))
+        except ValueError:
+            pass
+        # Try month/day/year
+        try:
+            dates.add(date(int(year), int(a), int(b)))
+        except ValueError:
+            pass
+
+    return dates
 
 
-_MONTH_LOOKUP: Dict[str, int] = {
-    name.lower(): i + 1
-    for i, (full_name, abbr) in enumerate(_MONTH_NAMES)
-    for name in (full_name, abbr)
-}
-
-_MONTH_ALT = "|".join(sorted(_MONTH_LOOKUP.keys(), key=len, reverse=True))
-# Ranges like "August 19-21, 2026" / "August 19 – 21 2026"
-_RANGE_MONTH_FIRST_RE = re.compile(
-    rf"\b({_MONTH_ALT})\s+(\d{{1,2}})\s*[-–—]\s*(\d{{1,2}})\s*,?\s*(\d{{4}})\b",
-    re.IGNORECASE,
-)
-# Ranges like "19-21 August 2026" / "19 – 21 Aug, 2026"
-_RANGE_MONTH_LAST_RE = re.compile(
-    rf"\b(\d{{1,2}})\s*[-–—]\s*(\d{{1,2}})\s+({_MONTH_ALT})\s*,?\s+(\d{{4}})\b",
-    re.IGNORECASE,
-)
-
-
-def _date_in_text_range(iso_date: str, source_text: str) -> bool:
-    """
-    True if *iso_date* is contained in a month-name day-range appearing in
-    *source_text*, e.g. ``"August 19-21, 2026"`` or ``"19-21 August 2026"``.
-    """
-    dt = _parse_date(iso_date)
+def _date_found_in_context(iso_date: str, context_dates: Set[date]) -> bool:
+    """Check if an ISO date string matches any date extracted from context."""
+    dt = _parse_iso_date(iso_date)
     if dt is None:
         return False
-
-    for m in _RANGE_MONTH_FIRST_RE.finditer(source_text):
-        month_name, d_start, d_end, year_str = m.groups()
-        month_num = _MONTH_LOOKUP.get(month_name.lower())
-        try:
-            if (
-                month_num == dt.month
-                and int(year_str) == dt.year
-                and int(d_start) <= dt.day <= int(d_end)
-            ):
-                return True
-        except ValueError:
-            continue
-
-    for m in _RANGE_MONTH_LAST_RE.finditer(source_text):
-        d_start, d_end, month_name, year_str = m.groups()
-        month_num = _MONTH_LOOKUP.get(month_name.lower())
-        try:
-            if (
-                month_num == dt.month
-                and int(year_str) == dt.year
-                and int(d_start) <= dt.day <= int(d_end)
-            ):
-                return True
-        except ValueError:
-            continue
-
-    return False
+    return dt in context_dates
 
 
-def _date_found_in_source(iso_date: str, source_text: str) -> bool:
-    """
-    True if *iso_date* (``YYYY-MM-DD``) appears in *source_text* in any
-    common surface form.
+# ---------------------------------------------------------------------------
+# String matching
+# ---------------------------------------------------------------------------
 
-    Strategy:
-      1. Generate plausible complete representations (``August 19, 2026``,
-         ``19/08/2026``, ``2026-08-19``, ...) and look for a substring match.
-      2. Look for a month-name day-range that brackets the date
-         (``August 19-21, 2026`` / ``19-21 August 2026``).
-      3. Fallback: year present AND a ``day + month`` fragment anywhere in
-         the text.
-    """
-    if not iso_date or not source_text:
-        return False
-    full, partial, year = _generate_date_variants(iso_date)
-    if not year:
-        return False
-
-    src = source_text.lower()
-
-    for v in full:
-        if v in src:
-            return True
-
-    if _date_in_text_range(iso_date, source_text):
-        return True
-
-    if year in src:
-        for p in partial:
-            if p in src:
-                return True
-
-    return False
-
-
-def _fuzzy_found_in_source(value: str, source_text: str, threshold: int = 70) -> bool:
-    """Check whether *value* can be found in *source_text* via fuzzy matching."""
+def _fuzzy_found(value: str, source_text: str, threshold: int = 70) -> bool:
+    """Check whether *value* appears in *source_text* via fuzzy matching."""
     if not value or not source_text:
         return False
     value_lower = value.lower().strip()
     source_lower = source_text.lower()
 
-    # Exact substring first (fast path)
+    # Exact substring (fast path)
     if value_lower in source_lower:
         return True
 
-    # For short values (city names, dates), use partial ratio
+    # For short values (city names, acronyms), use partial ratio
     if len(value_lower) < 40:
         return fuzz.partial_ratio(value_lower, source_lower) >= threshold
 
@@ -314,47 +203,30 @@ def _fuzzy_found_in_source(value: str, source_text: str, threshold: int = 70) ->
 
 
 # ---------------------------------------------------------------------------
-# Schema validation
+# Date ordering check
 # ---------------------------------------------------------------------------
 
-def validate_schema(data: Dict[str, Any]) -> List[str]:
-    """
-    Validate against the JSON Schema. Returns list of error messages (empty = OK).
-    """
-    try:
-        import jsonschema
-        validator = jsonschema.Draft7Validator(CONFERENCE_SCHEMA)
-        return [e.message for e in validator.iter_errors(data)]
-    except ImportError:
-        logger.warning("jsonschema not installed — skipping schema validation")
-        return []
-
-
-# ---------------------------------------------------------------------------
-# Date logic checks
-# ---------------------------------------------------------------------------
-
-def validate_dates(data: Dict[str, Any]) -> List[str]:
+def _check_date_ordering(data: Dict[str, Any]) -> List[str]:
     """
     Check logical ordering of dates:
-      submission < notification < camera_ready < start_date < end_date
+      submission < notification < camera_ready < start_date ≤ end_date
     Returns list of warnings.
     """
     warnings: List[str] = []
 
-    start = _parse_date(data.get("dates", {}).get("start_date"))
-    end = _parse_date(data.get("dates", {}).get("end_date"))
-    sub = _parse_date(data.get("deadlines", {}).get("submission"))
-    notif = _parse_date(data.get("deadlines", {}).get("notification"))
-    cam = _parse_date(data.get("deadlines", {}).get("camera_ready"))
+    start = _parse_iso_date(data.get("start_date"))
+    end = _parse_iso_date(data.get("end_date"))
+    sub = _parse_iso_date(data.get("submission_deadline"))
+    notif = _parse_iso_date(data.get("notification_date"))
+    cam = _parse_iso_date(data.get("camera_ready_date"))
 
     if start and end and start > end:
         warnings.append(f"start_date ({start}) > end_date ({end})")
 
     ordered: List[Tuple[str, Optional[date]]] = [
-        ("submission", sub),
-        ("notification", notif),
-        ("camera_ready", cam),
+        ("submission_deadline", sub),
+        ("notification_date", notif),
+        ("camera_ready_date", cam),
         ("start_date", start),
     ]
 
@@ -368,185 +240,206 @@ def validate_dates(data: Dict[str, Any]) -> List[str]:
 
 
 # ---------------------------------------------------------------------------
-# Source verification + confidence scoring
+# Per-category validation
 # ---------------------------------------------------------------------------
 
-def verify_against_source(
+def validate_other(
     data: Dict[str, Any],
-    source_text: str,
-) -> Dict[str, str]:
+    context: str,
+) -> Tuple[Dict[str, Any], List[str]]:
     """
-    For each key field, check if the extracted value appears in the original
-    source text. Returns a dict mapping field paths to confidence levels:
-    "high", "medium", "low".
+    Validate OTHER category LLM output against the context.
 
-    - high: exact substring found
-    - medium: fuzzy match found
-    - low: not found at all (possible hallucination)
+    Checks each scalar field against the context text. For dates, parses
+    all dates from the context first and compares normalized values.
+    Nullifies fields not found in context.
+
+    Returns (cleaned_data, warnings).
     """
-    confidence: Dict[str, str] = {}
+    if not data:
+        return {}, []
 
-    # Fields to check: (json_path, value)
-    checks: List[Tuple[str, Optional[str]]] = [
-        ("conference.full_name", data.get("conference", {}).get("full_name")),
-        ("conference.acronym", data.get("conference", {}).get("acronym")),
-        ("dates.start_date", data.get("dates", {}).get("start_date")),
-        ("dates.end_date", data.get("dates", {}).get("end_date")),
-        ("venue.city", data.get("venue", {}).get("city")),
-        ("venue.country", data.get("venue", {}).get("country")),
-        ("deadlines.submission", data.get("deadlines", {}).get("submission")),
-        ("deadlines.notification", data.get("deadlines", {}).get("notification")),
-        ("deadlines.camera_ready", data.get("deadlines", {}).get("camera_ready")),
-        ("publication.publisher", data.get("publication", {}).get("publisher")),
-    ]
-
-    # Date fields store normalized ISO dates ("YYYY-MM-DD") but the source
-    # text rarely uses that exact format, so they need format-aware matching.
-    date_paths = {
-        "dates.start_date",
-        "dates.end_date",
-        "deadlines.submission",
-        "deadlines.notification",
-        "deadlines.camera_ready",
-    }
-
-    source_lower = source_text.lower() if source_text else ""
-
-    for path, value in checks:
-        if value is None:
-            confidence[path] = "high"  # null is a valid "I don't know"
-            continue
-
-        if path in date_paths:
-            if _date_found_in_source(str(value).strip(), source_text):
-                confidence[path] = "high"
-            else:
-                confidence[path] = "low"
-            continue
-
-        val_lower = str(value).lower().strip()
-        if val_lower in source_lower:
-            confidence[path] = "high"
-        elif _fuzzy_found_in_source(str(value), source_text, threshold=70):
-            confidence[path] = "medium"
-        else:
-            confidence[path] = "low"
-
-    # Keynote speakers: check each name
-    for i, speaker in enumerate(data.get("keynote_speakers", [])):
-        name = speaker.get("name", "")
-        path = f"keynote_speakers[{i}].name"
-        if name.lower() in source_lower:
-            confidence[path] = "high"
-        elif _fuzzy_found_in_source(name, source_text, threshold=75):
-            confidence[path] = "medium"
-        else:
-            confidence[path] = "low"
-
-    # Program committee: check each name
-    for i, member in enumerate(data.get("program_committee", [])):
-        name = member.get("name", "") if isinstance(member, dict) else ""
-        path = f"program_committee[{i}].name"
-        if name and name.lower() in source_lower:
-            confidence[path] = "high"
-        elif name and _fuzzy_found_in_source(name, source_text, threshold=80):
-            confidence[path] = "medium"
-        else:
-            confidence[path] = "low"
-
-    return confidence
-
-
-def nullify_low_confidence(
-    data: Dict[str, Any],
-    confidence: Dict[str, str],
-) -> Dict[str, Any]:
-    """
-    Set fields with 'low' confidence to null (likely hallucinated).
-    Mutates and returns data.
-    """
-    import copy
-    data = copy.deepcopy(data)
-
-    mapping = {
-        "conference.full_name": ("conference", "full_name"),
-        "conference.acronym": ("conference", "acronym"),
-        "dates.start_date": ("dates", "start_date"),
-        "dates.end_date": ("dates", "end_date"),
-        "venue.city": ("venue", "city"),
-        "venue.country": ("venue", "country"),
-        "deadlines.submission": ("deadlines", "submission"),
-        "deadlines.notification": ("deadlines", "notification"),
-        "deadlines.camera_ready": ("deadlines", "camera_ready"),
-        "publication.publisher": ("publication", "publisher"),
-        "publication.series": ("publication", "series"),
-    }
-
-    for field_path, conf_level in confidence.items():
-        if conf_level == "low" and field_path in mapping:
-            section, key = mapping[field_path]
-            old_val = data.get(section, {}).get(key)
-            if old_val is not None:
-                logger.warning("Nullifying hallucinated field %s = %r", field_path, old_val)
-                data[section][key] = None
-
-    # Remove keynote speakers whose name is low-confidence
-    speakers = data.get("keynote_speakers", [])
-    filtered = []
-    for i, sp in enumerate(speakers):
-        path = f"keynote_speakers[{i}].name"
-        if confidence.get(path) != "low":
-            filtered.append(sp)
-        else:
-            logger.warning("Removing hallucinated speaker: %s", sp.get("name"))
-    data["keynote_speakers"] = filtered
-
-    # Remove program committee members whose name is low-confidence
-    committee = data.get("program_committee", [])
-    filtered_pc = []
-    for i, member in enumerate(committee):
-        path = f"program_committee[{i}].name"
-        if confidence.get(path) != "low":
-            filtered_pc.append(member)
-        else:
-            logger.warning(
-                "Removing hallucinated committee member: %s",
-                member.get("name") if isinstance(member, dict) else member,
-            )
-    data["program_committee"] = filtered_pc
-
-    return data
-
-
-# ---------------------------------------------------------------------------
-# Aggregate validation
-# ---------------------------------------------------------------------------
-
-def full_validate(
-    data: Dict[str, Any],
-    source_text: str,
-) -> Tuple[Dict[str, Any], Dict[str, str], List[str]]:
-    """
-    Run all validations. Returns:
-      (cleaned_data, confidence_map, list_of_warnings)
-    """
     warnings: List[str] = []
+    result = dict(data)
 
-    # 1. Schema
-    schema_errors = validate_schema(data)
-    warnings.extend([f"[schema] {e}" for e in schema_errors])
+    # Parse all dates from context once
+    context_dates = _extract_dates_from_text(context)
 
-    # 2. Date logic
-    date_warnings = validate_dates(data)
-    warnings.extend([f"[dates] {w}" for w in date_warnings])
+    # Date fields
+    date_fields = [
+        "start_date", "end_date",
+        "submission_deadline", "notification_date", "camera_ready_date",
+    ]
+    for field in date_fields:
+        value = result.get(field)
+        if value is None:
+            continue
+        if not _date_found_in_context(value, context_dates):
+            logger.warning("Nullifying hallucinated date %s = %r", field, value)
+            warnings.append(f"[hallucination] {field} = {value}")
+            result[field] = None
 
-    # 3. Source verification
-    confidence = verify_against_source(data, source_text)
-    low_fields = [k for k, v in confidence.items() if v == "low"]
-    if low_fields:
-        warnings.extend([f"[source] low confidence: {f}" for f in low_fields])
+    # String fields
+    string_fields = {
+        "full_name": 70,
+        "acronym": 80,
+        "city": 75,
+        "country": 75,
+        "publisher": 70,
+        "series": 70,
+    }
+    for field, threshold in string_fields.items():
+        value = result.get(field)
+        if value is None or value == "":
+            continue
+        # "Virtual Conference" is a special value we told the LLM to use
+        if field in ("city", "country") and value.lower() == "virtual conference":
+            continue
+        if not _fuzzy_found(value, context, threshold=threshold):
+            logger.warning("Nullifying hallucinated field %s = %r", field, value)
+            warnings.append(f"[hallucination] {field} = {value}")
+            result[field] = None
 
-    # 4. Nullify hallucinated fields
-    data = nullify_low_confidence(data, confidence)
+    # edition_number: just check that the number appears somewhere in context
+    edition = result.get("edition_number")
+    if edition is not None:
+        if str(edition) not in context:
+            logger.warning("Nullifying hallucinated edition_number = %r", edition)
+            warnings.append(f"[hallucination] edition_number = {edition}")
+            result["edition_number"] = None
 
-    return data, confidence, warnings
+    # Date ordering check
+    date_warnings = _check_date_ordering(result)
+    warnings.extend([f"[date_order] {w}" for w in date_warnings])
+
+    return result, warnings
+
+
+def validate_topics(
+    data: Dict[str, Any],
+    context: str,
+) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Validate TOPICS category LLM output.
+
+    Checks each topic against the context. Removes topics not found.
+    """
+    if not data:
+        return {}, []
+
+    warnings: List[str] = []
+    topics = data.get("topics", [])
+    if not isinstance(topics, list):
+        return {"topics": []}, ["[schema] topics is not a list"]
+
+    filtered = []
+    for topic in topics:
+        if not isinstance(topic, str) or not topic.strip():
+            continue
+        if _fuzzy_found(topic, context, threshold=65):
+            filtered.append(topic)
+        else:
+            logger.warning("Removing hallucinated topic: %r", topic)
+            warnings.append(f"[hallucination] topic = {topic}")
+
+    return {"topics": filtered}, warnings
+
+
+def validate_speakers(
+    data: Dict[str, Any],
+    context: str,
+) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Validate SPEAKERS category LLM output.
+
+    Checks each speaker name against the context. Removes speakers
+    whose names are not found.
+    """
+    if not data:
+        return {}, []
+
+    warnings: List[str] = []
+    speakers = data.get("keynote_speakers", [])
+    if not isinstance(speakers, list):
+        return {"keynote_speakers": []}, ["[schema] keynote_speakers is not a list"]
+
+    filtered = []
+    context_lower = context.lower()
+    for speaker in speakers:
+        if not isinstance(speaker, dict):
+            continue
+        name = speaker.get("name", "")
+        if not name:
+            continue
+        if name.lower() in context_lower or _fuzzy_found(name, context, threshold=75):
+            filtered.append(speaker)
+        else:
+            logger.warning("Removing hallucinated speaker: %r", name)
+            warnings.append(f"[hallucination] speaker = {name}")
+
+    return {"keynote_speakers": filtered}, warnings
+
+
+def validate_committee(
+    data: Dict[str, Any],
+    context: str,
+) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Validate COMMITTEE category LLM output.
+
+    Checks each committee member name against the context. Removes
+    members whose names are not found.
+    """
+    if not data:
+        return {}, []
+
+    warnings: List[str] = []
+    committee = data.get("program_committee", [])
+    if not isinstance(committee, list):
+        return {"program_committee": []}, ["[schema] program_committee is not a list"]
+
+    filtered = []
+    context_lower = context.lower()
+    for member in committee:
+        if not isinstance(member, dict):
+            continue
+        name = member.get("name", "")
+        if not name:
+            continue
+        if name.lower() in context_lower or _fuzzy_found(name, context, threshold=80):
+            filtered.append(member)
+        else:
+            logger.warning("Removing hallucinated committee member: %r", name)
+            warnings.append(f"[hallucination] committee_member = {name}")
+
+    return {"program_committee": filtered}, warnings
+
+
+# ---------------------------------------------------------------------------
+# Dispatch
+# ---------------------------------------------------------------------------
+
+# Import here to avoid circular imports at module level
+from .content_selection import Category
+
+_VALIDATORS: Dict[Category, Any] = {
+    Category.OTHER: validate_other,
+    Category.TOPICS: validate_topics,
+    Category.SPEAKERS: validate_speakers,
+    Category.COMMITTEE: validate_committee,
+}
+
+
+def validate_category(
+    category: Category,
+    data: Dict[str, Any],
+    context: str,
+) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Validate LLM output for a specific category against the context
+    that was sent to the LLM.
+
+    Returns (cleaned_data, warnings).
+    """
+    validator = _VALIDATORS[category]
+    return validator(data, context)
