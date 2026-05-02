@@ -196,20 +196,18 @@ def run_benchmark(
                     "Extraction failed for url=%s model=%s backend=%s",
                     url, display_model, backend,
                 )
-                result = {"data": {}, "confidence": {}, "warnings": [str(exc)], "meta": {}}
+                result = {"data": {}, "warnings": [str(exc)], "meta": {}}
                 status = "error"
                 error = str(exc)
             elapsed = round(time.time() - t0, 1)
 
             data = result["data"]
-            confidence = result["confidence"]
             warnings = result["warnings"]
             meta = result.get("meta", {})
 
             filled, total = _count_fields(data)
             fill_pct = round(filled / total * 100, 1) if total > 0 else 0.0
-            low_fields = [k for k, v in confidence.items() if v == "low"]
-            high_fields = [k for k, v in confidence.items() if v == "high"]
+            hallucination_warnings = [w for w in warnings if "[hallucination]" in w]
 
             entry = {
                 "model": model,
@@ -220,15 +218,12 @@ def run_benchmark(
                 "error": error,
                 "elapsed_sec": elapsed,
                 "pages_fetched": meta.get("pages_fetched", 0),
-                "attempts": meta.get("attempts", 0),
                 "fields_filled": filled,
                 "fields_total": total,
                 "fill_pct": fill_pct,
-                "high_confidence_count": len(high_fields),
-                "low_confidence_fields": low_fields,
+                "hallucinations_caught": len(hallucination_warnings),
                 "warnings": warnings,
                 "data": data,
-                "confidence": confidence,
             }
             report["results"].append(entry)
 
@@ -240,7 +235,7 @@ def run_benchmark(
 
             # Print progress
             if status == "ok":
-                print(f"  -> {fill_pct}% filled, {len(low_fields)} hallucinated, {elapsed}s")
+                print(f"  -> {fill_pct}% filled, {len(hallucination_warnings)} hallucinations caught, {elapsed}s")
             else:
                 print(f"  -> ERROR: {error} ({elapsed}s)")
 
@@ -294,7 +289,7 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
             elif e["status"] != "ok":
                 cell = "ERR"
             else:
-                cell = f"{e['fill_pct']}% h:{len(e['low_confidence_fields'])}"
+                cell = f"{e['fill_pct']}% h:{e['hallucinations_caught']}"
             row += f" | {cell:^{model_col_w}}"
         lines.append(row)
 
@@ -315,7 +310,7 @@ def _write_summary(report: Dict[str, Any], outdir: str) -> None:
             continue
         avg_fill = sum(e["fill_pct"] for e in entries) / len(entries)
         avg_time = sum(e["elapsed_sec"] for e in entries) / len(entries)
-        total_halluc = sum(len(e["low_confidence_fields"]) for e in entries)
+        total_halluc = sum(e["hallucinations_caught"] for e in entries)
         lines.append(
             f"  {label}: avg_fill={avg_fill:.1f}%  avg_time={avg_time:.0f}s  "
             f"total_hallucinations={total_halluc}  sites={len(entries)}/{len(urls)}"
