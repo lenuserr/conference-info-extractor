@@ -3,17 +3,13 @@ Main extraction pipeline: scrape → category-aware selection →
 LLM extract (4 categories × 3 fallback levels + brute-force) →
 validate → merge → output.
 
-Two algorithms run for each category:
+Two modes:
+  - **Live** (``extract_conference``): scrapes the site, builds contexts,
+    runs LLM — all in one process. Needs internet + LLM.
+  - **Prepared** (``extract_from_prepared``): reads pre-built contexts
+    from ``prepare_contexts.py``, runs LLM only. No internet needed.
 
-  Algorithm 1 (targeted, 3 levels):
-    L1  Navigation — select pages by link_text / URL path keywords
-    L2  Content   — search keywords inside page text (new pages only)
-    L3  Remaining — everything not yet sent for this category
-
-  Algorithm 2 (brute-force):
-    Send ALL pages to the LLM in one shot.
-
-Final merge: algorithm 1 results take priority; algorithm 2 fills gaps.
+Both modes share the same core extraction logic.
 """
 
 from __future__ import annotations
@@ -54,11 +50,7 @@ _EXTRACT_FN: Dict[Category, Callable] = {
 # ---------------------------------------------------------------------------
 
 def _has_other_data(result: Dict[str, Any]) -> bool:
-    """Check if OTHER result has enough data to skip further levels.
-
-    We consider it sufficient if we have at least the conference name
-    AND at least one of: dates, venue, or deadlines.
-    """
+    """Check if OTHER result has enough data to skip further levels."""
     if not result:
         return False
     has_name = bool(result.get("full_name"))
@@ -69,7 +61,6 @@ def _has_other_data(result: Dict[str, Any]) -> bool:
 
 
 def _has_list_data(result: Dict[str, Any], key: str) -> bool:
-    """Check if a list field (topics, speakers, committee) is non-empty."""
     if not result:
         return False
     val = result.get(key, [])
@@ -89,7 +80,6 @@ _HAS_DATA: Dict[Category, Callable[[Dict[str, Any]], bool]] = {
 # ---------------------------------------------------------------------------
 
 def _merge_other(base: Dict[str, Any], extra: Dict[str, Any]) -> Dict[str, Any]:
-    """Merge OTHER results: fill nulls in base from extra."""
     merged = dict(base)
     for key in (
         "full_name", "acronym", "edition_number",
@@ -104,7 +94,6 @@ def _merge_other(base: Dict[str, Any], extra: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _merge_list(base: Dict[str, Any], extra: Dict[str, Any], key: str) -> Dict[str, Any]:
-    """Merge list results: if base is empty, use extra."""
     merged = dict(base)
     if not merged.get(key) and extra.get(key):
         merged[key] = extra[key]
@@ -116,7 +105,6 @@ def _merge_category(
     base: Dict[str, Any],
     extra: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """Merge two results for the same category — base takes priority."""
     if not base:
         return extra or {}
     if not extra:
@@ -133,7 +121,7 @@ def _merge_category(
 
 
 # ---------------------------------------------------------------------------
-# Per-category extraction: targeted (3 levels) and brute-force
+# LLM call + validation
 # ---------------------------------------------------------------------------
 
 def _run_extract(
@@ -144,14 +132,10 @@ def _run_extract(
     backend: str,
     base_url: str,
     vllm_extra_args: Optional[List[str]],
-    prompts_dir: Optional[str],
+    prompts_dir: Optional[str] = None,
     all_warnings: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Call the LLM extraction function, then validate against context.
-
-    Validation checks that extracted values actually appear in the
-    context that was sent to the LLM. Hallucinated fields are nullified.
-    """
+    """Call the LLM extraction function, then validate against context."""
     fn = _EXTRACT_FN[category]
     raw = fn(
         context,
@@ -176,123 +160,45 @@ def _run_extract(
     return validated
 
 
-def _extract_targeted(
-    site: SiteContent,
-    category: Category,
-    *,
-    model: str,
-    backend: str,
-    base_url: str,
-    vllm_extra_args: Optional[List[str]],
-    prompts_dir: Optional[str],
-    all_warnings: Optional[List[str]] = None,
-) -> Dict[str, Any]:
+# ---------------------------------------------------------------------------
+# Build contexts from SiteContent (for live mode)
+# ---------------------------------------------------------------------------
+
+def build_all_contexts(site: SiteContent) -> Dict[str, Dict[str, str]]:
     """
-    Algorithm 1: targeted extraction with 3 fallback levels.
+    Build contexts for all categories × all levels from a SiteContent.
 
-    Each level sends only new (not yet processed) pages to the LLM.
-    Each LLM response is validated against the context before merging.
-    Stops early if the result already has sufficient data.
+    Returns a dict matching the structure of prepare_contexts.py output::
+
+        {
+            "other": {"L1": "...", "L2": "...", "L3": "...", "bruteforce": "..."},
+            "topics": {...},
+            "speakers": {...},
+            "committee": {...},
+        }
     """
-    selector = PageSelector(site, category)
-    has_data = _HAS_DATA[category]
-    result: Dict[str, Any] = {}
+    contexts: Dict[str, Dict[str, str]] = {}
+    all_pages_ctx = build_context(list(site.pages))
 
-    # Level 1: navigation (link_text + URL path)
-    pages_1 = selector.select_by_navigation()
-    if pages_1:
-        ctx = build_context(pages_1)
-        logger.info(
-            "Algo1 L1 [%s]: %d page(s), %d chars",
-            category.value, len(pages_1), len(ctx),
-        )
-        r = _run_extract(
-            category, ctx,
-            model=model, backend=backend, base_url=base_url,
-            vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
-            all_warnings=all_warnings,
-        )
-        if r:
-            result = r
-            if has_data(result):
-                logger.info("Algo1 L1 [%s]: sufficient data found", category.value)
-                return result
+    for category in Category:
+        selector = PageSelector(site, category)
 
-    # Level 2: content (keyword search in page text)
-    pages_2 = selector.select_by_content()
-    if pages_2:
-        ctx = build_context(pages_2)
-        logger.info(
-            "Algo1 L2 [%s]: %d page(s), %d chars",
-            category.value, len(pages_2), len(ctx),
-        )
-        r = _run_extract(
-            category, ctx,
-            model=model, backend=backend, base_url=base_url,
-            vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
-            all_warnings=all_warnings,
-        )
-        if r:
-            result = _merge_category(category, result, r)
-            if has_data(result):
-                logger.info("Algo1 L2 [%s]: sufficient data found", category.value)
-                return result
+        pages_1 = selector.select_by_navigation()
+        pages_2 = selector.select_by_content()
+        pages_3 = selector.select_remaining()
 
-    # Level 3: everything remaining
-    pages_3 = selector.select_remaining()
-    if pages_3:
-        ctx = build_context(pages_3)
-        logger.info(
-            "Algo1 L3 [%s]: %d page(s), %d chars",
-            category.value, len(pages_3), len(ctx),
-        )
-        r = _run_extract(
-            category, ctx,
-            model=model, backend=backend, base_url=base_url,
-            vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
-            all_warnings=all_warnings,
-        )
-        if r:
-            result = _merge_category(category, result, r)
+        contexts[category.value] = {
+            "L1": build_context(pages_1) if pages_1 else "",
+            "L2": build_context(pages_2) if pages_2 else "",
+            "L3": build_context(pages_3) if pages_3 else "",
+            "bruteforce": all_pages_ctx,
+        }
 
-    return result
-
-
-def _extract_bruteforce(
-    site: SiteContent,
-    category: Category,
-    *,
-    model: str,
-    backend: str,
-    base_url: str,
-    vllm_extra_args: Optional[List[str]],
-    prompts_dir: Optional[str],
-    all_warnings: Optional[List[str]] = None,
-) -> Dict[str, Any]:
-    """
-    Algorithm 2: brute-force — send ALL pages to the LLM.
-    Independent from algorithm 1, always runs.
-    Response is validated against the full context.
-    """
-    all_pages = list(site.pages)
-    if not all_pages:
-        return {}
-    ctx = build_context(all_pages)
-    logger.info(
-        "Algo2 [%s]: %d page(s), %d chars",
-        category.value, len(all_pages), len(ctx),
-    )
-    r = _run_extract(
-        category, ctx,
-        model=model, backend=backend, base_url=base_url,
-        vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
-        all_warnings=all_warnings,
-    )
-    return r or {}
+    return contexts
 
 
 # ---------------------------------------------------------------------------
-# Build final output structure
+# Core extraction logic (shared between live and prepared modes)
 # ---------------------------------------------------------------------------
 
 def _build_output(
@@ -302,12 +208,10 @@ def _build_output(
     speakers: Dict[str, Any],
     committee: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """Merge all category results into the target JSON structure."""
     o = other or {}
     t = topics or {}
     s = speakers or {}
     c = committee or {}
-
     return {
         "conference": {
             "full_name": o.get("full_name") or "",
@@ -339,7 +243,6 @@ def _build_output(
 
 
 def _empty_result(url: str) -> Dict[str, Any]:
-    """Return a fully-null result."""
     return {
         "conference": {"full_name": "", "acronym": "", "url": url, "edition_number": None},
         "dates": {"start_date": None, "end_date": None},
@@ -352,60 +255,22 @@ def _empty_result(url: str) -> Dict[str, Any]:
     }
 
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
-
-def extract_conference(
+def _extract_from_contexts(
     url: str,
-    model: str = DEFAULT_MODEL,
-    backend: str = DEFAULT_BACKEND,
-    base_url: Optional[str] = None,
-    vllm_extra_args: Optional[List[str]] = None,
+    contexts: Dict[str, Dict[str, str]],
+    *,
+    model: str,
+    backend: str,
+    base_url: str,
+    vllm_extra_args: Optional[List[str]],
     prompts_dir: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Full pipeline: scrape → extract (4 categories × 2 algorithms) →
-    validate → merge → return JSON.
+    Core extraction logic: run 4 categories × (targeted + brute-force)
+    using pre-built context strings.
 
-    Args:
-        url:             Conference website URL.
-        model:           Model name (e.g. "mistral:latest" for Ollama,
-                         "Qwen/Qwen2.5-7B" for vLLM).
-        backend:         "ollama" or "vllm".
-        base_url:        Server URL. If None, uses default for the backend.
-        vllm_extra_args: Extra CLI args for ``vllm serve`` (ignored for ollama).
-        prompts_dir:     If set, save rendered prompts and raw LLM responses
-                         to this directory for debugging.
-
-    Returns a dict with keys:
-      - "data":       the extracted conference JSON
-      - "warnings":   list of validation warnings
-      - "meta":       extraction metadata
+    Returns (data, warnings).
     """
-    if base_url is None:
-        base_url = get_default_url(backend)
-
-    # --- Step 1: Scrape all pages once ---
-    logger.info("Fetching conference site: %s", url)
-    site: SiteContent = fetch_conference_site(url)
-
-    if not site.pages:
-        logger.error("No pages fetched for %s", url)
-        return {
-            "data": _empty_result(url),
-            "warnings": ["Could not fetch any pages"],
-            "meta": {
-                "model": model, "backend": backend,
-                "pages_fetched": 0,
-                "algo1_levels": {},
-                "algo2_ran": False,
-            },
-        }
-
-    logger.info("Fetched %d page(s) for %s", len(site.pages), url)
-
-    # --- Step 2: Run both algorithms for each category ---
     llm_kwargs = dict(
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
@@ -415,28 +280,50 @@ def extract_conference(
     warnings: List[str] = []
 
     for category in Category:
-        logger.info("=== Category: %s ===", category.value)
+        cat_key = category.value
+        cat_contexts = contexts.get(cat_key, {})
+        has_data = _HAS_DATA[category]
+
+        logger.info("=== Category: %s ===", cat_key)
 
         # Algorithm 1: targeted (3 levels)
-        targeted = _extract_targeted(
-            site, category, **llm_kwargs, all_warnings=warnings,
-        )
+        targeted: Dict[str, Any] = {}
 
-        # Algorithm 2: brute-force (all pages)
-        bruteforce = _extract_bruteforce(
-            site, category, **llm_kwargs, all_warnings=warnings,
-        )
+        for level in ("L1", "L2", "L3"):
+            ctx = cat_contexts.get(level, "")
+            if not ctx:
+                continue
 
-        # Merge: targeted takes priority, brute-force fills gaps
+            logger.info("Algo1 %s [%s]: %d chars", level, cat_key, len(ctx))
+            r = _run_extract(
+                category, ctx, all_warnings=warnings, **llm_kwargs,
+            )
+            if r:
+                targeted = _merge_category(category, targeted, r)
+                if has_data(targeted):
+                    logger.info("Algo1 %s [%s]: sufficient data found", level, cat_key)
+                    break
+
+        # Algorithm 2: brute-force
+        bf_ctx = cat_contexts.get("bruteforce", "")
+        bruteforce: Dict[str, Any] = {}
+        if bf_ctx:
+            logger.info("Algo2 [%s]: %d chars", cat_key, len(bf_ctx))
+            r = _run_extract(
+                category, bf_ctx, all_warnings=warnings, **llm_kwargs,
+            )
+            if r:
+                bruteforce = r
+
+        # Merge: targeted priority, brute-force fills gaps
         merged = _merge_category(category, targeted, bruteforce)
         category_results[category] = merged
 
-        has_data = _HAS_DATA[category]
         if not has_data(merged):
-            warnings.append(f"No data found for category: {category.value}")
-            logger.warning("No data found for category: %s", category.value)
+            warnings.append(f"No data found for category: {cat_key}")
+            logger.warning("No data found for category: %s", cat_key)
 
-    # --- Step 3: Build final output ---
+    # Build final output
     data = _build_output(
         url,
         other=category_results.get(Category.OTHER, {}),
@@ -445,8 +332,7 @@ def extract_conference(
         committee=category_results.get(Category.COMMITTEE, {}),
     )
 
-    # --- Step 4: Cross-category validation ---
-    # Check that speakers and committee don't overlap
+    # Cross-category validation: speakers vs committee overlap
     speaker_names = {
         s.get("name", "").strip().lower()
         for s in data.get("keynote_speakers", [])
@@ -467,11 +353,53 @@ def extract_conference(
             "Speaker/committee overlap: %s — removing from committee",
             overlap,
         )
-        # Remove overlapping names from committee (speakers take priority)
         data["program_committee"] = [
             c for c in data["program_committee"]
             if c.get("name", "").strip().lower() not in overlap
         ]
+
+    return data, warnings
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+def extract_conference(
+    url: str,
+    model: str = DEFAULT_MODEL,
+    backend: str = DEFAULT_BACKEND,
+    base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Live mode: scrape → build contexts → extract → validate → merge.
+
+    Needs both internet access and an LLM backend.
+    """
+    if base_url is None:
+        base_url = get_default_url(backend)
+
+    logger.info("Fetching conference site: %s", url)
+    site: SiteContent = fetch_conference_site(url)
+
+    if not site.pages:
+        logger.error("No pages fetched for %s", url)
+        return {
+            "data": _empty_result(url),
+            "warnings": ["Could not fetch any pages"],
+            "meta": {"model": model, "backend": backend, "pages_fetched": 0},
+        }
+
+    logger.info("Fetched %d page(s) for %s", len(site.pages), url)
+
+    contexts = build_all_contexts(site)
+    data, warnings = _extract_from_contexts(
+        url, contexts,
+        model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
+    )
 
     return {
         "data": data,
@@ -480,5 +408,60 @@ def extract_conference(
             "model": model,
             "backend": backend,
             "pages_fetched": len(site.pages),
+        },
+    }
+
+
+def extract_from_prepared(
+    prepared: Dict[str, Any],
+    *,
+    model: str = DEFAULT_MODEL,
+    backend: str = DEFAULT_BACKEND,
+    base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Prepared mode: read pre-built contexts → extract → validate → merge.
+
+    No internet needed — only an LLM backend. The ``prepared`` dict
+    is the output of ``prepare_contexts.py`` (one site).
+    """
+    if base_url is None:
+        base_url = get_default_url(backend)
+
+    url = prepared["url"]
+
+    if prepared.get("error"):
+        return {
+            "data": _empty_result(url),
+            "warnings": [prepared["error"]],
+            "meta": {
+                "model": model, "backend": backend,
+                "pages_fetched": 0,
+            },
+        }
+
+    # Convert prepared format to simple {category: {level: context_str}}
+    contexts: Dict[str, Dict[str, str]] = {}
+    for cat_key, cat_data in prepared.get("categories", {}).items():
+        contexts[cat_key] = {
+            level: level_data.get("context", "")
+            for level, level_data in cat_data.items()
+        }
+
+    data, warnings = _extract_from_contexts(
+        url, contexts,
+        model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
+    )
+
+    return {
+        "data": data,
+        "warnings": warnings,
+        "meta": {
+            "model": model,
+            "backend": backend,
+            "pages_fetched": prepared.get("pages_fetched", 0),
         },
     }
