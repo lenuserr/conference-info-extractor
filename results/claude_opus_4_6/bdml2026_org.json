@@ -1,0 +1,313 @@
+{
+  "url": "https://bdml2026.org/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 88.2,
+  "pages_fetched": 9,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Big Data and Machine Learning",
+      "acronym": "BDML",
+      "url": "https://bdml2026.org/",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-06-27",
+      "end_date": "2026-06-28"
+    },
+    "venue": {
+      "city": "Copenhagen",
+      "country": "Denmark"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-05-23",
+      "camera_ready": "2026-05-30"
+    },
+    "topics": [
+      "Large Language Models (LLMs): architectures, scaling laws, training, alignment",
+      "Multimodal foundation models",
+      "Retrieval Augmented Generation (RAG) and knowledge grounded AI",
+      "Efficient fine tuning, distillation, quantization and model compression",
+      "Diffusion models and generative modeling for images, audio, video and 3D",
+      "Safety, robustness and evaluation of foundation models",
+      "Optimization methods for deep and large scale models",
+      "Representation learning and self supervised learning",
+      "Probabilistic modeling, Bayesian methods and uncertainty quantification",
+      "Meta learning, few shot learning and transfer learning",
+      "Online, continual and lifelong learning",
+      "Causal inference, causal discovery and counterfactual reasoning",
+      "Distributed training systems, parallelization strategies and scheduling",
+      "ML compilers, accelerators and hardware-software co design",
+      "Cloud native, edge and serverless ML systems",
+      "High performance computing for ML and data intensive workloads",
+      "Inference optimization, serving systems and low latency ML pipelines",
+      "Energy efficient ML, Green AI and sustainable computing",
+      "Scalable data processing architectures and dataflow systems",
+      "Data engineering, pipelines, orchestration and workflow automation",
+      "Data integration, cleaning, quality and governance",
+      "Real time and streaming data analytics",
+      "Data compression, indexing and query optimization",
+      "Privacy preserving data management",
+      "Large scale data mining algorithms and theory",
+      "Graph neural networks (GNNs) and graph representation learning",
+      "Knowledge graphs, reasoning and graph mining",
+      "Temporal, spatial and spatiotemporal data mining",
+      "Anomaly detection, fraud detection and rare event modeling",
+      "Recommender systems and personalization",
+      "Explainability, interpretability and transparency in ML",
+      "Fairness, bias mitigation and ethical AI",
+      "AI governance, policy and regulatory compliance",
+      "Adversarial ML, robustness and secure model training",
+      "Privacy preserving ML (federated learning, DP, secure aggregation)",
+      "ML for cybersecurity and threat intelligence",
+      "Federated learning algorithms, systems and applications",
+      "Collaborative and decentralized ML",
+      "Edge AI, on device learning and TinyML",
+      "6G, IoT and cyber physical systems for ML and data analytics",
+      "Resource constrained learning and communication efficient ML",
+      "Reinforcement learning theory and applications",
+      "Multi agent systems and coordination",
+      "LLM based agents and tool using AI systems",
+      "Planning, control and sequential decision making",
+      "Simulation based learning and digital twins",
+      "ML for physics, chemistry, biology and materials science",
+      "Climate modeling, environmental analytics and sustainability",
+      "Healthcare analytics, medical AI and computational biology",
+      "Finance, economics and risk modeling",
+      "Smart cities, transportation and mobility analytics",
+      "Multimedia, vision, speech and natural language analytics",
+      "Dataset creation, curation and governance",
+      "Data centric AI methodologies and tooling",
+      "Benchmarking ML systems and reproducibility studies",
+      "Robust evaluation protocols for large scale models",
+      "Synthetic data generation and simulation driven datasets"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Abd Abrahim Mosslah",
+        "affiliation": "University of Anbar",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Ahrar Husain",
+        "affiliation": "SGT University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "ALi H. Wheeb",
+        "affiliation": "University of Baghdad",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Balaji Govindarajan",
+        "affiliation": "SRM IST",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Ding Wang",
+        "affiliation": "Nankai University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Fahil Abdulbasit Abdulkareem",
+        "affiliation": "Duhok Polytechnic University",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Fatima Mohammed Rafie Younis",
+        "affiliation": "University of Mosul",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Ibrahim Hamzane",
+        "affiliation": "Cadi Ayyad University of Marrakech",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Joao Calado",
+        "affiliation": "Polytechnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Konstantinos Karampidis",
+        "affiliation": "Hellenic Mediterranean University",
+        "country": "Greece",
+        "role": null
+      },
+      {
+        "name": "Kousik Dasgupta",
+        "affiliation": "Kalyani Government Engineering College",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Labraoui Nabila",
+        "affiliation": "University of Tlemcen",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Lakmali Shashika Karunarathne",
+        "affiliation": "York St John University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Luisa Maria Arvide Cambra",
+        "affiliation": "University of Almeria",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Meghraoui Djamila",
+        "affiliation": "University of Science and Technology Houari Boumediene",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Mehdi Gheisari",
+        "affiliation": "Islamic Azad University",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Nikola Ivkovic",
+        "affiliation": "University of Zagreb",
+        "country": "Croatia",
+        "role": null
+      },
+      {
+        "name": "Nu Nu War",
+        "affiliation": "University of Co-operative and Management",
+        "country": "Myanmar",
+        "role": null
+      },
+      {
+        "name": "P.V.Siva Kumar",
+        "affiliation": "VNR VJIET",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Pascal LORENZ",
+        "affiliation": "University of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Prasang Gupta",
+        "affiliation": "PwC US",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Qi Zhang",
+        "affiliation": "Shandong University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Rajkumar",
+        "affiliation": "N.M.S.S.Vellaichamy Nadar College",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Rishabh Garg",
+        "affiliation": "Birla Institute of Technology & Science",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Seyyed Rohollah Mirhoseini",
+        "affiliation": "National University of Skills (NUS)",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Shareef M. Shareef",
+        "affiliation": "Salahaddin University",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Créteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Taleb Zouggar Souad",
+        "affiliation": "Oran 2 University",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Tasher Ali Sheikh",
+        "affiliation": "Assam down town University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Vitor Jesus",
+        "affiliation": "Birmingham City University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Wei-Chiang Hong",
+        "affiliation": "Yuan Ze University",
+        "country": "Taiwan",
+        "role": null
+      },
+      {
+        "name": "Xiaoyan Dai",
+        "affiliation": "Kyocera Corporation",
+        "country": "Japan",
+        "role": null
+      },
+      {
+        "name": "Yew Kee Wong",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Yousef FARHAOUI",
+        "affiliation": "Moulay Ismail University",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Zayar Aung",
+        "affiliation": "Tomsk State University",
+        "country": "Russia",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}

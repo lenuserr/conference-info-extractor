@@ -1,0 +1,377 @@
+{
+  "url": "https://asar-research.org/citdi/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 90.3,
+  "pages_fetched": 11,
+  "warnings": [
+    "[hallucination] series = Lecture Notes in Computer Science"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "Congress on Information Technologies and Digital Innovation",
+      "acronym": "CITDI",
+      "url": "https://asar-research.org/citdi/",
+      "edition_number": null
+    },
+    "dates": {
+      "start_date": "2026-08-26",
+      "end_date": "2026-08-28"
+    },
+    "venue": {
+      "city": "Latacunga",
+      "country": "Ecuador"
+    },
+    "deadlines": {
+      "submission": "2026-05-31",
+      "notification": "2026-07-12",
+      "camera_ready": "2026-07-26"
+    },
+    "topics": [
+      "Cloud computing, edge and fog computing",
+      "Distributed architectures and intelligent infrastructures",
+      "Cyber-physical systems and embedded platforms",
+      "Internet of Things (IoT) and Industrial IoT (IIoT)",
+      "Communication protocols for intelligent ecosystems",
+      "Cybersecurity and privacy in connected systems",
+      "Virtualization, containers, and automation",
+      "Smart grids, energy management, and sustainable systems",
+      "Platforms for smart cities, industry, and homes",
+      "AI, machine learning, and predictive models",
+      "Big data analytics, data mining, and intelligent processing",
+      "Modeling, simulation, and cognitive systems",
+      "Data-driven decision support systems",
+      "Ethical, explainable, and human-centered AI",
+      "AI applications in health, transport, industry, and cities",
+      "Intelligent automation in complex contexts",
+      "Human–computer interaction and user experience",
+      "Accessible, inclusive, and adaptive interfaces",
+      "Virtual, augmented, and mixed reality",
+      "Immersive experiences, serious games, and gamification",
+      "Cognition, ergonomics, and human factors",
+      "Digital experience design for education, work, and everyday life",
+      "Technologies for smart living and digital well-being",
+      "Digital health, telemedicine, and pervasive systems",
+      "Technologies for well-being, monitoring, and daily-life support",
+      "Digital transformation in organizations and productive sectors",
+      "Smart cities, smart mobility, and technological sustainability",
+      "Economic, social, and cultural impacts of digital innovation",
+      "Data governance, ethics, policies, and technology regulation",
+      "Sustainable innovation in industry, education, and public services",
+      "Resilient Digital Systems, Security, and Defense Applications"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Dr. Yehoshua Aguilar Molina",
+        "affiliation": "Universidad de Guadalajara",
+        "country": "Mexico"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "David Rivas Lalaleo",
+        "affiliation": "Universidad de las Fuerzas Armadas ESPE",
+        "country": "Ecuador",
+        "role": "General Chair"
+      },
+      {
+        "name": "Jacqueline Llanos Proaño",
+        "affiliation": "Universidad de las Fuerzas Armadas ESPE",
+        "country": "Ecuador",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Alex O. Topa",
+        "affiliation": "University of Almería",
+        "country": "Spain",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Fátima Avilés Castillo",
+        "affiliation": "Universidad Tecnológica Indoamérica",
+        "country": "Ecuador",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "José Luis Carrillo",
+        "affiliation": "Universidad de las Fuerzas Armadas ESPE",
+        "country": "Ecuador",
+        "role": "Technical Chair"
+      },
+      {
+        "name": "Homero J. Velasteguí",
+        "affiliation": "Pontificia Universidad Católica del Ecuador Sede Esmeraldas",
+        "country": "Ecuador",
+        "role": "Technical Chair"
+      },
+      {
+        "name": "Jorge Buele",
+        "affiliation": "Universidad Tecnológica Indoamérica",
+        "country": "Ecuador",
+        "role": "Technical Chair"
+      },
+      {
+        "name": "Pratyusha Singaraju",
+        "affiliation": "Netflix Inc.",
+        "country": "United States",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Daniel Benniah John",
+        "affiliation": "UC Berkeley",
+        "country": "United States",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Brian L. Reyes-Santiago",
+        "affiliation": "University of Puerto Rico Mayagüez (UPRM)",
+        "country": "United States",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Carlos Andrés García Sánchez",
+        "affiliation": "Universidad Politécnica de Cataluña",
+        "country": "Spain",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Carlos Arturo Raymundo Ibañez",
+        "affiliation": "Universidad Peruana de Ciencias Aplicadas",
+        "country": "Peru",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Carlos Hernández",
+        "affiliation": "Universidad de Castilla-La Mancha",
+        "country": "Spain",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Cesar Beltrán Castañon",
+        "affiliation": "Pontificia Universidad Católica del Perú",
+        "country": "Peru",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Corina Elizabeth Núñez Hernández",
+        "affiliation": "Universidad Técnica de Ambato",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Cristina Soguero Ruiz",
+        "affiliation": "Universidad Rey Juan Carlos",
+        "country": "Spain",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Danilo Corral-De-Witt",
+        "affiliation": "University of Windsor",
+        "country": "Canada",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Edgar Emanuel González Malla",
+        "affiliation": "Universidad Tecnológica Israel",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Edgar Roberto Salazar Achig",
+        "affiliation": "Universidad Técnica de Cotopaxi",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Erika Galindo",
+        "affiliation": "Universidad de las Américas Puebla (UDLAP)",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Esteban Arias-Méndez",
+        "affiliation": "Instituto Tecnológico de Costa Rica",
+        "country": "Costa Rica",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Esteban X. Castellanos",
+        "affiliation": "Universidad Internacional de La Rioja",
+        "country": "Spain",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Federico Machado",
+        "affiliation": "Universidad Don Bosco",
+        "country": "El Salvador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Gilberto Enrique Resplandor Barreto",
+        "affiliation": "Universidad Católica Andrés Bello extensión Guayana",
+        "country": "Venezuela",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Cristhian Ortiz",
+        "affiliation": "Instituto Superior Tecnológico TSA'CHILA",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Fael Pedro Gutierrez Loza",
+        "affiliation": "IEEE sección Bolivia",
+        "country": "Bolivia",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Germania Elizabeth Vayas Ortega",
+        "affiliation": "Universidad Tecnológica Indoamérica",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Juan Carlos Lázaro Guillermo",
+        "affiliation": "Universidad Nacional Intercultural de la Amazonia",
+        "country": "Peru",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "J Jesús Francisco Carpio Mendoza",
+        "affiliation": "Centro de Estudios Estratégicos del Bajío",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Jerry Mena Nagua",
+        "affiliation": "Universidad de las Fuerzas Armadas ESPE",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "José Ortiz Bejar",
+        "affiliation": "Universidad Michoacana de San Nicolás de Hidalgo",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "José Ramón Zavala Ramírez",
+        "affiliation": "Colegio Iberoamericano de Investigación en Psicología y Educación",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Juan Pablo López Goyez",
+        "affiliation": "Universidad Politécnica Estatal del Carchi",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Marco Antonio Ríos Ponce",
+        "affiliation": "AICAD Business School",
+        "country": "Spain",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "María Magdalena Pérez Torres",
+        "affiliation": "Benemérita Universidad Autónoma de Puebla",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Martha Rocio Ceballos Hernández",
+        "affiliation": "Instituto Tecnológico de Conkal",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Nora Gavira Durón",
+        "affiliation": "Universidad de las Américas Puebla (UDLAP)",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Oscar Palma Gamboa",
+        "affiliation": "Instituto Tecnológico de Conkal",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Paola G. Vinueza Naranjo",
+        "affiliation": "Universidad Nacional de Chimborazo",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Patricia Guadalupe Gamboa Rodríguez",
+        "affiliation": "Tecnológico Nacional de México ITS Coatzacoalcos",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Rita Aguilar González",
+        "affiliation": "Universidad Latinoamericana de Empresarios",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Vanessa Morocho",
+        "affiliation": "Pichinchacorp",
+        "country": "Ecuador",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Yehoshua Aguilar Molina",
+        "affiliation": "Universidad de Guadalajara",
+        "country": "Mexico",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Gabriel Arturo Farías Rojas",
+        "affiliation": "Universidad de las Américas (UDLA)",
+        "country": "Chile",
+        "role": "Scientific Program Committee"
+      },
+      {
+        "name": "Janik Wolter",
+        "affiliation": "Academic Society for Applied Research (ASAR)",
+        "country": "Ireland",
+        "role": "Organizing Committee"
+      },
+      {
+        "name": "César León Rodríguez",
+        "affiliation": "Academic Society for Applied Research (ASAR)",
+        "country": "Brazil",
+        "role": "Organizing Committee"
+      },
+      {
+        "name": "Alexandra Chuquitarco Aguayo",
+        "affiliation": "Universidad de las Fuerzas Armadas ESPE",
+        "country": "Ecuador",
+        "role": "Organizing Committee"
+      },
+      {
+        "name": "José Linares Morales",
+        "affiliation": "Instituto Profesional IACC",
+        "country": "Chile",
+        "role": "Organizing Committee"
+      },
+      {
+        "name": "Samantha Hurtado",
+        "affiliation": "Universidad Nacional de Chimborazo",
+        "country": "Ecuador",
+        "role": "Organizing Committee"
+      }
+    ],
+    "publication": {
+      "publisher": "Springer",
+      "series": "EAI/Springer Innovations in Communication and Computing"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 1
+}

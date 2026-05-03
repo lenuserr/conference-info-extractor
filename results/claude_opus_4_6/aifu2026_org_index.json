@@ -1,0 +1,251 @@
+{
+  "url": "https://aifu2026.org/index",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 70.6,
+  "pages_fetched": 7,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Artificial Intelligence and Applications",
+      "acronym": "AIFU",
+      "url": "https://aifu2026.org/index",
+      "edition_number": 12
+    },
+    "dates": {
+      "start_date": "2026-06-27",
+      "end_date": "2026-06-28"
+    },
+    "venue": {
+      "city": "Copenhagen",
+      "country": "Denmark"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-05-23",
+      "camera_ready": "2026-05-30"
+    },
+    "topics": [
+      "Large Language Models (LLMs), Vision Language Models (VLMs) and Multimodal Foundation Models",
+      "Generative AI: Diffusion Models, GANs, Autoregressive Models and Creative AI",
+      "Retrieval Augmented Generation (RAG), Memory Augmented Models and Long Context AI",
+      "Scaling Laws, Foundation Model Engineering and Model as a Service Architectures",
+      "Efficient AI: Distillation, Quantization, Pruning and Low Compute Training",
+      "Continual Learning, Lifelong Learning and Transfer Learning",
+      "Synthetic Data Ecosystems: Generation, Alignment, Governance and Evaluation",
+      "Supervised, Unsupervised, Self Supervised and Contrastive Learning",
+      "Reinforcement Learning, Multi Agent RL and Decision Making Systems",
+      "Graph Neural Networks, Relational Learning and Structured Prediction",
+      "Probabilistic Modeling, Bayesian Learning and Uncertainty Estimation",
+      "Neuro Symbolic AI, Hybrid Reasoning and Differentiable Programming",
+      "Explainable AI (XAI), Interpretability, Trustworthy ML and Model Transparency",
+      "Knowledge Graphs, Ontologies and Semantic Reasoning",
+      "Automated Planning, Heuristics and Intelligent Decision Making",
+      "Causal AI: Causal Discovery, Causal Representation Learning and Counterfactual Reasoning",
+      "Cognitive Architectures, Human AI Interaction and Cognitive Modeling",
+      "Neuroscience Inspired AI, Biologically Plausible Learning and Neural Coding",
+      "Logic Based AI, Constraint Solving and Automated Theorem Proving",
+      "Text Understanding, Summarization, Question Answering and Information Extraction",
+      "Dialogue Systems, Conversational Agents and LLM Based Assistants",
+      "Agentic AI: Tool Using Agents, Autonomous Research Agents and Multi Agent Collaboration",
+      "Multi Step Planning, Reasoning Chains and Agentic Workflows",
+      "Multilingual NLP, Low Resource NLP and Cross Lingual Transfer",
+      "Speech Recognition, Speech Synthesis and Spoken Language Understanding",
+      "Image/Video Understanding, Object Detection and Scene Analysis",
+      "Vision Language Models, Visual Reasoning and Multimodal Perception",
+      "Robotics, Motion Planning and Autonomous Systems",
+      "Embodied AI: Vision Language Action Models, Instruction Following Agents and Manipulation",
+      "Simulation to Real Transfer, 3D Perception and Embodied Reinforcement Learning",
+      "Human Robot Interaction and Collaborative Robotics",
+      "AI for Chemistry, Biology, Physics and Materials Science",
+      "AI for Drug Discovery, Protein Design and Molecular Simulation",
+      "AI for Climate Modeling, Sustainability and Environmental Intelligence",
+      "AI for Finance, Law, Education, Manufacturing and Smart Cities",
+      "AI Driven Software Engineering, Automated Code Generation and Program Synthesis",
+      "Intelligent Transportation, Autonomous Vehicles and Mobility Systems",
+      "Bias Detection, Fairness and Inclusive AI",
+      "Privacy Preserving AI, Federated Learning and Secure ML",
+      "AI Safety, Alignment, Red Teaming and Jailbreak Prevention",
+      "Robustness to Adversarial Attacks and Distribution Shift",
+      "Governance, Policy, Regulation and Societal Impact of AI",
+      "AI Risk Management, Certification and Compliance",
+      "Fuzzy Logic, Type 2 Fuzzy Systems and Approximate Reasoning",
+      "Neuro Fuzzy Systems, Evolutionary Fuzzy Systems and Hybrid Soft Computing",
+      "Fuzzy Modeling, Control Systems and Intelligent Automation",
+      "Soft Computing for Optimization, Pattern Recognition and Decision Support",
+      "Data Mining, Predictive Analytics and Pattern Recognition",
+      "Information Retrieval, Semantic Search and Vector Databases",
+      "Big Data Analytics, Stream Processing and Real Time Intelligence",
+      "Cognitive Informatics and Intelligent Information Systems",
+      "AI Evaluation Science: Benchmarking, Meta Evaluation and Stress Testing",
+      "AI Observability, Monitoring, Debugging and Failure Analysis",
+      "MLOps, Model Deployment, Lifecycle Management and AI Pipelines",
+      "Distributed AI, Parallel Training and High Performance ML Systems",
+      "AI Hardware Acceleration (GPUs, TPUs, Neuromorphic Computing)",
+      "Software and Hardware Architectures for Scalable AI Systems",
+      "AI for Social Networks, Influence Modeling and Social Simulation",
+      "Toxicity Detection, Content Moderation and Misinformation Analysis",
+      "AI for Political Discourse, Public Opinion and Social Dynamics",
+      "Human Centered AI, User Modeling and Personalized AI Systems"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Amal Azeroual",
+        "affiliation": "Mohammed V University",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Bilal Alatas",
+        "affiliation": "Firat University",
+        "country": "Turkiye",
+        "role": null
+      },
+      {
+        "name": "Deepali Gupta",
+        "affiliation": "Chitkara University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Dongping Tian",
+        "affiliation": "Baoji University of Arts and Sciences",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Emin Taner Elmas",
+        "affiliation": "Igdır University",
+        "country": "Turkey",
+        "role": null
+      },
+      {
+        "name": "Fernanda Otilia Figueiredo",
+        "affiliation": "University of Porto",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Haruna Abdu",
+        "affiliation": "Federal University Lokoja",
+        "country": "Nigeria",
+        "role": null
+      },
+      {
+        "name": "Jianbiao Zhang",
+        "affiliation": "Beijing University of Technology",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Joao Calado",
+        "affiliation": "Polythecnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Jue-Sam Chou",
+        "affiliation": "Nanhua University",
+        "country": "Taiwan",
+        "role": null
+      },
+      {
+        "name": "Kamel Hussein Rahouma",
+        "affiliation": "Minia University",
+        "country": "Egypt",
+        "role": null
+      },
+      {
+        "name": "Lakmali Shashika Karunarathne",
+        "affiliation": "St John University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Lakshmi Narasimhan",
+        "affiliation": "Elizabeth City State University",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Lucian Lupu-Dima",
+        "affiliation": "University of Petrosani",
+        "country": "Romania",
+        "role": null
+      },
+      {
+        "name": "Muhammad Shafiq",
+        "affiliation": "Guangzhou University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Rao Li",
+        "affiliation": "University of South Carolina Aiken",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Creteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Suriza Ahmad Zabidi",
+        "affiliation": "George Washington University",
+        "country": "Malaysia",
+        "role": null
+      },
+      {
+        "name": "Wanyang Dai",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Xiaoyan Dai",
+        "affiliation": "KYOCERA Corporation",
+        "country": "Japan",
+        "role": null
+      },
+      {
+        "name": "Yew Kee WONG Eric",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Zayar Aung",
+        "affiliation": "Tomsk State University",
+        "country": "Russia",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}

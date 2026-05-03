@@ -1,0 +1,256 @@
+{
+  "url": "https://blocksys.info/2026/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 44.4,
+  "pages_fetched": 8,
+  "warnings": [
+    "[hallucination] series = Communications in Computer and Information Science"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Blockchain, Artificial Intelligence, and Trustworthy Systems",
+      "acronym": "BlockSys",
+      "url": "https://blocksys.info/2026/",
+      "edition_number": 8
+    },
+    "dates": {
+      "start_date": "2026-07-29",
+      "end_date": "2026-07-31"
+    },
+    "venue": {
+      "city": "Chengdu",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": "2026-04-20",
+      "notification": "2026-05-30",
+      "camera_ready": null
+    },
+    "topics": [
+      "Advances in blockchain protocols and architectures",
+      "Smart contracts and decentralized applications",
+      "Security, privacy, scalability, and interoperability of blockchain systems",
+      "Blockchain integration with emerging technologies",
+      "Blockchain in supply chain and logistics",
+      "Blockchain for digital identity and authentication",
+      "Advances in machine learning, deep learning, and AI algorithms",
+      "AI ethics, fairness, and transparency",
+      "Explainable AI and interpretability",
+      "AI in healthcare, finance, and industry",
+      "AI-driven data analysis and visualization",
+      "Reinforcement learning and robotics",
+      "AI applications in data analysis, decision-making, and automation",
+      "Synergies between AI and blockchain technologies",
+      "AI-driven innovations in trustworthy systems",
+      "Techniques for enhancing system reliability and robustness",
+      "Privacy-preserving methods and trust management",
+      "Risk assessment and mitigation strategies",
+      "Compliance and regulatory issues",
+      "Frameworks for ensuring system trustworthiness",
+      "Ethical and societal impacts of technology",
+      "Policy and regulatory considerations",
+      "Integration of blockchain and AI for improved security and reliability",
+      "Innovative solutions at the nexus of blockchain, AI, and trustworthy systems",
+      "Case studies showcasing successful applications and challenges"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Xiaohua Jia",
+        "affiliation": "City University of Hong Kong",
+        "country": "China"
+      },
+      {
+        "name": "Tony Quek",
+        "affiliation": "Singapore University of Technology and Design",
+        "country": "Singapore"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Yan Zhang",
+        "affiliation": "University of Electronic Science and Technology of China",
+        "country": "China",
+        "role": "General Chair"
+      },
+      {
+        "name": "Giancarlo Fortino",
+        "affiliation": "University of Calabria",
+        "country": "Italy",
+        "role": "General Chair"
+      },
+      {
+        "name": "Josep Domingo-Ferrer",
+        "affiliation": "Universitat Rovira i Virgili",
+        "country": "Spain",
+        "role": "General Chair"
+      },
+      {
+        "name": "Pin-Han Ho",
+        "affiliation": "University of Waterloo",
+        "country": "Canada",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "Yin Zhang",
+        "affiliation": "University of Electronic Science and Technology of China",
+        "country": "China",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "Pierangela Samarati",
+        "affiliation": "Universita` degli Studi di Milano",
+        "country": "Italy",
+        "role": "Technical Program Committee Chair"
+      },
+      {
+        "name": "Xiangping Chen",
+        "affiliation": "Sun Yat-sen University",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Shulin Lan",
+        "affiliation": "University of Chinese Academy of Sciences",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Ming Tao",
+        "affiliation": "Dongguan University of Technology",
+        "country": "China",
+        "role": "Publicity Chair"
+      },
+      {
+        "name": "Cristina Alcaraz",
+        "affiliation": "University of Malaga",
+        "country": "Spain",
+        "role": "Publicity Chair"
+      },
+      {
+        "name": "Xiaojie Zhu",
+        "affiliation": "King Abdullah University of Science and Technology",
+        "country": "Saudi Arabia",
+        "role": "Publicity Chair"
+      },
+      {
+        "name": "Sabita Maharjan",
+        "affiliation": "University of Oslo",
+        "country": "Norway",
+        "role": "Publicity Chair"
+      },
+      {
+        "name": "Tianyi Li",
+        "affiliation": "Aalborg University",
+        "country": "Denmark",
+        "role": "Publicity Chair"
+      },
+      {
+        "name": "Stephen Wang",
+        "affiliation": "VIAVI",
+        "country": null,
+        "role": "Industry Chair"
+      },
+      {
+        "name": "Chen Sun",
+        "affiliation": "Sony",
+        "country": null,
+        "role": "Industry Chair"
+      },
+      {
+        "name": "Hong Liu",
+        "affiliation": "UniSentry",
+        "country": null,
+        "role": "Industry Chair"
+      },
+      {
+        "name": "Naihan Zhang",
+        "affiliation": "China Unicom Research Institute",
+        "country": "China",
+        "role": "Industry Chair"
+      },
+      {
+        "name": "Fenfang Xie",
+        "affiliation": "Guangdong University of Foreign Studies",
+        "country": "China",
+        "role": "Track Chair"
+      },
+      {
+        "name": "Ting Cai",
+        "affiliation": "Hubei University of Technology",
+        "country": "China",
+        "role": "Track Chair"
+      },
+      {
+        "name": "Li Taotao",
+        "affiliation": "Sun Yat-sen University",
+        "country": "China",
+        "role": "Track Chair"
+      },
+      {
+        "name": "Peilin Zheng",
+        "affiliation": "Sun Yat-sen University",
+        "country": "China",
+        "role": "Media Chair"
+      },
+      {
+        "name": "Huaimin Wang",
+        "affiliation": "National University of Defense Technology",
+        "country": "China",
+        "role": "Advisory Board"
+      },
+      {
+        "name": "Jiannong Cao",
+        "affiliation": "The Hong Kong Polytechnic University",
+        "country": "Hong Kong",
+        "role": "Advisory Board"
+      },
+      {
+        "name": "Kuan-Ching Li",
+        "affiliation": "Providence University",
+        "country": "Taiwan",
+        "role": "Advisory Board"
+      },
+      {
+        "name": "Michael R. Lyu",
+        "affiliation": "The Chinese University of Hong Kong",
+        "country": "Hong Kong",
+        "role": "Advisory Board"
+      },
+      {
+        "name": "Hong-Ning Dai",
+        "affiliation": "Hong Kong Baptist University",
+        "country": "Hong Kong",
+        "role": "Steering Committee"
+      },
+      {
+        "name": "Xiapu Luo",
+        "affiliation": "The Hong Kong Polytechnic University",
+        "country": "Hong Kong",
+        "role": "Steering Committee"
+      },
+      {
+        "name": "Yan Zhang",
+        "affiliation": "University of Electronic Science and Technology of China",
+        "country": "China",
+        "role": "Steering Committee"
+      },
+      {
+        "name": "Zibin Zheng",
+        "affiliation": "Sun Yat-sen University",
+        "country": "China",
+        "role": "Steering Committee"
+      }
+    ],
+    "publication": {
+      "publisher": "Springer",
+      "series": "Communications in Computer and Information Science"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 1
+}

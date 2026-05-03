@@ -1,0 +1,411 @@
+{
+  "url": "https://aifu2026.org/nlcai/index",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 88.7,
+  "pages_fetched": 7,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Natural Language Computing and AI",
+      "acronym": "NLCAI",
+      "url": "https://aifu2026.org/nlcai/index",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-06-27",
+      "end_date": "2026-06-28"
+    },
+    "venue": {
+      "city": "Copenhagen",
+      "country": "Denmark"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-05-23",
+      "camera_ready": "2026-05-30"
+    },
+    "topics": [
+      "Large Language Models (LLMs) and Foundation Models",
+      "Pre training, Fine tuning, Instruction Tuning and Alignment",
+      "Hallucination Mitigation, Safety, Trustworthiness and Governance",
+      "Retrieval Augmented Generation (RAG), Memory Augmented Models and Long Context LLMs",
+      "Efficient LLMs: Distillation, Quantization, Pruning and Low Compute Adaptation",
+      "Continual Learning, Lifelong Adaptation and Model Personalization",
+      "Multilingual, Low Resource and Cross Lingual Foundation Models",
+      "Evaluation, Benchmarking, Meta Evaluation and Human Preference Modeling",
+      "Cognitive Modeling with LLMs and Human Like Reasoning",
+      "Neuro Inspired Architectures and Memory Systems",
+      "Human AI Interaction, Alignment and Preference Learning",
+      "Cognitive Load, Mental Models and Human Centered NLP",
+      "Dialogue Systems, Chatbots and Multi Turn Reasoning",
+      "Task Oriented Dialogue, Planning and Dialogue Management",
+      "LLM Based Agents, Tool Using Agents and Autonomous Language Agents",
+      "Multi Agent Communication, Collaboration and Emergent Behavior",
+      "Emotion Aware, Empathetic and Socially Intelligent Dialogue Systems",
+      "Information Extraction, NER, Relation and Event Extraction",
+      "Question Answering, Reading Comprehension and Open Domain QA",
+      "Text Summarization, Paraphrasing, Entailment and Natural Language Generation",
+      "Knowledge Graphs, Ontologies, Neuro Symbolic NLP and Knowledge Infused Models",
+      "Neural IR, Dense Retrieval, Hybrid Retrieval and Vector Search",
+      "Fact Checking, Stance Detection and Misinformation Detection",
+      "Vision Language Models (VLMs) and Multimodal Transformers",
+      "Image/Video Captioning, Visual Question Answering (VQA)",
+      "Speech Recognition, Speech Synthesis and Spoken Language Understanding",
+      "Audio Text Multimodal Learning and Cross Modal Retrieval",
+      "Embodied AI, Vision Language Action Models and Robotics NLP",
+      "Simulation to Real Transfer for Language Conditioned Agents",
+      "Neural Machine Translation (NMT) and Multilingual MT",
+      "Low Resource, Zero Shot and Few Shot Translation",
+      "Cross Lingual Transfer Learning and Multilingual Representations",
+      "Code Switching, Dialect Modeling and Language Preservation",
+      "Cultural Aware NLP and Global Language Technologies",
+      "Dataset Curation, Annotation Quality and Data Governance",
+      "Data Contamination Detection and Dataset Auditing",
+      "Synthetic Data Generation, Evaluation and Alignment",
+      "Data Centric Approaches for LLM Training and Fine Tuning",
+      "Data Augmentation for Low Resource and Domain Specific NLP",
+      "Bias Detection, Fairness and Inclusive NLP",
+      "Privacy Preserving NLP and Federated Learning",
+      "Explainability, Interpretability and Transparency",
+      "Red Teaming LLMs, Jailbreak Prevention and Safety Evaluation",
+      "Societal Impact, Policy Aligned Models and Regulatory Compliance",
+      "Chain of Thought Reasoning and Multi Step Inference",
+      "Symbolic Neural Hybrid Models and Neuro Symbolic Reasoning",
+      "Mathematical Reasoning, Logical Inference and Program Synthesis",
+      "Long Horizon Reasoning, Planning and Task Decomposition",
+      "Biomedical NLP, Clinical Text Mining and Healthcare AI",
+      "Legal NLP, Financial NLP and Scientific Document Understanding",
+      "NLP for Chemistry, Biology and Automated Scientific Discovery",
+      "Social Media Analytics, Sentiment Analysis and Opinion Mining",
+      "Educational NLP, Intelligent Tutoring and Automated Assessment",
+      "NLP for Autonomous Systems, Robotics and Human AI Interaction",
+      "Robustness to Noise, Adversarial Attacks and Distribution Shift",
+      "Efficient Inference, Edge Deployment and On Device NLP",
+      "Monitoring, Evaluation and Lifecycle Management of Deployed Models",
+      "Real World Benchmarks, Stress Testing and Production Grade NLP",
+      "LLM Tooling, Orchestration Frameworks and Prompt Engineering Automation"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Abebaw Agegne Engda",
+        "affiliation": "Debark University",
+        "country": "Ethiopia",
+        "role": null
+      },
+      {
+        "name": "Abhay Kumar Agarwal",
+        "affiliation": "Kamla Nehru Institute of Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Abreu Andre Boavida",
+        "affiliation": "Engineering of Informatics Department",
+        "country": "Timor-Leste",
+        "role": null
+      },
+      {
+        "name": "Ahmadreza Mohebbi",
+        "affiliation": "University of Auckland",
+        "country": "New Zealand",
+        "role": null
+      },
+      {
+        "name": "Ankush Rastogi",
+        "affiliation": "Vail Systems Inc",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Antonio Abreu",
+        "affiliation": "Polytechnic University Of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Bauminwood",
+        "affiliation": "Neijiang Normal University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Bharti Kumari",
+        "affiliation": "IIMT University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Bobby Lukose",
+        "affiliation": "Krupanidhi college of Management",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Chandra Shekhar Gautam",
+        "affiliation": "AKS University Satna",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Ching-Chun Chang",
+        "affiliation": "National Institute of Informatics",
+        "country": "Japan",
+        "role": null
+      },
+      {
+        "name": "Dibya Jyoti Bora",
+        "affiliation": "The Assam Kaziranga University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Elsaid M M Zahran",
+        "affiliation": "University of Nottingham Ningbo China",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Gajendra Sharma",
+        "affiliation": "Kathmandu University",
+        "country": "Nepal",
+        "role": null
+      },
+      {
+        "name": "GNR Prasad",
+        "affiliation": "CBIT(A)",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Kafi Dano Pati",
+        "affiliation": "University Of Duhok",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Kalema Josue Djamba",
+        "affiliation": "Adventist University of Goma",
+        "country": "Democratic Republic of the Congo",
+        "role": null
+      },
+      {
+        "name": "Ketan Thakkar",
+        "affiliation": "Linkedin",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Kyrylo Kalashnikov",
+        "affiliation": "University of Toronto",
+        "country": "Canada",
+        "role": null
+      },
+      {
+        "name": "Layth Abdulrasool Alasadi",
+        "affiliation": "University Of Kufa",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Loc Nguyen",
+        "affiliation": "Loc Nguyen's Academic Network",
+        "country": "Vietnam",
+        "role": null
+      },
+      {
+        "name": "Mahmudul Hasan",
+        "affiliation": "Comilla University",
+        "country": "Bangladesh",
+        "role": null
+      },
+      {
+        "name": "Manish Kumar Keshri",
+        "affiliation": "University of Minnesota",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Marko Radovanovic",
+        "affiliation": "University Of Defence",
+        "country": "Serbia",
+        "role": null
+      },
+      {
+        "name": "Md Tofael Ahmed",
+        "affiliation": "Comilla University",
+        "country": "Bangladesh",
+        "role": null
+      },
+      {
+        "name": "Mina Basirat",
+        "affiliation": "University Of Central Florida",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Mohammed Alchaita",
+        "affiliation": "Al-Rasheed Private University for Science and Technology (RU)",
+        "country": "Syria",
+        "role": null
+      },
+      {
+        "name": "Okba Kazar",
+        "affiliation": "University Of Kalba",
+        "country": "United Arab Emirates",
+        "role": null
+      },
+      {
+        "name": "Oleksii K. Tyshchenko",
+        "affiliation": "University Of Ostrava",
+        "country": "Czech Republic",
+        "role": null
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University Of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Pavel Loskot",
+        "affiliation": "ZJU-UIUC Institute",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Pooja M Bhatt",
+        "affiliation": "Parul Institute Of Engineering And Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Preeti Sharma",
+        "affiliation": "Dit University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Prem Kumar Singh",
+        "affiliation": "Gandhi Institute Of Technology And Management",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Rajeev Kumar Sinha",
+        "affiliation": "ARKA JAIN University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sadique Shaikh",
+        "affiliation": "Aimsr",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sakshi Patni",
+        "affiliation": "Gachon University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Salah-ddine Krit",
+        "affiliation": "IEEE",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Seppo Sirkemaa",
+        "affiliation": "Turku School Of Economics At The University Of Turku",
+        "country": "Finland",
+        "role": null
+      },
+      {
+        "name": "Shashikant Patil",
+        "affiliation": "Atlas Skilltech University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Shi Dong",
+        "affiliation": "Zhoukou Normal University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Creteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Subhendu Kumar Pani",
+        "affiliation": "Krupajal Group Of Institutions",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sudip Barua",
+        "affiliation": "St. Joseph Higher Secondary School",
+        "country": "Bangladesh",
+        "role": null
+      },
+      {
+        "name": "Surender Singh Saini",
+        "affiliation": "CSIR",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Tarachand Amgoth",
+        "affiliation": "Indian Institute of Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "U Moulali",
+        "affiliation": "The ICFAI Foundation for Higher Education",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Vindhya Avvari",
+        "affiliation": "University of Southern California",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Vishal Polara",
+        "affiliation": "Marwadi University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Younes Abou El Hanoune",
+        "affiliation": "Abdelmalek Essaadi University",
+        "country": "Morocco",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}

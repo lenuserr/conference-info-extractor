@@ -1,0 +1,410 @@
+{
+  "url": "https://aivr.org/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 296.0,
+  "pages_fetched": 21,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Artificial Intelligence and Virtual Reality",
+      "acronym": "AIVR",
+      "url": "https://aivr.org/",
+      "edition_number": 10
+    },
+    "dates": {
+      "start_date": "2026-07-11",
+      "end_date": "2026-07-13"
+    },
+    "venue": {
+      "city": "Kobe",
+      "country": "Japan"
+    },
+    "deadlines": {
+      "submission": "2026-05-20",
+      "notification": "2026-06-10",
+      "camera_ready": "2026-06-20"
+    },
+    "topics": [
+      "System components",
+      "Virtual reality platforms",
+      "AI platforms for VR/AR",
+      "Cloud-based platforms",
+      "Data generation, manipulation, analysis, and validation",
+      "Tracking",
+      "Physical environment mapping",
+      "Registration",
+      "Vision for VR/AR",
+      "Deep learning for VR/AR",
+      "Standards and theoretical models for AI and/or VR",
+      "Generation of immersive environments and virtual worlds",
+      "Environments for gaming, simulation, training",
+      "Visualization, optimized and realistic rendering",
+      "Geometric modelling and design in immersive settings",
+      "Animations",
+      "Crowd-simulation",
+      "Character modelling",
+      "Customization and personalization",
+      "Semantic and cognitive aspects of virtual reality",
+      "Depth perception",
+      "Multimodal perception",
+      "Behavior and activity generation",
+      "Representations of self (avatars)",
+      "Embodiment",
+      "Presence",
+      "Virtual agents",
+      "Conversational non-player characters (NPCs)",
+      "Understanding and modelling human behavior, emotions",
+      "Searching",
+      "Planning",
+      "Reasoning",
+      "Knowledge representation",
+      "Natural language processing",
+      "Robotics and perception",
+      "Multi-agent systems",
+      "Recognition",
+      "Statistical learning",
+      "Deep learning",
+      "Soft Computing",
+      "Intelligent Image Processing",
+      "Intelligent computing techniques",
+      "Multimodal interaction and experiences in VR/AR",
+      "Machine learning for multimodal interaction",
+      "Human-virtual user/agent interaction",
+      "Human to human communication in virtual environments",
+      "Collaboration and communication",
+      "Dialogue modelling and generation",
+      "Conversational and natural language interfaces",
+      "Speech interaction for AR/VR",
+      "Navigation and spatial orientation in VR",
+      "Interaction devices",
+      "Brain-Computer Interfaces (BCI)",
+      "Data and knowledge representation",
+      "Problem solving",
+      "Spatial visualization",
+      "Multimodality for visualization",
+      "Visualization for domains",
+      "Arts, leisure, and entertainment",
+      "Gaming and game narratives",
+      "Immersive storytelling and gameplay",
+      "Education, training, simulation",
+      "Business prototyping",
+      "Business productivity",
+      "Business process design, architecture and evaluation",
+      "Telepresence and collaboration",
+      "Social interactions",
+      "Healthcare and therapy",
+      "Evaluation metrics and methodologies",
+      "Quality of Experience (QoE)"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Lakhmi C. Jain",
+        "affiliation": "KES International",
+        "country": "United Kingdom",
+        "role": "Honorary Chair"
+      },
+      {
+        "name": "Yen-Wei Chen",
+        "affiliation": "Ritsumeikan University",
+        "country": "Japan",
+        "role": "General Chair"
+      },
+      {
+        "name": "Kazumi Nakamatsu",
+        "affiliation": "University of Hyogo",
+        "country": "Japan",
+        "role": "General Chair"
+      },
+      {
+        "name": "Ari Aharari",
+        "affiliation": "Sojo University",
+        "country": "Japan",
+        "role": "Conference Chair"
+      },
+      {
+        "name": "Toshifumi Kimura",
+        "affiliation": "University of Hyogo",
+        "country": "Japan",
+        "role": "Conference Chair"
+      },
+      {
+        "name": "Srikanta Patnaik",
+        "affiliation": "I.I.M.T.",
+        "country": "India",
+        "role": "Program Committee Chair"
+      },
+      {
+        "name": "Jair M. Abe",
+        "affiliation": "Paulista University",
+        "country": "Brazil",
+        "role": "Program Committee Chair"
+      },
+      {
+        "name": "Kung Wong, LAU (Nick)",
+        "affiliation": "Hong Kong Shue Yan University",
+        "country": "China",
+        "role": "Advisory Chair"
+      },
+      {
+        "name": "Tatsuya Yamazaki",
+        "affiliation": "Niigata University",
+        "country": "Japan",
+        "role": "Advisory Chair"
+      },
+      {
+        "name": "Aslina Baharum",
+        "affiliation": "Sunway University",
+        "country": "Malaysia",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Ajune Wanis Ismail",
+        "affiliation": "Universiti Teknologi Malaysia",
+        "country": "Malaysia",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Chi-Wei Lin",
+        "affiliation": "Feng Chia University",
+        "country": "Taiwan",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Daniele Schicchi",
+        "affiliation": "Institute for Educational Technology, National Research Council of Italy",
+        "country": "Italy",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Dario Cazzato",
+        "affiliation": "Joint Research Centre (JRC), European Commission",
+        "country": "Italy",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Devendra Kumar R. N",
+        "affiliation": "Sri Ramakrishna Institute of Technology",
+        "country": "India",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Diego Vilela Monteiro",
+        "affiliation": "LII – Immersion and Interaction Lab, ESIEA",
+        "country": "France",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Farhad Mehdipour",
+        "affiliation": "Otago Polytechnic - Auckland International Campus (OPAIC) & Future Skills Academy",
+        "country": "New Zealand",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Gbolahan Olasina",
+        "affiliation": "University of KwaZulu-Natal",
+        "country": "South Africa",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Ghani Albaali",
+        "affiliation": "Princess Sumaya University for Technology",
+        "country": "Jordan",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Hasan Kadhem",
+        "affiliation": "American University of Bahrain",
+        "country": "United States",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Huamin Ren",
+        "affiliation": "Kristiania University of Applied Sciences",
+        "country": "Norway",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Hui-Wen Huang",
+        "affiliation": "Shaoguan University",
+        "country": "China",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Jiaqing Liu",
+        "affiliation": "Ritsumeikan University",
+        "country": "Japan",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Jinyong Hu",
+        "affiliation": "Tufts University",
+        "country": "United States",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Joao Manuel R. S. Tavares",
+        "affiliation": "University of Porto",
+        "country": "Portugal",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Juan Manuel Corchado Rodríguez",
+        "affiliation": "University of Salamanca",
+        "country": "Spain",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Kasem Khalil",
+        "affiliation": "University of Mississippi",
+        "country": "United States",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Liu Huaqun",
+        "affiliation": "Beijing Institute of Graphic Communication",
+        "country": "China",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Liviu Octavian Mafteiu-Scai",
+        "affiliation": "West University of Timisoara",
+        "country": "Romania",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Megha Quamara",
+        "affiliation": "King's College London",
+        "country": "United Kingdom",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Miguel Martínez García",
+        "affiliation": "Loughborough University",
+        "country": "United Kingdom",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Mohd Fairuz Shiratuddin",
+        "affiliation": "Murdoch University",
+        "country": "Australia",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Muñoz-Ubando, Luis Alberto",
+        "affiliation": "Tecnológico de Monterrey",
+        "country": "Mexico",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Nashwa El-Bendary",
+        "affiliation": "Arab Academy for Science, Technology, and Maritime Transport (AASTMT)",
+        "country": "Egypt",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Pavlo Maruschak",
+        "affiliation": "Ternopil Ivan Puluj National Technical University",
+        "country": "Ukraine",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Raha binti Sulaiman",
+        "affiliation": "Universiti Malaya",
+        "country": "Malaysia",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Reshmy Krishnan",
+        "affiliation": "Muscat College",
+        "country": "Oman",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "S. Anne Susan Georgena",
+        "affiliation": "Sri Ramakrishna Institute of Technology",
+        "country": "India",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "S. Nagarani",
+        "affiliation": "Sri Ramakrishna Institute of Technology",
+        "country": "India",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "S.Thenmozhi",
+        "affiliation": "PES University",
+        "country": "India",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Shilei Li",
+        "affiliation": "Naval University of Engineering",
+        "country": "China",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Shivaram Ramachandran",
+        "affiliation": "Tata Consultancy Services",
+        "country": "India",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Suliman A. Alsuhibany",
+        "affiliation": "Qassim University",
+        "country": "Saudi Arabia",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Teodoro A. Macaraeg Jr.",
+        "affiliation": "University of Caloocan City",
+        "country": "Philippines",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Thammasak Thainniwet",
+        "affiliation": "Institute of Digital Arts and Science",
+        "country": "Thailand",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Wanwan Li",
+        "affiliation": "University of South Florida",
+        "country": "United States",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Wen Tang",
+        "affiliation": "Bournemouth University",
+        "country": "United Kingdom",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Yew Kee Wong",
+        "affiliation": "BASIS International School Guangzhou",
+        "country": "China",
+        "role": "International Advisory Board/Program Committee"
+      },
+      {
+        "name": "Zati Hakim Azizul Hasan",
+        "affiliation": "University of Malaya",
+        "country": "Malaysia",
+        "role": "International Advisory Board/Program Committee"
+      }
+    ],
+    "publication": {
+      "publisher": "Springer",
+      "series": "Smart Innovation, Systems and Technologies"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}

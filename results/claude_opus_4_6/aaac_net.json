@@ -1,0 +1,628 @@
+{
+  "url": "https://aaac.net/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 215.9,
+  "pages_fetched": 23,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "Asian Aerospace and Astronautics Conference",
+      "acronym": "AAAC",
+      "url": "https://aaac.net/",
+      "edition_number": 4
+    },
+    "dates": {
+      "start_date": "2026-08-21",
+      "end_date": "2026-08-23"
+    },
+    "venue": {
+      "city": "Hong Kong",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": "2026-05-20",
+      "notification": "2026-06-20",
+      "camera_ready": null
+    },
+    "topics": [
+      "Air Traffic Planning and Management",
+      "Airspace Planning and Route Network Optimization",
+      "Air Traffic Information and Control",
+      "Air Traffic Safety and Environment",
+      "Air Traffic Big Data and Artificial Intelligence",
+      "Avionics monitoring and maintenance, sensors and actuators",
+      "Circuit analysis, analog and digital circuits, circuits and systems",
+      "High-frequency electronic technology, electronic measurement technology",
+      "Research and Design of Aerospace Electronic Information System",
+      "Electromagnetic field and microwave technology, vacuum electronic technology",
+      "Optoelectronics in Aerospace Applications, optical sensors for Aerospace Systems",
+      "Photonics Integration in Avionics, optical communication systems in space, optical signal processing in Aerospace Electronics",
+      "Aircraft navigation and positioning technology, radar detection and imaging technology",
+      "Synthetic aperture radar technology, navigation guidance and control",
+      "UAV and remote sensing technology, wireless communication and signal processing",
+      "Space-Earth Integration Network",
+      "Optical Navigation Systems for Aircraft, Lidar Technology for Navigation and Imaging",
+      "Optical Satellite Communication Systems, Optical Remote Sensing for UAVs",
+      "Optical Interference Techniques in Spatial Communications",
+      "Aerospace manufacturing engineering, Emerging avionics technology, Aerospace Propulsion",
+      "Spacecraft Structure and Design, Aerospace Design, Testing, and Performance",
+      "Experimental Methods and Measurements, Optical Metrology in Aerospace Manufacturing",
+      "Hyperspectral Imaging for Aerospace Applications, Optical Coatings for Spacecraft Structures",
+      "Laser Propulsion Systems for Aerospace Vehicles",
+      "Automation system engineering, pattern recognition and intelligent system",
+      "Automation equipment and systems, intelligent control technology and application",
+      "Application of automation control technology in the aerospace field, monitoring systems",
+      "Combustion Analysis",
+      "Fuels / Fuel Injection",
+      "Engines",
+      "Turbines",
+      "Cooling Systems",
+      "Spacecraft Propulsion",
+      "Aerospace Propulsion Theory and Engineering",
+      "Air Vehicle Airworthiness Technology",
+      "Air Vehicle Design",
+      "Man-Machine and Environmental Engineering",
+      "Advanced Materials Applications",
+      "Complex Systems Assembly",
+      "Low Altitude Vehicle Design",
+      "Low Altitude Intelligent Network",
+      "Convergence of Low Altitude Application Scenarios"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Wenhe Liao",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Advisory Chair"
+      },
+      {
+        "name": "Yongxin Guo",
+        "affiliation": "City University of Hong Kong",
+        "country": "China",
+        "role": "Advisory Chair"
+      },
+      {
+        "name": "Guobiao Cai",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Advisory Chair"
+      },
+      {
+        "name": "Xiong Chen",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "General Chair"
+      },
+      {
+        "name": "Danhe Chen",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "General Co-Chair"
+      },
+      {
+        "name": "Peng Zhang",
+        "affiliation": "City University of Hong Kong",
+        "country": "China",
+        "role": "General Co-Chair"
+      },
+      {
+        "name": "Erick Lansard",
+        "affiliation": "Nanyang Technological University",
+        "country": "Singapore",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Kan Zheng",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Ivan Tkachenko",
+        "affiliation": "Samara University",
+        "country": "Russia",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Lim Wee Seng",
+        "affiliation": "Nanyang Technological University",
+        "country": "Singapore",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Jinsheng Xu",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Weitao Wu",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Fengquan Zhong",
+        "affiliation": "Institute of Mechanics, Chinese Academy of Sciences and University of Chinese Academy of Sciences",
+        "country": "China",
+        "role": "Organizing Committees"
+      },
+      {
+        "name": "Ling Veck Voon",
+        "affiliation": "Nanyang Technological University",
+        "country": "Singapore",
+        "role": "Program Committees"
+      },
+      {
+        "name": "Xiang Zhang",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Program Committees"
+      },
+      {
+        "name": "Hu Ma",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Program Committees"
+      },
+      {
+        "name": "Changfei Zhuo",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Program Committees"
+      },
+      {
+        "name": "Daiyang Gao",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Program Committees"
+      },
+      {
+        "name": "Peng Zhou",
+        "affiliation": "Institute of Mechanics, Chinese Academy of Sciences and University of Chinese Academy of Sciences",
+        "country": "China",
+        "role": "Publication Committees"
+      },
+      {
+        "name": "Bo Sun",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Publication Committees"
+      },
+      {
+        "name": "Ben Guan",
+        "affiliation": "Harbin Engineering University",
+        "country": "China",
+        "role": "Publication Committees"
+      },
+      {
+        "name": "Zhiyuan Shen",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Publication Committees"
+      },
+      {
+        "name": "Ho Yee-Man",
+        "affiliation": "Hong Kong Automation Technology",
+        "country": "China",
+        "role": "Publication Committees"
+      },
+      {
+        "name": "Yan Wang",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Publication Committees"
+      },
+      {
+        "name": "Wei Wang",
+        "affiliation": "City University of Hong Kong",
+        "country": "China",
+        "role": "Local Chair"
+      },
+      {
+        "name": "Chujie Qin",
+        "affiliation": "Hong Kong University of Science and Technology",
+        "country": "China",
+        "role": "Treasurer"
+      },
+      {
+        "name": "Vsevolod V. Koryanov",
+        "affiliation": "Bauman Moscow State Technical University",
+        "country": "Russia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Luling An",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Elbrus Caferov",
+        "affiliation": "Istanbul Technical University",
+        "country": "Turkey",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Chingiz Hajiyev",
+        "affiliation": "Istanbul Technical University",
+        "country": "Turkey",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Mahmut Adil Yükselen",
+        "affiliation": "Istanbul Technical University",
+        "country": "Turkey",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Lin Sun",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yongjie Zhang",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Ozlem Sahin",
+        "affiliation": "Eskisehir Technical University",
+        "country": "Turkey",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yuwei Sun",
+        "affiliation": "Beijing Institute of Spacecraft Environment Engineering",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Guoping Huang",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Anbang Sun",
+        "affiliation": "Beihang University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Mohd Na'Im Abdullah",
+        "affiliation": "Universiti Putra Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Fatih Karpat",
+        "affiliation": "Uludag University",
+        "country": "Turkey",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Saijal Kizhakke Kodakkattu",
+        "affiliation": "Government Engineering College Kozhikode",
+        "country": "India",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Srinivasa Rao Nadiminti",
+        "affiliation": "Vignan's Foundation for Science, Technology and Research (VFSTR)",
+        "country": "India",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Lei Qiao",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Qu Feng",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Fathinul Fikri AS",
+        "affiliation": "Universiti Putra Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Shiwei Feng",
+        "affiliation": "Beijing University of Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Vladimir Golubev",
+        "affiliation": "Embry-Riddle Aeronautical University",
+        "country": "United States",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Kai Cheng",
+        "affiliation": "Brunel University",
+        "country": "United Kingdom",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Junwei Wang",
+        "affiliation": "China Academy of Space Technology (CAST)",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Zebbiche Toufik",
+        "affiliation": "Blida University 1",
+        "country": "Algeria",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Pavlo Maruschak",
+        "affiliation": "Ternopil Ivan Puluj National Technical University",
+        "country": "Ukraine",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Fengquan Zhong",
+        "affiliation": "Institute of Mechanics, Chinese Academy of Sciences",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Linyuan Jia",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Dharmahinder Singh Chand",
+        "affiliation": "Chandigarh University",
+        "country": "India",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Bingning Jin",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yajun You",
+        "affiliation": "North University of China",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Jialiang Sun",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Pengyun Chen",
+        "affiliation": "North University of China",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yin Yin",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yao Yan",
+        "affiliation": "University of Electronic Science and Technology of China",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "He Zhu",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Kuo Tian",
+        "affiliation": "Dalian University of Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Jian Deng",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yanjun Li",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Qiaozhi Yin",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Salman Ijaz",
+        "affiliation": "University of Nottingham Ningbo China",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yan Yan",
+        "affiliation": "Southeast University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Richard Adjei",
+        "affiliation": "University of Nottingham Ningbo China",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Zhiwei Huang",
+        "affiliation": "Shanghai Jiao Tong University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Sarjit Singh Sidhu Junior",
+        "affiliation": "Universiti Sains Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Feiteng Luo",
+        "affiliation": "Huazhong University of Science and Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Syamimi Saadon",
+        "affiliation": "Universiti Putra Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Kim, Kyu-Tae",
+        "affiliation": "Korea Advanced Institute of Science and Technology",
+        "country": "South Korea",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Noorfaizal Yidris",
+        "affiliation": "Universiti Putra Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Mohsen Sharifpur",
+        "affiliation": "University of the Witwatersrand",
+        "country": "South Africa",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Vilius Portapas",
+        "affiliation": "University of Nottingham",
+        "country": "United Kingdom",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Aarti Panday",
+        "affiliation": "University of the Witwatersrand",
+        "country": "South Africa",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Chantal Cappelletti",
+        "affiliation": "University of Nottingham",
+        "country": "United Kingdom",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Zeeshan Rana",
+        "affiliation": "Prince Mohammad Bin Fahd University",
+        "country": "Saudi Arabia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Nishanth Pushparaj",
+        "affiliation": "University of Nottingham",
+        "country": "United Kingdom",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Chengxiang Zhu",
+        "affiliation": "Xiamen University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Zhou Ye",
+        "affiliation": "Universiti Sains Malaysia",
+        "country": "Malaysia",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Larry Li",
+        "affiliation": "The Hong Kong University of Science and Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Yanfang Liu",
+        "affiliation": "Harbin Institute of Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Anil Kumar",
+        "affiliation": "Delhi Technological University",
+        "country": "India",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "He-Xia Huang",
+        "affiliation": "Nanjing University of Aeronautics and Astronautics",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Manoj Ukamanal",
+        "affiliation": "Kalinga Institute of Industrial Technology",
+        "country": "India",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Wenxiang Cai",
+        "affiliation": "Nanjing University of Science and Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Hui Wang",
+        "affiliation": "Beijing Institute of Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Lifang Zeng",
+        "affiliation": "Zhejiang University",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      },
+      {
+        "name": "Rui Xu",
+        "affiliation": "Beijing Institute of Technology",
+        "country": "China",
+        "role": "Technical Commitee Members"
+      }
+    ],
+    "publication": {
+      "publisher": "IEEE",
+      "series": null
+    }
+  },
+  "fields_filled": 13,
+  "fields_total": 16,
+  "fill_pct": 81.2,
+  "hallucinations_caught": 0
+}

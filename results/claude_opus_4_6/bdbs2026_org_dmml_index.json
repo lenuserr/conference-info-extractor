@@ -1,0 +1,510 @@
+{
+  "url": "https://bdbs2026.org/dmml/index",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 112.6,
+  "pages_fetched": 8,
+  "warnings": [],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Data Mining & Machine Learning",
+      "acronym": "DMML",
+      "url": "https://bdbs2026.org/dmml/index",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-04-25",
+      "end_date": "2026-04-26"
+    },
+    "venue": {
+      "city": "Copenhagen",
+      "country": "Denmark"
+    },
+    "deadlines": {
+      "submission": null,
+      "notification": "2026-04-22",
+      "camera_ready": "2026-04-24"
+    },
+    "topics": [
+      "Theoretical foundations of data mining",
+      "Statistical learning theory",
+      "Optimization methods for ML",
+      "Causality and causal discovery",
+      "Explainable and interpretable AI",
+      "Fairness, accountability, transparency, and ethics",
+      "Robust and trustworthy ML",
+      "Uncertainty modeling and noise handling",
+      "Classification, regression, and clustering",
+      "Ensemble learning and hybrid models",
+      "Deep learning architectures (CNNs, RNNs, Transformers, GNNs)",
+      "Graph mining and graph ML",
+      "Reinforcement learning",
+      "Probabilistic and Bayesian models",
+      "Transfer learning, domain adaptation, multi task learning",
+      "Online learning and data stream mining",
+      "Federated and privacy preserving learning",
+      "Large scale and distributed data mining algorithms",
+      "Data cleaning, transformation, and pre processing",
+      "Feature engineering and feature selection",
+      "Data integration, fusion, and warehousing",
+      "ETL pipelines for ML systems",
+      "High performance and parallel computing",
+      "Edge, cloud, and distributed ML systems",
+      "Efficient model training, compression, and deployment",
+      "Frequent pattern and sequential pattern mining",
+      "Anomaly, outlier, and novelty detection",
+      "Temporal, spatial, and spatio temporal mining",
+      "Mining from incomplete or low quality data",
+      "Knowledge representation and reasoning",
+      "Knowledge graphs and semantic mining",
+      "Automated knowledge consolidation and explanation",
+      "Natural language processing and text mining",
+      "Large language models and foundation models",
+      "Information retrieval and web mining",
+      "Social media and social network analysis",
+      "Image, video, and audio mining",
+      "Multimodal learning and cross media analysis",
+      "Generative models (GANs, diffusion models, multimodal generators)",
+      "Interactive data exploration and visual analytics",
+      "Human AI collaboration and human in the loop ML",
+      "Interfaces and languages for data mining",
+      "Visualization of complex models and explanations",
+      "User centered evaluation of ML systems",
+      "Privacy preserving data mining (DP, MPC, FL)",
+      "Adversarial machine learning",
+      "Data security and information hiding",
+      "ML safety and risk assessment",
+      "Ethical and societal implications of AI",
+      "Bioinformatics, genomics, and computational biology",
+      "Biometrics and identity recognition",
+      "Healthcare and medical imaging",
+      "Finance, forecasting, and risk modeling",
+      "Education and learning analytics",
+      "Smart cities, IoT, and sensor data mining",
+      "Cybersecurity and fraud detection",
+      "E commerce and recommendation systems",
+      "Climate science and environmental modeling",
+      "Industrial AI and predictive maintenance",
+      "Foundation models and general purpose AI",
+      "Autonomous systems and robotics",
+      "Quantum machine learning",
+      "Neuro symbolic AI",
+      "ML for scientific discovery",
+      "AI governance, policy, and global standards",
+      "Trends, opportunities, and risks in data mining & ML"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Menglong Guo",
+        "affiliation": "Chinese University of Hong Kong",
+        "country": "China"
+      },
+      {
+        "name": "Chao Wu",
+        "affiliation": "Zhejiang University",
+        "country": "China"
+      },
+      {
+        "name": "Hubert Kyeremateng-Boateng",
+        "affiliation": "Bowie State University",
+        "country": "United States"
+      },
+      {
+        "name": "Henry Cheng",
+        "affiliation": "Suffield Academy",
+        "country": "United States"
+      },
+      {
+        "name": "Xiaotiao Wang",
+        "affiliation": null,
+        "country": "United States"
+      },
+      {
+        "name": "Jinyuan Li",
+        "affiliation": "Shenzhen College of International Education",
+        "country": "China"
+      },
+      {
+        "name": "Tengyue Pan",
+        "affiliation": "California State University",
+        "country": "United States"
+      },
+      {
+        "name": "Raymond He",
+        "affiliation": null,
+        "country": "Canada"
+      },
+      {
+        "name": "Catherine Hu",
+        "affiliation": null,
+        "country": "United States"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Alex Mathew",
+        "affiliation": "Bethany College",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Ali Asghar Rahmani Hosseinabadi",
+        "affiliation": "University of Regina",
+        "country": "Canada",
+        "role": null
+      },
+      {
+        "name": "Antonio Abreu",
+        "affiliation": "Polytechnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Ayse Kok Arslan",
+        "affiliation": "Oxford Alumni- Silicon Valley Chapter",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Ayush Dogra",
+        "affiliation": "Chitkara University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Christian Mancas",
+        "affiliation": "Ovidius University at Constanta",
+        "country": "Romania",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Grigorios N. Beligiannis",
+        "affiliation": "University of Patras",
+        "country": "Greece",
+        "role": null
+      },
+      {
+        "name": "Ifeanyi Stanly Nwokoro",
+        "affiliation": "Southwestern University",
+        "country": "Nigeria",
+        "role": null
+      },
+      {
+        "name": "Joao Calado",
+        "affiliation": "Polytechnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Kailash Thiyagarajan",
+        "affiliation": "Independent Researcher, Austin, TX",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Karen Howells",
+        "affiliation": "Coventry University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Khaja Kamaluddin",
+        "affiliation": "Umm Al Qura University",
+        "country": "Saudi Arabia",
+        "role": null
+      },
+      {
+        "name": "Kiattichai Saitakham",
+        "affiliation": "Chiang Mai Rajabhat University",
+        "country": "Thailand",
+        "role": null
+      },
+      {
+        "name": "Lakmali Shashika Karunarathne",
+        "affiliation": "York St John University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Layth Abdulrasool Alasadi",
+        "affiliation": "University of Kufa",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Loc Nguyen",
+        "affiliation": "Loc Nguyen's Academic Network",
+        "country": "Vietnam",
+        "role": null
+      },
+      {
+        "name": "Lucian Lupu-Dima",
+        "affiliation": "University of Petrosani",
+        "country": "Romania",
+        "role": null
+      },
+      {
+        "name": "Luisa Maria Arvide Cambra",
+        "affiliation": "University of Almeria",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Mahmood ul Hassan",
+        "affiliation": "National Industrial Training Institute (NITI)",
+        "country": "Saudi Arabia",
+        "role": null
+      },
+      {
+        "name": "Maxim Solovchuk",
+        "affiliation": "National Taiwan University",
+        "country": "Taiwan",
+        "role": null
+      },
+      {
+        "name": "Michael Albino",
+        "affiliation": "Magsaysay State University",
+        "country": "Philippines",
+        "role": null
+      },
+      {
+        "name": "Michail Kalogiannakis",
+        "affiliation": "University of Thessaly",
+        "country": "Greece",
+        "role": null
+      },
+      {
+        "name": "Mirza Mujtaba Baig",
+        "affiliation": "PwC",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Mohammad Jafarabad",
+        "affiliation": "Qom university",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Mohammed Alchaita",
+        "affiliation": "HIAST",
+        "country": "Syria",
+        "role": null
+      },
+      {
+        "name": "Nikhil Ghadge",
+        "affiliation": "Okta.inc",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Nu Nu War",
+        "affiliation": "University of Co-operative and Management",
+        "country": "Myanmar",
+        "role": null
+      },
+      {
+        "name": "Oleksii Tyshchenko",
+        "affiliation": "University of Ostrava",
+        "country": "Czech Republic",
+        "role": null
+      },
+      {
+        "name": "Ouided Sekhri",
+        "affiliation": "Constantine 1 Freres Mentouri University",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Pavel Loskot",
+        "affiliation": "ZJU-UIUC Institute",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Ramadan Elaiess",
+        "affiliation": "University of Benghazi",
+        "country": "Libya",
+        "role": null
+      },
+      {
+        "name": "Rana Mukherji",
+        "affiliation": "The ICFAI University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Rao Li",
+        "affiliation": "University of South Carolina Aiken",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Rita Yi Man Li",
+        "affiliation": "Hong Kong Shue Yan University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Rodrigo Pérez Fernández",
+        "affiliation": "Universidad Politécnica de Madrid",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Rony Kumer Saha",
+        "affiliation": "Missouri University of Science and Technology",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Ruksar Fatima",
+        "affiliation": "Khaja Bandanawaz University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Samir Kumar Bandyopadhyay",
+        "affiliation": "University of Calcutta",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sauhard Bhatt",
+        "affiliation": "Independent Researcher",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Seppo Sirkemaa",
+        "affiliation": "University of Turku, Pori Unit",
+        "country": "Finland",
+        "role": null
+      },
+      {
+        "name": "Seyyed Rohollah Mirhoseini",
+        "affiliation": null,
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Shahid Ali",
+        "affiliation": "AGI Education Ltd",
+        "country": "New Zealand",
+        "role": null
+      },
+      {
+        "name": "Shahram Babaie",
+        "affiliation": "University at Buffalo",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Shashikant Patil",
+        "affiliation": "Atlas SkillTech University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Shi Dong",
+        "affiliation": "Zhoukou Normal University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Shiwei Gan",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Creteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Silvia Gaftandzhieva",
+        "affiliation": "University of Plovdiv Paisii Hilendarski",
+        "country": "Bulgaria",
+        "role": null
+      },
+      {
+        "name": "Subhendu Kumar Pani",
+        "affiliation": "Krupajal Engineering College",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sweta Srivastav",
+        "affiliation": "Sharda University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Vijaya Sai Munduru",
+        "affiliation": "Independent researcher",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Vikramsingh R. Parihar",
+        "affiliation": "Ram Meghe College of Engineering and Management",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Vinod Kumar Verma",
+        "affiliation": "Sant Longowal Institute of Engineering and Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Wanyang Dai",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Wei-Chiang Hong",
+        "affiliation": "Harbin Engineering University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Yew Kee Wong Eric",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Yousef Farhaoui",
+        "affiliation": "University Moulay Ismail",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Zayar Aung",
+        "affiliation": "Tomsk State University",
+        "country": "Russia",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}

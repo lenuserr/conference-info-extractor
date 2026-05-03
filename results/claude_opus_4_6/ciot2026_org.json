@@ -1,0 +1,528 @@
+{
+  "url": "https://ciot2026.org/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 123.5,
+  "pages_fetched": 8,
+  "warnings": [],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Internet of Things",
+      "acronym": "CIoT",
+      "url": "https://ciot2026.org/",
+      "edition_number": 8
+    },
+    "dates": {
+      "start_date": "2026-07-16",
+      "end_date": "2026-07-17"
+    },
+    "venue": {
+      "city": "London",
+      "country": "United Kingdom"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-06-20",
+      "camera_ready": "2026-06-27"
+    },
+    "topics": [
+      "IoT Connectivity, Networking and Communication Technologies",
+      "5G/6G Enabled IoT and Ultra Reliable Low Latency Communications (URLLC)",
+      "Massive Machine Type Communications (mMTC)",
+      "Low Power Wide Area Networks (LPWAN), LoRaWAN, NB IoT",
+      "Edge to Cloud Networking and Multi Access Edge Computing (MEC)",
+      "Non Terrestrial Networks (NTN), Satellite IoT and UAV Assisted IoT",
+      "Time Sensitive Networking (TSN) and Real Time IoT Communications",
+      "Interplanetary IoT, Space Edge Networking and LEO Satellite Routing",
+      "Next Generation IoT Protocols, Interoperability and Network Architectures",
+      "IoT Devices, Sensors, Embedded Systems and Hardware Innovation",
+      "Ultra Low Power IoT Devices and Energy Efficient Electronics",
+      "Advanced Sensors, Multi Modal Sensing and Smart Sensor Networks",
+      "TinyML, On Device Learning and Resource Constrained AI",
+      "Neuromorphic IoT Hardware and Event Driven Computing",
+      "Energy Harvesting IoT Devices and Battery Free IoT",
+      "Wearable, Implantable and Bio Integrated IoT Systems",
+      "Programmable Materials, Smart Surfaces and Ambient IoT Interfaces",
+      "AI Driven IoT (AIoT), Data Intelligence and Autonomous Systems",
+      "Machine Learning, Deep Learning and Federated Learning for IoT",
+      "Edge AI, Fog Intelligence and Distributed Analytics",
+      "Autonomous IoT Systems, Multi Agent IoT and Self Optimizing Networks",
+      "Digital Twins for IoT, Cyber Physical Systems and Real Time Simulation",
+      "Generative AI for IoT Optimization and Synthetic Sensor Data",
+      "IoT Data Pipelines for Foundation Models and Multimodal AI",
+      "AI Accelerated Event Detection, Prediction and Decision Making",
+      "IoT Platforms, Middleware, Software and System Engineering",
+      "IoT Operating Systems, Middleware and Interoperability Frameworks",
+      "Cloud Native IoT, Serverless Computing and Microservices",
+      "IoT APIs, Standards, Protocols and Open Source Platforms",
+      "Large Scale IoT System Integration, Deployment and Management",
+      "IoT Emulation Platforms, Testbeds and Digital Twin Based Validation",
+      "Real Time Edge Scheduling and Edge Native Application Architectures",
+      "Security, Privacy, Trust and Resilience in IoT",
+      "IoT Security Architectures, Threat Modeling and Vulnerability Analysis",
+      "AI Driven Intrusion Detection and Anomaly Detection",
+      "Post Quantum Cryptography for IoT and Quantum Safe Communication",
+      "Blockchain IoT, Distributed Ledgers and Decentralized IoT Architectures",
+      "Secure Device Identity, Authentication and Zero Trust IoT",
+      "Resilient IoT Systems, Fault Tolerance and Self-Healing Networks",
+      "IoT for Cyber Physical Systems, Robotics and Autonomous Machines",
+      "IoT Enabled Robotics, Drones and Autonomous Vehicles",
+      "Multi Robot IoT Systems, Drone Swarms and Distributed Coordination",
+      "Industrial Cyber Physical Systems (CPS) and Safety Critical IoT",
+      "Human Robot Collaboration (HRC) and IoT Enhanced Automation",
+      "Real Time Control Systems and IoT Driven Autonomy",
+      "Smart Cities, Smart Buildings and Urban IoT Infrastructure",
+      "Smart Construction, Infrastructure 4.0 and Structural Health Monitoring",
+      "Smart Energy, Smart Grids and Grid Edge Intelligence",
+      "Industrial IoT (IIoT), Industry 4.0/5.0 and Smart Manufacturing",
+      "IoT for Predictive Maintenance and Industrial Automation Safety",
+      "Healthcare IoT, Wearables and Remote Monitoring",
+      "Digital Therapeutics, Personalized Medicine and Health Digital Twins",
+      "IoT Enabled Diagnostics and Medical Cyber Physical Systems",
+      "Agriculture IoT, Precision Farming and Livestock Monitoring",
+      "Agriculture 5.0, Autonomous Farm Robots and Soil AI Digital Twins",
+      "Environmental Monitoring, Climate Tech and Biodiversity IoT",
+      "IoT for Climate Adaptive Agriculture",
+      "Intelligent Transportation, Connected Vehicles and Mobility IoT",
+      "IoT for Supply Chain, Logistics and Asset Tracking",
+      "IoT for Disaster Detection, Early Warning Systems and Emergency Response",
+      "IoT for Wildfire, Flood and Extreme Weather Prediction",
+      "Human Centric IoT, Social IoT and Interaction Technologies",
+      "Human in the Loop IoT and Adaptive Interaction Systems",
+      "Human Digital Twins, Behavioral Sensing and Emotion Aware IoT",
+      "Social IoT, Context Aware Systems and Cognitive IoT",
+      "Accessibility Focused IoT and Assistive Technologies",
+      "Ethical, Societal and Behavioral Dimensions of IoT",
+      "Internet of Everything (IoE) and Human Digital Ecosystems",
+      "Quantum IoT (QIoT) and Quantum Enhanced Sensing",
+      "Bio IoT, Chemical IoT and Living Sensors",
+      "Metaverse IoT Integration, XR Enabled IoT and Digital Environments",
+      "Space IoT, Interplanetary IoT and Deep Space Sensing Networks",
+      "Swarm IoT Systems and Collective Intelligence",
+      "Programmable Environments and Shape Changing IoT Interfaces",
+      "IoT Standards, Regulation and Global Interoperability",
+      "Green IoT, Carbon Aware IoT and Sustainable System Design",
+      "Energy Aware AI Inference and Carbon Optimized IoT Networks",
+      "Environmental Digital Twins and Climate Resilient IoT Systems",
+      "Ethical, Societal and Economic Impacts of IoT Technologies"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Sudhanshu Sekhar Tripathy",
+        "affiliation": "C.V. Raman Global University",
+        "country": "India"
+      },
+      {
+        "name": "Praveen Ravula",
+        "affiliation": null,
+        "country": "United States"
+      },
+      {
+        "name": "Chia-Hsiang HSIEH",
+        "affiliation": "Chung Hua University",
+        "country": "Taiwan"
+      },
+      {
+        "name": "Prof. Natarajan Meghanathan",
+        "affiliation": "Jackson State University",
+        "country": "United States"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Abdelhadi Assir",
+        "affiliation": "Hassan 1st University",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Addisson Salazar",
+        "affiliation": "Universitat Politècnica de València",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Ahmad Fakharian",
+        "affiliation": "Islamic Azad University",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Alex Mathew",
+        "affiliation": "Bethany College",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Alper Ugur",
+        "affiliation": "Pamukkale University",
+        "country": "Turkey",
+        "role": null
+      },
+      {
+        "name": "Amizah Malip",
+        "affiliation": "Universiti Malaya",
+        "country": "Malaysia",
+        "role": null
+      },
+      {
+        "name": "Atanu Nag",
+        "affiliation": "IFTM University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Ayse KOk Arslan",
+        "affiliation": "Oxbridge/Silicon Valley chapter",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Azlan Mohd Zain",
+        "affiliation": "Universiti Teknologi Malaysia",
+        "country": "Malaysia",
+        "role": null
+      },
+      {
+        "name": "Chien-Chang CHOU",
+        "affiliation": "National Kaohsiung University of Science and Technology",
+        "country": "Taiwan",
+        "role": null
+      },
+      {
+        "name": "CYRUS RAEL",
+        "affiliation": "Kudarat State University (SKSU)",
+        "country": "Philippines",
+        "role": null
+      },
+      {
+        "name": "Dan Dobrota",
+        "affiliation": "Lucian Blaga University of Sibiu",
+        "country": "Romania",
+        "role": null
+      },
+      {
+        "name": "Eric Yew Kee WONG",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "Hong Kong",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Ghani Albaali",
+        "affiliation": "Princess Sumaya University for Technology",
+        "country": "Jordan",
+        "role": null
+      },
+      {
+        "name": "Hamid Ali Abed AL-Asadi",
+        "affiliation": "University of Basrah",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Haruna Abdu",
+        "affiliation": "Federal University Lokoja",
+        "country": "Nigeria",
+        "role": null
+      },
+      {
+        "name": "Hussein Hazimeh",
+        "affiliation": "Lebanese University and Al Maaref University",
+        "country": "Lebanon",
+        "role": null
+      },
+      {
+        "name": "Ibrahim Hamzane",
+        "affiliation": "Cadi Ayyad University of Marrakech",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Jagadeesh HS",
+        "affiliation": "Sir M. Visvesvaraya Institute of Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Janusz Kacprzyk",
+        "affiliation": "Polish Academy of Sciences",
+        "country": "Poland",
+        "role": null
+      },
+      {
+        "name": "Jawad K. Ali",
+        "affiliation": "University of Technology",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Jeff Sterling Ngami Kamagoua",
+        "affiliation": "University of Yaoundé I",
+        "country": "Cameroon",
+        "role": null
+      },
+      {
+        "name": "João Calado",
+        "affiliation": "Polythecnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "João Manuel R. S. Tavares",
+        "affiliation": "Universidade do Porto (FEUP)",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Johan Manuel Tapia Bueno",
+        "affiliation": "Oym University",
+        "country": "Dominican Republic",
+        "role": null
+      },
+      {
+        "name": "Jozef Korbicz",
+        "affiliation": "University of Zielona Gora",
+        "country": "Poland",
+        "role": null
+      },
+      {
+        "name": "Jue-Sam Chou",
+        "affiliation": "Nanhua University",
+        "country": "Taiwan",
+        "role": null
+      },
+      {
+        "name": "Kiattichai Saitakham",
+        "affiliation": "Chiang Mai Rajabhat University",
+        "country": "Thailand",
+        "role": null
+      },
+      {
+        "name": "Klimis Ntalianis",
+        "affiliation": "University of West Attica",
+        "country": "Greece",
+        "role": null
+      },
+      {
+        "name": "Lakmali Shashika Karunarathne",
+        "affiliation": "York St John University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Lakshmi Narasimhan",
+        "affiliation": "University of Newcastle",
+        "country": "Australia",
+        "role": null
+      },
+      {
+        "name": "Lakshmi Simhan",
+        "affiliation": "Elizabeth city state university",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Loc Nguyen",
+        "affiliation": "Loc Nguyen's Academic Network",
+        "country": "Vietnam",
+        "role": null
+      },
+      {
+        "name": "Manuela Panoiu",
+        "affiliation": "University Politechnica Timisoara",
+        "country": "Romania",
+        "role": null
+      },
+      {
+        "name": "Mehdi Gheisari",
+        "affiliation": "Islamic Azad University",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Mervat Bamiah",
+        "affiliation": "Prince Sultan University",
+        "country": "Saudi Arabia",
+        "role": null
+      },
+      {
+        "name": "Mirza Mujtaba Baig",
+        "affiliation": "University of the Cumberlands",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Mohammed Alchaita",
+        "affiliation": "Al-Rasheed Private University for Science and Technology (RU)",
+        "country": "Syria",
+        "role": null
+      },
+      {
+        "name": "Mouna Jouini",
+        "affiliation": "University of Jendouba",
+        "country": "Tunisia",
+        "role": null
+      },
+      {
+        "name": "Nadia Abd-Alsabour",
+        "affiliation": "Cairo University",
+        "country": "Egypt",
+        "role": null
+      },
+      {
+        "name": "Nassim Boukari",
+        "affiliation": "University of Skikda",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Nurul Islam Khan",
+        "affiliation": "Bangladesh University",
+        "country": "Bangladesh",
+        "role": null
+      },
+      {
+        "name": "Oday Ali",
+        "affiliation": "Wasit University",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Pavel Loskot",
+        "affiliation": "ZJU-UIUC Institute",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Ramakrishnan",
+        "affiliation": "Drmgr Educational And Research Institute",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Rao Li",
+        "affiliation": "University of South Carolina Aiken",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Rita Yi Man Li",
+        "affiliation": "Hong Kong Shue Yan University",
+        "country": "Hong Kong",
+        "role": null
+      },
+      {
+        "name": "Sabina Rossi",
+        "affiliation": "Università Ca' Foscari Venezia",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Sadique Shaikh",
+        "affiliation": "AIMSR",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Seppo Sirkemaa",
+        "affiliation": "Turku School of Economics at the University of Turku",
+        "country": "Finland",
+        "role": null
+      },
+      {
+        "name": "Seyed Mohammadreza Ghadiri",
+        "affiliation": "Swiss Information and Management Institute (SIMI)",
+        "country": "Switzerland",
+        "role": null
+      },
+      {
+        "name": "Seyyed Rohollah Mirhoseini",
+        "affiliation": "Islamic Azad University",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Shahid Ali",
+        "affiliation": "AGI Education Ltd",
+        "country": "New Zealand",
+        "role": null
+      },
+      {
+        "name": "Shashikant Patil",
+        "affiliation": "Atlas SkillTech University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Creteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Smain Femmam",
+        "affiliation": "University of Upper Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Vinod Kumar Verma",
+        "affiliation": "Sant Longowal Institute of Engineering and Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Wanyang Dai",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Wei-Chiang Hong",
+        "affiliation": "Harbin Engineering University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Yousef Farhaoui",
+        "affiliation": "University Moulay Ismail",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Zayar Aung",
+        "affiliation": "Tomsk State University",
+        "country": "Russia",
+        "role": null
+      },
+      {
+        "name": "Zoran Bojkovic",
+        "affiliation": "University of Belgrade",
+        "country": "Serbia",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology"
+    }
+  },
+  "fields_filled": 16,
+  "fields_total": 16,
+  "fill_pct": 100.0,
+  "hallucinations_caught": 0
+}

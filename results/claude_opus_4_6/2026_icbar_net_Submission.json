@@ -1,0 +1,367 @@
+{
+  "url": "https://2026.icbar.net/Submission",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 92.1,
+  "pages_fetched": 20,
+  "warnings": [
+    "[hallucination] submission_deadline = 2026-05-05",
+    "[hallucination] camera_ready_date = 2026-04-15",
+    "Speaker/committee overlap detected (1 name(s)): prof. zhengyong zhang"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Big Data, Artificial Intelligence and Risk Management",
+      "acronym": "ICBAR",
+      "url": "https://2026.icbar.net/Submission",
+      "edition_number": 6
+    },
+    "dates": {
+      "start_date": "2026-05-15",
+      "end_date": "2026-05-17"
+    },
+    "venue": {
+      "city": "Shanghai",
+      "country": "China"
+    },
+    "deadlines": {
+      "submission": null,
+      "notification": null,
+      "camera_ready": null
+    },
+    "topics": [
+      "Data analysis",
+      "Data mining",
+      "Modeling",
+      "Natural language processing (NLP)",
+      "Risk management systems",
+      "Data integration and visualization",
+      "Data management, analysis and information retrieval",
+      "Object detection and recognition",
+      "Network security",
+      "Open knowledge computing",
+      "Distributed data processing and integration",
+      "Risk recognition",
+      "Artificial intelligence algorithms",
+      "Distributed artificial intelligence",
+      "Big data-driven management and decision-making",
+      "Scientific research based on big data",
+      "Decision management",
+      "Risk and emergency governance system",
+      "Reliability engineering",
+      "Big data-driven risk analysis and management",
+      "Risk governance and big data",
+      "Application of big data in epidemic risk management",
+      "Risk analysis and management based on artificial intelligence technology"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Prof. Xiong Yan",
+        "affiliation": "Shanghai Institute of Technology",
+        "country": "China"
+      },
+      {
+        "name": "Prof. Fan Guoliang",
+        "affiliation": "Shanghai Maritime University",
+        "country": "China"
+      },
+      {
+        "name": "Prof. Zhengyong Zhang",
+        "affiliation": "Nanjing University Of Finance & Economics",
+        "country": "China"
+      },
+      {
+        "name": "Prof. Wu Xianhua",
+        "affiliation": "Shanghai Maritime University",
+        "country": "China"
+      },
+      {
+        "name": "Prof. Jianchao Hou",
+        "affiliation": "Shanghai University of Electric Power",
+        "country": "China"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Prof. Xianhua Wu",
+        "affiliation": "Shanghai Maritime University",
+        "country": "China",
+        "role": "General Chair"
+      },
+      {
+        "name": "Prof. Jun Liu",
+        "affiliation": "Nanjing University Of Finance & Economics",
+        "country": "China",
+        "role": "General Chair"
+      },
+      {
+        "name": "Prof. Aytun Ozturk",
+        "affiliation": "Ritsumeikan University",
+        "country": "Japan",
+        "role": "General Chair"
+      },
+      {
+        "name": "Prof. Xiuli Meng",
+        "affiliation": "Nanjing University Of Finance & Economics",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Prof. Gonzalez, Ernesto D. R. Santibanez",
+        "affiliation": "Universidad de Talca",
+        "country": "Chile",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Prof. Ji Guo",
+        "affiliation": "Shanghai Maritime University",
+        "country": "China",
+        "role": "Publication Chair"
+      },
+      {
+        "name": "Prof. Hamed Taherdoost",
+        "affiliation": "University Canada West",
+        "country": "Canada",
+        "role": "Program Chair"
+      },
+      {
+        "name": "Prof. Marcin Paprzycki",
+        "affiliation": "Polish Academy of Sciences",
+        "country": "Poland",
+        "role": "Program Chair"
+      },
+      {
+        "name": "Prof. Jian Wu",
+        "affiliation": "Shanghai Maritime University",
+        "country": "China",
+        "role": "Program Chair"
+      },
+      {
+        "name": "Prof. Guoliang Fan",
+        "affiliation": "Shanghai Maritime University",
+        "country": "China",
+        "role": "Organizing Committee Chair"
+      },
+      {
+        "name": "Malik Zawwar Hussain",
+        "affiliation": "University of the Punjab",
+        "country": "Pakistan",
+        "role": null
+      },
+      {
+        "name": "Mingzhi Mao",
+        "affiliation": "Sun Yat-Sen University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Dariusz Jacek Jakóbczak",
+        "affiliation": "Koszalin University of Technology",
+        "country": "Poland",
+        "role": null
+      },
+      {
+        "name": "Yajing Wang",
+        "affiliation": "Beijing Normal University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Leiping Jia",
+        "affiliation": "Guangdong Ocean University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Pei He",
+        "affiliation": "Guangzhou University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Vali Derhami",
+        "affiliation": "Yazd University",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Mariofanna Milanova",
+        "affiliation": "University of Arkansas at Little Rock",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Priti Srinivas Sajja",
+        "affiliation": "Sardar Patel University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Zhiyuan Cheng",
+        "affiliation": "Zhejiang University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Giuseppe Carbone",
+        "affiliation": "University of Cassino and South Latium",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Tarek M. Sobh",
+        "affiliation": "Lawrence Technological University",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Jing Tian",
+        "affiliation": "National University of Singapore",
+        "country": "Singapore",
+        "role": null
+      },
+      {
+        "name": "D. T. Pham",
+        "affiliation": "University of Birmingham",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Albert M. K. Cheng",
+        "affiliation": "University of Houston",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Jee Hou Ho",
+        "affiliation": "University of Nottingham Malaysia",
+        "country": "Malaysia",
+        "role": null
+      },
+      {
+        "name": "Jonghwa Kim",
+        "affiliation": "Cheju Halla University",
+        "country": "South Korea",
+        "role": null
+      },
+      {
+        "name": "Junxin Chen",
+        "affiliation": "Dalian University of Technology",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "KAMBAYASHI Yasushi",
+        "affiliation": "Nippon Institute of Technology",
+        "country": "Japan",
+        "role": null
+      },
+      {
+        "name": "Sophia C. Alih",
+        "affiliation": "Universiti Teknologi Malaysia",
+        "country": "Malaysia",
+        "role": null
+      },
+      {
+        "name": "Zhiyu Jiang",
+        "affiliation": "Northwestern Polytechnical University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Juan Manuel Corchado",
+        "affiliation": "University of Salamanca",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Malka N. Halgamuge",
+        "affiliation": "The University of Melbourne",
+        "country": "Australia",
+        "role": null
+      },
+      {
+        "name": "YaXi Chen",
+        "affiliation": "Southwest Minzu University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Joydev Ghosh",
+        "affiliation": "Tomsk Polytechnic University",
+        "country": "Russia",
+        "role": null
+      },
+      {
+        "name": "Ho Duc Tho",
+        "affiliation": "Toyohashi University of Technology",
+        "country": "Japan",
+        "role": null
+      },
+      {
+        "name": "Karim Negadi",
+        "affiliation": "University of Tiaret",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Huaming Wu",
+        "affiliation": "Center for Applied Mathematics Tianjin University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Vu Van Phong",
+        "affiliation": "National Central University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Carlos Renato Vázquez",
+        "affiliation": "Universidad de Zaragoza",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Mohsen Bahreini",
+        "affiliation": "Shiraz University of Technology",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Akif Durdu",
+        "affiliation": "Konya Technical University",
+        "country": "Turkey",
+        "role": null
+      },
+      {
+        "name": "Tong Wen",
+        "affiliation": "Feng Chia University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Seyedshams Feyzabadi",
+        "affiliation": "University of California",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Magdi S. Mahmoud",
+        "affiliation": "King Fahd University of Petroleum and Minerals",
+        "country": "Saudi Arabia",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "IET",
+      "series": "IET Conference Proceedings"
+    }
+  },
+  "fields_filled": 13,
+  "fields_total": 16,
+  "fill_pct": 81.2,
+  "hallucinations_caught": 2
+}

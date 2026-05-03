@@ -1,0 +1,338 @@
+{
+  "url": "https://cios2026.org/index",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 104.6,
+  "pages_fetched": 6,
+  "warnings": [],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Cloud, IoT and Security",
+      "acronym": "CIOS",
+      "url": "https://cios2026.org/index",
+      "edition_number": 4
+    },
+    "dates": {
+      "start_date": "2026-05-30",
+      "end_date": "2026-05-31"
+    },
+    "venue": {
+      "city": "Virtual Conference",
+      "country": "Virtual Conference"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-05-21",
+      "camera_ready": "2026-05-25"
+    },
+    "topics": [
+      "Cloud Architecture and Platforms",
+      "Next-Generation Cloud Architectures and Cloud-Native Systems",
+      "Microservices, Service Mesh and API Ecosystems",
+      "Serverless Computing and Function-as-a-Service",
+      "Multi-Cloud, Hybrid Cloud and Cloud Federation",
+      "Cloud Interoperability, Standards and APIs",
+      "AI-Driven Cloud and Foundation Model Infrastructure",
+      "Cloud Infrastructure for LLM Training and Inference",
+      "Distributed Training Systems (FSDP, ZeRO, MoE, Pipeline Parallelism)",
+      "GPU/TPU/DPU Scheduling, Multi-Tenant Accelerator Clouds",
+      "AI Workload Optimization in Data Centers",
+      "MLOps, Model Serving, Vector Databases and Retrieval Systems",
+      "Disaggregated Infrastructure (Compute/Memory/Storage/Network)",
+      "CXL-based Memory Pooling and Rack-Scale Computing",
+      "High-Performance Data Center Networking (RDMA, SmartNICs, DPUs)",
+      "Cloud for HPC and Scientific Workloads",
+      "Observability, Monitoring, Telemetry and AIOps",
+      "Autonomous Cloud Operations and Self-Healing Systems",
+      "Cloud Performance, Scalability and Reliability Engineering",
+      "Carbon-Aware Scheduling and Sustainable Cloud Computing",
+      "Energy-Efficient AI and Green Data Centers",
+      "Cloud Storage Systems and Disaggregated Storage",
+      "Big Data Analytics, Real-Time Processing and Stream Systems",
+      "Data Governance, Data Sovereignty and Compliance",
+      "Confidential Computing and Trusted Execution Environments",
+      "Quantum Computing in Cloud Environments",
+      "Cloud Security Architectures and DevSecOps",
+      "IoT Protocols, Standards and Interoperability",
+      "IoT–Edge–Cloud Continuum and Distributed Intelligence",
+      "Edge AI, TinyML and On-Device Learning",
+      "AIoT: AI-Enhanced IoT Systems and On-Device Generative AI",
+      "5G/6G IoT, URLLC, TSN and LPWAN",
+      "Integrated Sensing and Communication (ISAC)",
+      "Reconfigurable Intelligent Surfaces (RIS) for IoT",
+      "Spectrum Sharing and Next-Gen Wireless for CPS",
+      "Autonomous Edge Systems and Self-Optimizing CPS",
+      "Robotics, Drones and Autonomous Systems with IoT",
+      "Real-Time CPS, Safety-Critical IoT and Industrial IoT",
+      "Digital Twins for IoT, CPS and Smart Infrastructure",
+      "Smart Cities, Smart Healthcare, Smart Transportation",
+      "IoT for Digital Health, Wearables and Bio-IoT",
+      "IoT Data Management, Stream Analytics and Event Processing",
+      "Sustainable IoT and Green CPS",
+      "Human–IoT Interaction and Usability",
+      "Security and Privacy in Cloud, Edge and IoT Ecosystems",
+      "Zero Trust Architectures, SASE and Secure Access",
+      "Secure Virtualization, Container Security and Multi-Tenancy",
+      "IoT Security Frameworks, Lightweight Cryptography and Secure Firmware",
+      "Hardware Security: TEE, TPM, SGX, SEV, TrustZone",
+      "Adversarial Machine Learning and Model Robustness",
+      "Security of LLMs, AI Agents and Foundation Models",
+      "AI Supply Chain Security (Dataset Poisoning, Model Extraction, Backdoors)",
+      "Privacy-Preserving ML: Differential Privacy, MPC, Federated Learning",
+      "AI for Cyber Defense, Threat Detection and Automated Response",
+      "Network Security, Wireless Security and 5G/6G Security",
+      "Intrusion Detection and Prevention (IDS/IPS)",
+      "Malware Analysis, Threat Intelligence and Incident Response",
+      "Ransomware, APTs and Nation-State Threats",
+      "Secure Protocols, Cryptographic Engineering and Key Management",
+      "Distributed System and P2P Security",
+      "Blockchain and Distributed Ledger Security",
+      "Smart Contract Security and Formal Verification",
+      "Post-Quantum Cryptography and Quantum-Resistant Systems",
+      "Decentralized Identity and Trust Management",
+      "GPU/Accelerator Security and Side-Channel Attacks",
+      "Deepfake Detection, Synthetic Media Forensics and Misinformation Defense",
+      "Security of Autonomous Vehicles, Robots and Drones",
+      "Cybersecurity for Critical Infrastructure (ICS/SCADA, OT Systems)",
+      "Quantum-Enabled Attacks and Hybrid Security Models",
+      "Usable Security and Privacy",
+      "Security Governance, Risk and Compliance",
+      "Social Engineering, Behavioral Security and Cyber Psychology",
+      "Software Supply Chain Security (SBOM, CI/CD Security)",
+      "Privacy-Enhancing Technologies (PETs): HE, MPC, DP",
+      "Ethical AI, AI Governance and Responsible Computing",
+      "Metaverse, AR/VR Security and IoT Integration",
+      "Multimodal Systems (Vision + Audio + IoT + Cloud)",
+      "Resilience Engineering, Chaos Engineering and Disaster Recovery",
+      "Quantum-Safe Cloud and IoT Systems",
+      "Autonomous Cloud and Edge Orchestration",
+      "Global Regulatory Compliance (GDPR, AI Act, Data Sovereignty)"
+    ],
+    "keynote_speakers": [
+      {
+        "name": "Catherine Haliotou",
+        "affiliation": null,
+        "country": "Greece"
+      },
+      {
+        "name": "John Hedlund-Fay",
+        "affiliation": "University of Sheffield",
+        "country": "United States"
+      },
+      {
+        "name": "Nick Alex",
+        "affiliation": "Bauman Moscow State Technical University",
+        "country": "Russia"
+      },
+      {
+        "name": "Jordi Audet Palau",
+        "affiliation": null,
+        "country": "Spain"
+      }
+    ],
+    "program_committee": [
+      {
+        "name": "Adriana Alexandru",
+        "affiliation": "National Institute for Research and Development in Informatics",
+        "country": "Romania",
+        "role": null
+      },
+      {
+        "name": "Ajay Anil Gurjar",
+        "affiliation": "Sipna College of Engineering and Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Ali Kaveh",
+        "affiliation": "Iran University of Science and Technology",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Amb Dr Assem Moussa",
+        "affiliation": "lambustech university",
+        "country": "Egypt",
+        "role": null
+      },
+      {
+        "name": "António Abreu",
+        "affiliation": "Polytechnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Gajendra Sharma",
+        "affiliation": "Kathmandu University",
+        "country": "Nepal",
+        "role": null
+      },
+      {
+        "name": "Grienggrai Rajchakit",
+        "affiliation": "Maejo university",
+        "country": "Thailand",
+        "role": null
+      },
+      {
+        "name": "Hedayat Omidvar",
+        "affiliation": "National Iranian Gas Company",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Huseyin Çakir",
+        "affiliation": "Gazi University",
+        "country": "Turkey",
+        "role": null
+      },
+      {
+        "name": "Hyunsung Kim",
+        "affiliation": "Kyungil University",
+        "country": "Korea",
+        "role": null
+      },
+      {
+        "name": "Jagadeesh HS",
+        "affiliation": "Sir M. Visvesvaraya Institute of Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Jawad K. Ali",
+        "affiliation": "University of Technology",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Kurada Ramachandra Rao",
+        "affiliation": "Shri Vishnu Engineering College for Women",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Loc Nguyen",
+        "affiliation": "Loc Nguyen's Academic Network",
+        "country": "Vietnam",
+        "role": null
+      },
+      {
+        "name": "Martin Sagayam",
+        "affiliation": "SRM TRP Engineering College",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Martins E. Irhebhude",
+        "affiliation": "Nigerian Defence Academy",
+        "country": "Nigeria",
+        "role": null
+      },
+      {
+        "name": "Panagiotis Vlamos",
+        "affiliation": "Ionian University",
+        "country": "Greece",
+        "role": null
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Praveen Agarwal",
+        "affiliation": "Anand International College of Engineering",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Ruksar Fatima",
+        "affiliation": "Khaja Bandanawaz University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sathyendra Bhat J",
+        "affiliation": "AJ Institute of Engineering and Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Seppo Sirkemaa",
+        "affiliation": "The University of Turku, Pori Unit",
+        "country": "Finland",
+        "role": null
+      },
+      {
+        "name": "Shashikant Patil",
+        "affiliation": "Atlas Skill Tech University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Shi Dong",
+        "affiliation": "Zhoukou Normal University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Shraddha Shinde",
+        "affiliation": "MCOERC, Nashik, Maharashtra",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Siva Kumar PV",
+        "affiliation": "VNR VJIET",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Smain Femmam",
+        "affiliation": "UHA University",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Vladimir Voronov",
+        "affiliation": "Irkutsk National Research Technical University",
+        "country": "Russia",
+        "role": null
+      },
+      {
+        "name": "Yhuseyin Çakir",
+        "affiliation": "Gazi University",
+        "country": "Turkey",
+        "role": null
+      },
+      {
+        "name": "Yogendra Kumar Jain",
+        "affiliation": "Samrat Ashok Technological Institute",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Yoosuf Nizam",
+        "affiliation": "The Maldives National University",
+        "country": "Maldives",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": null,
+      "series": null
+    }
+  },
+  "fields_filled": 14,
+  "fields_total": 16,
+  "fill_pct": 87.5,
+  "hallucinations_caught": 0
+}

@@ -1,0 +1,411 @@
+{
+  "url": "https://ais2026.org/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 116.6,
+  "pages_fetched": 9,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Artificial Intelligence and Soft Computing",
+      "acronym": "AIS",
+      "url": "https://ais2026.org/",
+      "edition_number": 12
+    },
+    "dates": {
+      "start_date": "2026-07-25",
+      "end_date": "2026-07-26"
+    },
+    "venue": {
+      "city": "Toronto",
+      "country": "Canada"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-05-23",
+      "camera_ready": "2026-05-30"
+    },
+    "topics": [
+      "AI Algorithms & Intelligent Decision Making",
+      "Knowledge Representation, Reasoning & Cognitive Architectures",
+      "Probabilistic Reasoning, Bayesian Models & Uncertainty Quantification",
+      "Multi Agent Systems, Agentic AI & Autonomous Decision Making",
+      "Reactive, Distributed & Self Organizing AI Systems",
+      "Machine Learning (Supervised, Unsupervised, Semi Supervised)",
+      "Deep Learning Architectures, Optimization & Training Dynamics",
+      "Foundation Models (LLMs, VLMs, Multimodal Models)",
+      "Self Supervised, Contrastive & Representation Learning",
+      "Continual, Lifelong & Online Learning",
+      "Computational Learning Theory",
+      "Trustworthy ML: Robustness, Safety, Fairness & Explainability",
+      "Efficient ML: Quantization, Distillation & Sparse Models",
+      "Diffusion Models, GANs, VAEs & Generative Transformers",
+      "Text to Image, Text to Video, Text to 3D & Multimodal Generation",
+      "Synthetic Data Generation & Evaluation",
+      "Creative AI for Art, Music, Design & Simulation",
+      "Generative Agents & Autonomous Creative Systems",
+      "Large Language Models (LLMs) & Instruction Tuned Models",
+      "Text Understanding, Summarization, QA & Information Extraction",
+      "Dialogue Systems, Conversational AI & Agentic NLP",
+      "Speech Recognition, Speech Synthesis & Spoken Dialogue",
+      "Multilingual NLP & Low Resource Language Modeling",
+      "NLP for Reasoning, Planning & Knowledge Integration",
+      "Computer Vision, Scene Understanding & Object Recognition",
+      "Vision Language Models (VLMs) & Multimodal Perception",
+      "Image Processing, Image Understanding & Pattern Recognition",
+      "Video Understanding, Action Recognition & Video AI",
+      "3D Vision, NeRFs, 3D Reconstruction & Spatial AI",
+      "Biomedical Image Analysis & Medical Vision AI",
+      "Autonomous Robotics, Planning & Navigation",
+      "Robot Perception, Manipulation & Control",
+      "Human Robot Interaction & Cognitive Robotics",
+      "Soft Robotics & Bio Inspired Robotics",
+      "Mechatronics & Intelligent Automation",
+      "Embodied AI & Simulation Driven Robotics",
+      "Fuzzy Logic, Fuzzy Systems & Fuzzy Control",
+      "Evolutionary Computing, Genetic Algorithms & Swarm Intelligence",
+      "Rough Sets, Granular Computing & Morphic Computing",
+      "Hybrid Intelligent Systems (Neuro Fuzzy, Neuro Symbolic)",
+      "Soft Computing Theory & Applications",
+      "Reinforcement Learning (RL) & Deep RL",
+      "RLHF (Reinforcement Learning from Human Feedback)",
+      "World Models & Model Based RL",
+      "Multi Agent RL & Cooperative/Competitive Learning",
+      "RL for Robotics, Games & Autonomous Systems",
+      "Data Mining, Knowledge Discovery & Big Data Analytics",
+      "Graph Machine Learning, GNNs & Graph Transformers",
+      "Knowledge Graphs, Semantic Reasoning & Web Intelligence",
+      "Data Visualization, Interactive Analytics & Explainability",
+      "ML Pipelines, MLOps & Data Centric AI",
+      "Bioinformatics, Computational Biology & Genomic AI",
+      "Neural Computation & Brain Inspired AI",
+      "Nano Computing, Micro Systems & Bio Digital Interfaces",
+      "AI for Healthcare, Precision Medicine & Drug Discovery",
+      "ML Compilers, Accelerators & Optimization (XLA, TVM, Triton)",
+      "Distributed Training, Scaling Laws & Large Model Infrastructure",
+      "Edge AI, TinyML & On Device Intelligence",
+      "AI Systems Engineering & Deployment Architectures",
+      "Energy Efficient AI & Green Machine Learning",
+      "AI Safety, Alignment & Risk Mitigation",
+      "Adversarial ML, Robustness & Secure AI",
+      "Explainability, Transparency & Accountability",
+      "Fairness, Bias Mitigation & Responsible AI",
+      "Policy, Governance & Societal Impacts of AI",
+      "Quantum Machine Learning & Quantum AI",
+      "AI for Science (Physics, Chemistry, Biology, Climate)",
+      "AI for Telecommunications, Networking & 6G Systems",
+      "AI for Smart Cities, IoT & Ambient Intelligence",
+      "AI for Industry 4.0, Manufacturing & Automation",
+      "AI Driven Simulation, Digital Twins & Virtual Worlds"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "A. Prasanth",
+        "affiliation": "Vel Tech University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Abdelhadi Assir",
+        "affiliation": "Hassan 1st University",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Abhay Kumar Agarwal",
+        "affiliation": "Kamla Nehru Institute Of Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Ahmadreza Mohebbi",
+        "affiliation": "University Of Auckland",
+        "country": "New Zealand",
+        "role": null
+      },
+      {
+        "name": "Ali Asghar Rahmani Hosseinabadi",
+        "affiliation": "University Of Regina",
+        "country": "Canada",
+        "role": null
+      },
+      {
+        "name": "Ali Kalantari",
+        "affiliation": "Islamic Azad University",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "António Abreu",
+        "affiliation": "Polytechnic University Of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Ashwani Kumar Aggarwal",
+        "affiliation": "Sliet Longowal",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Cabasag, Ariel C",
+        "affiliation": "University Of Caloocan City",
+        "country": "Philippines",
+        "role": null
+      },
+      {
+        "name": "Ching-Chun Chang",
+        "affiliation": "National Institute Of Informatics",
+        "country": "Japan",
+        "role": null
+      },
+      {
+        "name": "Dibya Jyoti Bora",
+        "affiliation": "The Assam Kaziranga University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Domingos Alves",
+        "affiliation": "University Of São Paulo",
+        "country": "Brazil",
+        "role": null
+      },
+      {
+        "name": "Elsaid Zahran",
+        "affiliation": "University Of Nottingham Ningbo China",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Francisco Jose Moo-Mena",
+        "affiliation": "Universidad Autonoma De Yucatan",
+        "country": "Mexico",
+        "role": null
+      },
+      {
+        "name": "Gajendra Sharma",
+        "affiliation": "Kathmandu University",
+        "country": "Nepal",
+        "role": null
+      },
+      {
+        "name": "Gnr Prasad",
+        "affiliation": "Cbit(A)",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Harmandeep Singh Gill",
+        "affiliation": "Guru Nanak Dev University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Hanan Ahmed",
+        "affiliation": "Ibb University",
+        "country": "Yemen",
+        "role": null
+      },
+      {
+        "name": "Hari Mohan Rai",
+        "affiliation": "Nazarbayev University",
+        "country": "Kazakhstan",
+        "role": null
+      },
+      {
+        "name": "Johan Tapia",
+        "affiliation": "Oym",
+        "country": "Dominican Republic",
+        "role": null
+      },
+      {
+        "name": "João Calado",
+        "affiliation": "Polythecnic University Of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Layth Abdulrasool Alasadi",
+        "affiliation": "University Of Kufa",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Luis Miguel Nunes Corujo",
+        "affiliation": "Universidade de Lisboa",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Maryam Mardani",
+        "affiliation": "Hamedan University Of Medical Science",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Mohammed Alchaita",
+        "affiliation": "Al-Rasheed Private University for Science and Technology (RU)",
+        "country": "Syria",
+        "role": null
+      },
+      {
+        "name": "Mohamad Nazri Husin",
+        "affiliation": "Universiti Malaysia Terengganu (UMT)",
+        "country": "Malaysia",
+        "role": null
+      },
+      {
+        "name": "Neelam Srivastava",
+        "affiliation": "Institute Of Engineering & Technology",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Nguyen Huy Trung",
+        "affiliation": "Posts and Telecommunications Institute of Technology",
+        "country": "Vietnam",
+        "role": null
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University Of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Pavel Loskot",
+        "affiliation": "Zju-Uiuc Institute",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Rena Cao",
+        "affiliation": "University High School",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Sadique Shaikh",
+        "affiliation": "Aimsr",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Sasanka Katreddi",
+        "affiliation": "West Virginia University",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Seppo Sirkemaa",
+        "affiliation": "Turku School Of Economics At The University Of Turku",
+        "country": "Finland",
+        "role": null
+      },
+      {
+        "name": "Seyyed Rohollah Mirhoseini",
+        "affiliation": "National University Of Skills (Nus)",
+        "country": "Iran",
+        "role": null
+      },
+      {
+        "name": "Shahram Babaie",
+        "affiliation": "University At Buffalo",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Shashikant Patil",
+        "affiliation": "Atlas Skilltech University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Creteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Sonali Wankhede",
+        "affiliation": "Kj Somaiya School Of Engineering",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Suad Alramouni",
+        "affiliation": "Prince Sultan University",
+        "country": "Saudi Arabia",
+        "role": null
+      },
+      {
+        "name": "Subhendu Kumar Pani",
+        "affiliation": "Krupajal Engineering College",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Venkata Sesha Giridhar Akula",
+        "affiliation": "Brilliant Grammar Schools Group Of Educational Institutions Integrated Campus",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Victor Chigbundu Nwaiwu",
+        "affiliation": "Health Sciences University",
+        "country": "United Kingdom",
+        "role": null
+      },
+      {
+        "name": "Vilem Novak",
+        "affiliation": "University Of Ostrava",
+        "country": "Czech Republic",
+        "role": null
+      },
+      {
+        "name": "Wanyang Dai",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Yew Kee Wong",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "Hong Kong",
+        "role": null
+      },
+      {
+        "name": "Yisong Chen",
+        "affiliation": "Georgia Institute Of Technology",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Zhiyuan Cheng",
+        "affiliation": "Qualcomm",
+        "country": "United States",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}

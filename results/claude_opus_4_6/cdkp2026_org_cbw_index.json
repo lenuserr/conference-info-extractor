@@ -1,0 +1,315 @@
+{
+  "url": "https://cdkp2026.org/cbw/index",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 106.1,
+  "pages_fetched": 7,
+  "warnings": [
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Cloud, Big Data and Web Services",
+      "acronym": "CBW",
+      "url": "https://cdkp2026.org/cbw/index",
+      "edition_number": 7
+    },
+    "dates": {
+      "start_date": "2026-06-20",
+      "end_date": "2026-06-21"
+    },
+    "venue": {
+      "city": "Sydney",
+      "country": "Australia"
+    },
+    "deadlines": {
+      "submission": "2026-05-03",
+      "notification": "2026-05-23",
+      "camera_ready": "2026-05-30"
+    },
+    "topics": [
+      "Cloud Architecture, Engineering and Design",
+      "Cloud Native Systems, Microservices and Service Meshes",
+      "Serverless Computing and Function as a Service (FaaS)",
+      "Multi Cloud, Hybrid Cloud and Cross Cloud Interoperability",
+      "Distributed Systems for AI/ML Workloads",
+      "GPU/TPU/Accelerator Scheduling and Multi Tenant AI Infrastructure",
+      "Confidential Computing and Trusted Execution Environments (TEE)",
+      "Cloud Observability, Telemetry and Reliability Engineering (SRE)",
+      "Cloud Automation, DevOps, MLOps and Infrastructure as Code",
+      "High Performance Computing (HPC) in the Cloud",
+      "Software Defined Infrastructure, SDN and NFV",
+      "Sustainable and Carbon Aware Cloud Computing",
+      "Cloud Networking and Edge to Cloud Continuum",
+      "Large Scale Data Processing (Spark, Flink, Ray, etc.)",
+      "Data Lakehouse Architectures and Unified Analytics Systems",
+      "Real Time and Streaming Data Analytics",
+      "Data Governance, Quality, Lineage and Compliance",
+      "Distributed Databases, NoSQL/NewSQL and Cloud Native Data Stores",
+      "Vector Databases and Embedding Based Retrieval",
+      "Graph Data Management and Graph Mining",
+      "Data Mesh and Decentralized Data Architecture",
+      "Big Data Security, Privacy and Federated Data Governance",
+      "Energy Efficient and Sustainable Data Systems",
+      "Domain Specific Big Data Applications (Healthcare, Finance, Smart Cities, etc.)",
+      "Machine Learning and Deep Learning for Large Scale Data",
+      "Foundation Models, LLMs and Generative AI Systems",
+      "Distributed Training, Parallel ML and Model Serving",
+      "Federated Learning and Privacy Preserving ML",
+      "Trustworthy AI: Fairness, Explainability, Robustness and Safety",
+      "AutoML and Automated Data Engineering",
+      "Multimodal Learning (Text Image Audio Video)",
+      "Knowledge Graphs, Semantic Computing and Intelligent Information Systems",
+      "AI for Cloud Optimization, Resource Prediction and Workload Management",
+      "Edge and Fog Computing Architectures",
+      "6G Enabled Edge Intelligence and Ultra Low Latency Systems",
+      "IoT Platforms, Data Management and Large Scale Sensor Networks",
+      "Cyber Physical Systems and Industrial IoT",
+      "Digital Twins and Simulation Driven Analytics",
+      "Real Time Distributed Systems and Time Sensitive Networking",
+      "Edge Native AI and TinyML",
+      "Zero Trust Architectures for Cloud and Distributed Systems",
+      "Privacy Preserving Data Analytics (DP, HE, MPC)",
+      "Secure Multi Party Computation and Decentralized Trust Models",
+      "Identity, Access Management and Authentication in Cloud/Edge Environments",
+      "AI Driven Threat Detection and Security Analytics",
+      "Blockchain Based Security and Distributed Ledger Technologies",
+      "Web Services Architecture, Standards and Protocols",
+      "Service Oriented Architecture (SOA) and Microservices",
+      "API Driven Ecosystems, API Security and API Management",
+      "Event Driven Architectures and Reactive Systems",
+      "Semantic Web, Linked Data and Knowledge Driven Services",
+      "Web Scale Systems: Scalability, Performance and High Availability",
+      "Testing, Verification and Benchmarking of Web Services",
+      "Cloud and Big Data Applications in Healthcare, Finance, Manufacturing and Government",
+      "Enterprise Cloud Migration, Modernization and Digital Transformation",
+      "AI Driven Business Services and Intelligent Automation",
+      "Social Clouds, Collaborative Platforms and Digital Ecosystems",
+      "Sustainability, Green Computing and Carbon Aware Workload Scheduling",
+      "Real World Case Studies, Benchmarks and Experimental Evaluations"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Abdel-Badeeh M. Salem",
+        "affiliation": "Ain Shams University",
+        "country": "Egypt",
+        "role": null
+      },
+      {
+        "name": "Antonio Abreu",
+        "affiliation": "Polytechnic University of Lisbon",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Ayse Arslan",
+        "affiliation": "Oxford University Northern California Alumni network",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Chawki Djeddi",
+        "affiliation": "Larbi Tebessi University",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Djenouhat Assia",
+        "affiliation": "University of Algiers 3",
+        "country": "Algeria",
+        "role": null
+      },
+      {
+        "name": "Eric Yew Kee Wong",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Fernando G. Tinetti",
+        "affiliation": "National university in La Plata",
+        "country": "Argentina",
+        "role": null
+      },
+      {
+        "name": "Francesco Zirilli",
+        "affiliation": "Sapienza Universita Roma",
+        "country": "Italy",
+        "role": null
+      },
+      {
+        "name": "Gajendra Sharma",
+        "affiliation": "Kathmandu University",
+        "country": "Nepal",
+        "role": null
+      },
+      {
+        "name": "Hamid Ali Abed AL-Asadi",
+        "affiliation": "Iraq University college",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Ibrahim Hamzane",
+        "affiliation": "Cadi Ayyad University of Marrakech",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Javier Gozalvez",
+        "affiliation": "Miguel Hernández University of Elche",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Jawad K. Ali",
+        "affiliation": "University of Technology",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Jeferson Lima",
+        "affiliation": "Sardar Patel University",
+        "country": "Brazil",
+        "role": null
+      },
+      {
+        "name": "Jose Silva",
+        "affiliation": "Military Academy Research Center",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Jue-Sam Chou",
+        "affiliation": "Nanhua University",
+        "country": "Taiwan",
+        "role": null
+      },
+      {
+        "name": "Loc Nguyen",
+        "affiliation": "Loc Nguyen's Academic Network",
+        "country": "Vietnam",
+        "role": null
+      },
+      {
+        "name": "Luisa Maria Arvide Cambra",
+        "affiliation": "University of Almeria",
+        "country": "Spain",
+        "role": null
+      },
+      {
+        "name": "Michail Kalogiannakis",
+        "affiliation": "University of Thessaly",
+        "country": "Greece",
+        "role": null
+      },
+      {
+        "name": "Mohammad Abido",
+        "affiliation": "King Fahd University of Petroleum & Minerals",
+        "country": "Saudi Arabia",
+        "role": null
+      },
+      {
+        "name": "Muhammad Suhaib",
+        "affiliation": "IIC University Of Technology",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Osama Mohammed Qasim",
+        "affiliation": "Al-Karkh University of Science",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Pascal Lorenz",
+        "affiliation": "University of Haute Alsace",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Paulo Gil",
+        "affiliation": "Nova School Of Science And Technology",
+        "country": "Portugal",
+        "role": null
+      },
+      {
+        "name": "Ruksar Fatima",
+        "affiliation": "Khaja Bandanawaz University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Seppo Sirkemaa",
+        "affiliation": "Turku School of Economics at the University of Turku, Pori Unit",
+        "country": "Finland",
+        "role": null
+      },
+      {
+        "name": "Shareef M. Shareef",
+        "affiliation": "Salahaddin University-Kurdistan-Iraq",
+        "country": "Iraq",
+        "role": null
+      },
+      {
+        "name": "Shi Dong",
+        "affiliation": "Zhoukou Normal University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Siarry Patrick",
+        "affiliation": "Universite Paris-Est Creteil",
+        "country": "France",
+        "role": null
+      },
+      {
+        "name": "Umesh Kumar Singh",
+        "affiliation": "Vikram University",
+        "country": "India",
+        "role": null
+      },
+      {
+        "name": "Wanyang Dai",
+        "affiliation": "Nanjing University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Wei Cai",
+        "affiliation": "University of Florida",
+        "country": "United States",
+        "role": null
+      },
+      {
+        "name": "Yousef Farhaoui",
+        "affiliation": "University Moulay Ismail",
+        "country": "Morocco",
+        "role": null
+      },
+      {
+        "name": "Yuanzhe Cai",
+        "affiliation": "Shenzhen Technology University",
+        "country": "China",
+        "role": null
+      },
+      {
+        "name": "Zoran Bojkovic",
+        "affiliation": "University of Belgrade",
+        "country": "Serbia",
+        "role": null
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 0
+}
