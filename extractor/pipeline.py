@@ -76,29 +76,6 @@ _HAS_DATA: Dict[Category, Callable[[Dict[str, Any]], bool]] = {
 
 
 # ---------------------------------------------------------------------------
-# Completeness checks — stricter than _HAS_DATA, used to skip brute-force
-# ---------------------------------------------------------------------------
-
-def _is_other_complete(result: Dict[str, Any]) -> bool:
-    """All key OTHER fields are filled — no need for brute-force."""
-    if not result:
-        return False
-    has_name = bool(result.get("full_name"))
-    has_dates = bool(result.get("start_date") and result.get("end_date"))
-    has_venue = bool(result.get("city") and result.get("country"))
-    has_deadline = bool(result.get("submission_deadline"))
-    return has_name and has_dates and has_venue and has_deadline
-
-
-_IS_COMPLETE: Dict[Category, Callable[[Dict[str, Any]], bool]] = {
-    Category.OTHER: _is_other_complete,
-    Category.TOPICS: lambda r: _has_list_data(r, "topics"),
-    Category.SPEAKERS: lambda r: _has_list_data(r, "keynote_speakers"),
-    Category.COMMITTEE: lambda r: _has_list_data(r, "program_committee"),
-}
-
-
-# ---------------------------------------------------------------------------
 # Helpers: merge results within a category
 # ---------------------------------------------------------------------------
 
@@ -227,14 +204,13 @@ def build_all_contexts(site: SiteContent) -> Dict[str, Dict[str, str]]:
     Returns a dict matching the structure of prepare_contexts.py output::
 
         {
-            "other": {"L1": "...", "L2": "...", "L3": "...", "bruteforce": "..."},
+            "other": {"L1": "...", "L2": "...", "L3": "..."},
             "topics": {...},
             "speakers": {...},
             "committee": {...},
         }
     """
     contexts: Dict[str, Dict[str, str]] = {}
-    all_pages_ctx = build_context(list(site.pages))
 
     for category in Category:
         selector = PageSelector(site, category)
@@ -247,7 +223,6 @@ def build_all_contexts(site: SiteContent) -> Dict[str, Dict[str, str]]:
             "L1": build_context(pages_1) if pages_1 else "",
             "L2": build_context(pages_2) if pages_2 else "",
             "L3": build_context(pages_3) if pages_3 else "",
-            "bruteforce": all_pages_ctx,
         }
 
     return contexts
@@ -311,6 +286,47 @@ def _empty_result(url: str) -> Dict[str, Any]:
     }
 
 
+def _is_speakers_tba(contexts: Dict[str, str]) -> bool:
+    """
+    Check if the speakers section contains TBA / "to be announced" phrases.
+
+    If the context text explicitly says speakers are not yet announced,
+    we should return an empty list rather than risk the LLM hallucinating
+    names from unrelated sections.
+    """
+    import re
+    # Combine all speaker context levels
+    text = " ".join(contexts.get(level, "") for level in ("L1", "L2", "L3"))
+    text_lower = text.lower()
+
+    # Patterns: speaker-related keyword near a TBA-like phrase
+    tba_phrases = (
+        r"to be announced",
+        r"to be announced soon",
+        r"to be confirmed",
+        r"to be determined",
+        r"coming soon",
+        r"\btba\b",
+        r"\btbd\b",
+        r"\btbc\b",
+    )
+    speaker_keywords = (
+        "keynote", "keynotes", "invited speaker", "plenary speaker",
+        "speaker", "speakers",
+    )
+
+    for kw in speaker_keywords:
+        if kw not in text_lower:
+            continue
+        # Find the keyword and check nearby text (within 200 chars)
+        for m in re.finditer(re.escape(kw), text_lower):
+            vicinity = text_lower[max(0, m.start() - 100) : m.end() + 200]
+            for tba in tba_phrases:
+                if re.search(tba, vicinity):
+                    return True
+    return False
+
+
 def _extract_from_contexts(
     url: str,
     contexts: Dict[str, Dict[str, str]],
@@ -322,12 +338,12 @@ def _extract_from_contexts(
     prompts_dir: Optional[str] = None,
 ) -> Tuple[Dict[str, Any], List[str], Dict[str, str]]:
     """
-    Core extraction logic: run 4 categories × (targeted + brute-force)
+    Core extraction logic: run 4 categories × 3 fallback levels
     using pre-built context strings.
 
     Returns (data, warnings, sources).
     ``sources`` maps field names to the level that filled them
-    (e.g. ``{"full_name": "L1", "topics": "bruteforce"}``).
+    (e.g. ``{"full_name": "L1", "topics": "L2"}``).
     """
     llm_kwargs = dict(
         model=model, backend=backend, base_url=base_url,
@@ -345,7 +361,15 @@ def _extract_from_contexts(
 
         logger.info("=== Category: %s ===", cat_key)
 
-        # Algorithm 1: targeted (3 levels)
+        # TBA check for speakers: if speakers are explicitly "to be announced",
+        # skip extraction entirely and return empty list
+        if category == Category.SPEAKERS and _is_speakers_tba(cat_contexts):
+            logger.info("Speakers TBA detected — returning empty list")
+            warnings.append("Speakers marked as TBA — returning empty list")
+            category_results[category] = {"keynote_speakers": []}
+            continue
+
+        # Targeted extraction: 3 levels with progressive broadening
         targeted: Dict[str, Any] = {}
 
         for level in ("L1", "L2", "L3"):
@@ -353,7 +377,7 @@ def _extract_from_contexts(
             if not ctx:
                 continue
 
-            logger.info("Algo1 %s [%s]: %d chars", level, cat_key, len(ctx))
+            logger.info("%s [%s]: %d chars", level, cat_key, len(ctx))
             r = _run_extract(
                 category, ctx,
                 all_warnings=warnings,
@@ -362,35 +386,12 @@ def _extract_from_contexts(
             if r:
                 targeted = _merge_category(category, targeted, r, sources, level)
                 if has_data(targeted):
-                    logger.info("Algo1 %s [%s]: sufficient data found", level, cat_key)
+                    logger.info("%s [%s]: sufficient data found", level, cat_key)
                     break
 
-        # Algorithm 2: brute-force (skip if targeted already found everything)
-        is_complete = _IS_COMPLETE[category]
-        bruteforce: Dict[str, Any] = {}
+        category_results[category] = targeted
 
-        if is_complete(targeted):
-            logger.info(
-                "Algo1 [%s]: complete data found, skipping brute-force",
-                cat_key,
-            )
-        else:
-            bf_ctx = cat_contexts.get("bruteforce", "")
-            if bf_ctx:
-                logger.info("Algo2 [%s]: %d chars", cat_key, len(bf_ctx))
-                r = _run_extract(
-                    category, bf_ctx,
-                    all_warnings=warnings,
-                    **llm_kwargs,
-                )
-                if r:
-                    bruteforce = r
-
-        # Merge: targeted priority, brute-force fills gaps
-        merged = _merge_category(category, targeted, bruteforce, sources, "bruteforce")
-        category_results[category] = merged
-
-        if not has_data(merged):
+        if not has_data(targeted):
             warnings.append(f"No data found for category: {cat_key}")
             logger.warning("No data found for category: %s", cat_key)
 
