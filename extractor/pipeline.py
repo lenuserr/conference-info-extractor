@@ -190,7 +190,6 @@ def _run_extract(
     vllm_extra_args: Optional[List[str]],
     prompts_dir: Optional[str] = None,
     all_warnings: Optional[List[str]] = None,
-    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """Call the LLM extraction function, then validate against context."""
     fn = _EXTRACT_FN[category]
@@ -201,7 +200,6 @@ def _run_extract(
         base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         prompts_dir=prompts_dir,
-        all_failures=all_failures,
     )
     if raw is None:
         return None
@@ -322,17 +320,14 @@ def _extract_from_contexts(
     base_url: str,
     vllm_extra_args: Optional[List[str]],
     prompts_dir: Optional[str] = None,
-) -> Tuple[Dict[str, Any], List[str], Dict[str, str], List[Dict[str, Any]]]:
+) -> Tuple[Dict[str, Any], List[str], Dict[str, str]]:
     """
     Core extraction logic: run 4 categories × (targeted + brute-force)
     using pre-built context strings.
 
-    Returns (data, warnings, sources, failures).
+    Returns (data, warnings, sources).
     ``sources`` maps field names to the level that filled them
     (e.g. ``{"full_name": "L1", "topics": "bruteforce"}``).
-    ``failures`` is a list of dicts with failed LLM parse attempts,
-    each containing ``url``, ``category``, ``level``, ``reason``,
-    ``prompt``, ``raw_response``.
     """
     llm_kwargs = dict(
         model=model, backend=backend, base_url=base_url,
@@ -342,7 +337,6 @@ def _extract_from_contexts(
     category_results: Dict[Category, Dict[str, Any]] = {}
     warnings: List[str] = []
     sources: Dict[str, str] = {}  # field_name -> level
-    failures: List[Dict[str, Any]] = []  # failed LLM attempts
 
     for category in Category:
         cat_key = category.value
@@ -360,17 +354,11 @@ def _extract_from_contexts(
                 continue
 
             logger.info("Algo1 %s [%s]: %d chars", level, cat_key, len(ctx))
-            n_before = len(failures)
             r = _run_extract(
                 category, ctx,
-                all_warnings=warnings, all_failures=failures,
+                all_warnings=warnings,
                 **llm_kwargs,
             )
-            # Enrich any new failures with context
-            for f in failures[n_before:]:
-                f["url"] = url
-                f["category"] = cat_key
-                f["level"] = level
             if r:
                 targeted = _merge_category(category, targeted, r, sources, level)
                 if has_data(targeted):
@@ -390,16 +378,11 @@ def _extract_from_contexts(
             bf_ctx = cat_contexts.get("bruteforce", "")
             if bf_ctx:
                 logger.info("Algo2 [%s]: %d chars", cat_key, len(bf_ctx))
-                n_before = len(failures)
                 r = _run_extract(
                     category, bf_ctx,
-                    all_warnings=warnings, all_failures=failures,
+                    all_warnings=warnings,
                     **llm_kwargs,
                 )
-                for f in failures[n_before:]:
-                    f["url"] = url
-                    f["category"] = cat_key
-                    f["level"] = "bruteforce"
                 if r:
                     bruteforce = r
 
@@ -447,9 +430,7 @@ def _extract_from_contexts(
         ]
 
     logger.info("Field sources: %s", sources)
-    if failures:
-        logger.warning("%d LLM parse failure(s) for %s", len(failures), url)
-    return data, warnings, sources, failures
+    return data, warnings, sources
 
 
 # ---------------------------------------------------------------------------
@@ -486,7 +467,7 @@ def extract_conference(
     logger.info("Fetched %d page(s) for %s", len(site.pages), url)
 
     contexts = build_all_contexts(site)
-    data, warnings, sources, failures = _extract_from_contexts(
+    data, warnings, sources = _extract_from_contexts(
         url, contexts,
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
@@ -496,7 +477,6 @@ def extract_conference(
         "data": data,
         "warnings": warnings,
         "sources": sources,
-        "failures": failures,
         "meta": {
             "model": model,
             "backend": backend,
@@ -543,7 +523,7 @@ def extract_from_prepared(
             for level, level_data in cat_data.items()
         }
 
-    data, warnings, sources, failures = _extract_from_contexts(
+    data, warnings, sources = _extract_from_contexts(
         url, contexts,
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
@@ -553,7 +533,6 @@ def extract_from_prepared(
         "data": data,
         "warnings": warnings,
         "sources": sources,
-        "failures": failures,
         "meta": {
             "model": model,
             "backend": backend,

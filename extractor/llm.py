@@ -676,7 +676,6 @@ def _run_pass(
     vllm_extra_args: Optional[List[str]],
     list_wrap_key: Optional[str] = None,
     prompts_dir: Optional[str] = None,
-    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """Format *prompt_template* with *text*, call the LLM, parse JSON.
 
@@ -688,9 +687,6 @@ def _run_pass(
 
     When ``prompts_dir`` is set, the fully rendered prompt and the raw LLM
     response are saved to that directory for debugging.
-
-    When ``all_failures`` is set, failed parse attempts are appended as
-    dicts with keys ``pass_name``, ``prompt``, ``raw_response``, ``reason``.
     """
     if base_url is None:
         base_url = get_default_url(backend)
@@ -717,20 +713,9 @@ def _run_pass(
             f.write(raw)
         logger.debug("Saved LLM response to %s", response_path)
 
-    def _record_failure(reason: str) -> None:
-        if all_failures is not None:
-            all_failures.append({
-                "pass_name": pass_name,
-                "prompt": prompt,
-                "raw_response": raw or "",
-                "reason": reason,
-            })
-
     result = _parse_json_from_response(raw)
     if result is None:
-        reason = "empty response" if not raw else "failed to parse JSON"
-        logger.warning("Pass %s: %s", pass_name, reason)
-        _record_failure(reason)
+        logger.warning("Pass %s failed to produce valid JSON", pass_name)
         return None
     if isinstance(result, dict):
         return result
@@ -740,7 +725,6 @@ def _run_pass(
                 "Pass %s returned a bare JSON list but no wrap key is set — discarding",
                 pass_name,
             )
-            _record_failure("bare JSON list without wrap key")
             return None
         logger.warning(
             "Pass %s returned a bare JSON list; wrapping as %r (%d items)",
@@ -751,7 +735,6 @@ def _run_pass(
         "Pass %s returned unexpected JSON type %s — discarding",
         pass_name, type(result).__name__,
     )
-    _record_failure(f"unexpected JSON type: {type(result).__name__}")
     return None
 
 
@@ -762,7 +745,6 @@ def extract_other(
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
     prompts_dir: Optional[str] = None,
-    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 1: identity, dates, venue, deadlines, publication.
@@ -776,7 +758,6 @@ def extract_other(
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         prompts_dir=prompts_dir,
-        all_failures=all_failures,
     )
 
 
@@ -787,7 +768,6 @@ def extract_topics(
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
     prompts_dir: Optional[str] = None,
-    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 2: research topics / themes / tracks / scope.
@@ -801,7 +781,6 @@ def extract_topics(
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         prompts_dir=prompts_dir,
-        all_failures=all_failures,
     )
 
 
@@ -812,7 +791,6 @@ def extract_speakers(
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
     prompts_dir: Optional[str] = None,
-    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 3: keynote / invited / plenary speakers only.
@@ -827,7 +805,6 @@ def extract_speakers(
         vllm_extra_args=vllm_extra_args,
         list_wrap_key="keynote_speakers",
         prompts_dir=prompts_dir,
-        all_failures=all_failures,
     )
 
 
@@ -838,7 +815,6 @@ def extract_committee(
     base_url: Optional[str] = None,
     vllm_extra_args: Optional[List[str]] = None,
     prompts_dir: Optional[str] = None,
-    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """
     Pass 4: program committee / chairs / organizing committee.
@@ -853,5 +829,4 @@ def extract_committee(
         vllm_extra_args=vllm_extra_args,
         list_wrap_key="program_committee",
         prompts_dir=prompts_dir,
-        all_failures=all_failures,
     )

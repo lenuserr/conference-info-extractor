@@ -241,23 +241,6 @@ def main():
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(entry, f, indent=2, ensure_ascii=False)
 
-            # Save failures separately if any
-            site_failures = result.get("failures", [])
-            if site_failures:
-                failures_dir = os.path.join(args.output, "failures", _sanitize_name(model))
-                os.makedirs(failures_dir, exist_ok=True)
-                fail_path = os.path.join(failures_dir, prep_file)
-                with open(fail_path, "w", encoding="utf-8") as f:
-                    json.dump({
-                        "url": url,
-                        "model": model,
-                        "backend": args.backend,
-                        "failures": site_failures,
-                    }, f, indent=2, ensure_ascii=False)
-                logger.warning(
-                    "%d LLM parse failure(s) for %s, saved to %s",
-                    len(site_failures), url, fail_path,
-                )
 
             done += 1
             if done % 10 == 0 or done == len(prepared_files):
