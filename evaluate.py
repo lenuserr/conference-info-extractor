@@ -128,27 +128,43 @@ def eval_venue(golden: Dict, pred: Dict, threshold: int = 75) -> Dict[str, Any]:
 def eval_topics(
     golden: Dict, pred: Dict, threshold: int = 70,
 ) -> Dict[str, Any]:
-    """Evaluate topics: precision / recall / F1 with fuzzy matching."""
+    """
+    Evaluate topics: precision / recall / F1 with fuzzy matching.
+
+    Uses many-to-one matching to handle topic granularity differences:
+      1. Greedy 1-to-1 pass: each pred topic matches the best unused golden topic.
+      2. Absorption pass: unmatched pred topics are checked against ALL golden
+         topics (including already matched ones).  If a pred topic is a fuzzy
+         sub-part of a golden topic, it is "absorbed" — not counted as a false
+         positive.  This prevents precision penalties when the model splits
+         one golden topic into several finer-grained pred topics.
+
+    Recall is based on 1-to-1 matches only (how many golden topics were found).
+    Precision counts both 1-to-1 matches and absorbed topics as true positives.
+    """
     g_topics: List[str] = golden.get("topics", [])
     p_topics: List[str] = pred.get("topics", [])
 
     if not g_topics and not p_topics:
         return {"precision": 1.0, "recall": 1.0, "f1": 1.0,
-                "golden_count": 0, "pred_count": 0, "matched": 0}
+                "golden_count": 0, "pred_count": 0, "matched": 0,
+                "absorbed": 0}
 
     if not g_topics:
         return {"precision": 0.0, "recall": 1.0, "f1": 0.0,
-                "golden_count": 0, "pred_count": len(p_topics), "matched": 0}
+                "golden_count": 0, "pred_count": len(p_topics), "matched": 0,
+                "absorbed": 0}
 
     if not p_topics:
         return {"precision": 1.0, "recall": 0.0, "f1": 0.0,
-                "golden_count": len(g_topics), "pred_count": 0, "matched": 0}
+                "golden_count": len(g_topics), "pred_count": 0, "matched": 0,
+                "absorbed": 0}
 
-    # Match predicted topics to golden (greedy, each golden used at most once)
+    # Pass 1: greedy 1-to-1 matching (each golden used at most once)
     g_used = [False] * len(g_topics)
-    matched = 0
+    p_matched = [False] * len(p_topics)
 
-    for pt in p_topics:
+    for pi, pt in enumerate(p_topics):
         best_idx = -1
         best_score = 0
         for i, gt in enumerate(g_topics):
@@ -160,9 +176,33 @@ def eval_topics(
                 best_idx = i
         if best_idx >= 0 and best_score >= threshold:
             g_used[best_idx] = True
-            matched += 1
+            p_matched[pi] = True
 
-    precision = matched / len(p_topics) if p_topics else 0.0
+    matched = sum(p_matched)
+
+    # Pass 2: absorption — unmatched pred topics that are sub-parts of
+    # any golden topic (including already matched ones).
+    absorbed = 0
+    for pi, pt in enumerate(p_topics):
+        if p_matched[pi]:
+            continue
+        pt_lower = pt.lower().strip()
+        for gt in g_topics:
+            gt_lower = gt.lower().strip()
+            # Check if pred is a substring of golden
+            if pt_lower in gt_lower:
+                absorbed += 1
+                break
+            # Fuzzy containment: partial_ratio checks if one string
+            # is approximately contained in the other
+            if fuzz.partial_ratio(pt_lower, gt_lower) >= threshold:
+                absorbed += 1
+                break
+
+    # Precision: matched + absorbed count as true positives
+    tp_precision = matched + absorbed
+    precision = tp_precision / len(p_topics) if p_topics else 0.0
+    # Recall: only 1-to-1 matches count (did we find each golden topic?)
     recall = matched / len(g_topics) if g_topics else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
@@ -173,6 +213,7 @@ def eval_topics(
         "golden_count": len(g_topics),
         "pred_count": len(p_topics),
         "matched": matched,
+        "absorbed": absorbed,
     }
 
 
@@ -400,8 +441,9 @@ def print_report(
                       f"acc={r['venue']['accuracy']:.0%}")
 
         t = r["topics"]
+        absorbed_str = f"  absorbed={t.get('absorbed', 0)}" if t.get("absorbed", 0) > 0 else ""
         lines.append(f"    topics:     P={t['precision']:.2f}  R={t['recall']:.2f}  F1={t['f1']:.2f}  "
-                      f"({t['matched']}/{t['golden_count']} golden, {t['pred_count']} pred)")
+                      f"({t['matched']}/{t['golden_count']} golden, {t['pred_count']} pred){absorbed_str}")
 
         s = r["keynote_speakers"]
         lines.append(f"    speakers:   P={s['precision']:.2f}  R={s['recall']:.2f}  F1={s['f1']:.2f}  "
