@@ -57,6 +57,15 @@ class Category(str, Enum):
 #
 # Level 1 matches these against link_text and URL path (navigation).
 # Level 2 matches these against page body text (content search).
+# Categories that can be confused with each other.
+# When selecting pages for a category, pages that match the OPPOSING
+# category's navigation keywords are excluded — unless the page ALSO
+# matches the current category's keywords (shared page).
+_OPPOSING_CATEGORY: Dict[Category, Category] = {
+    Category.SPEAKERS: Category.COMMITTEE,
+    Category.COMMITTEE: Category.SPEAKERS,
+}
+
 CATEGORY_KEYWORDS: Dict[Category, Tuple[str, ...]] = {
     Category.OTHER: (
         # Dates / deadlines
@@ -209,6 +218,12 @@ class PageSelector:
         self.keywords = CATEGORY_KEYWORDS[category]
         self._used_urls: Set[str] = set()
 
+        # Opposing category setup (speakers ↔ committee)
+        opposing = _OPPOSING_CATEGORY.get(category)
+        self._opposing_keywords: Tuple[str, ...] = (
+            CATEGORY_KEYWORDS[opposing] if opposing else ()
+        )
+
     @property
     def main_page(self) -> PageContent | None:
         """The main (root) page, if present."""
@@ -225,10 +240,45 @@ class PageSelector:
         """Pages not yet returned by any level."""
         return [p for p in self.site.pages if p.url not in self._used_urls]
 
+    def _is_opposing_page(self, page: PageContent) -> bool:
+        """
+        Check if a page belongs to the opposing category.
+
+        Two-level check:
+        1. Navigation (strict): if link_text/URL matches opposing keywords
+           and does NOT match ours — exclude.
+        2. Content (soft): if navigation is ambiguous but content matches
+           opposing keywords and does NOT match ours — exclude.
+
+        If the page matches BOTH categories at either level (e.g. a
+        single page listing both speakers and committee), it is kept.
+        """
+        if not self._opposing_keywords:
+            return False
+
+        # Level 1: navigation — strict
+        opp_nav = _matches_navigation(page, self._opposing_keywords)
+        own_nav = _matches_navigation(page, self.keywords)
+
+        if opp_nav and not own_nav:
+            return True
+        if opp_nav and own_nav:
+            return False  # shared page by navigation
+
+        # Level 2: content — soft (only if navigation was inconclusive)
+        opp_content = _matches_content(page, self._opposing_keywords)
+        if not opp_content:
+            return False
+        own_content = _matches_content(page, self.keywords)
+        if own_content:
+            return False  # shared page by content
+        return True
+
     def select_by_navigation(self) -> List[PageContent]:
         """
         Level 1: select pages whose link_text or URL path matches
         category keywords.  Main page is always included.
+        Pages belonging to the opposing category are excluded.
         """
         selected: List[PageContent] = []
 
@@ -243,6 +293,16 @@ class PageSelector:
             if _matches_navigation(page, self.keywords):
                 selected.append(page)
 
+        # Filter out opposing-category pages
+        before = len(selected)
+        selected = [p for p in selected if not self._is_opposing_page(p)]
+        filtered = before - len(selected)
+        if filtered:
+            logger.debug(
+                "L1 [%s]: filtered %d opposing page(s)",
+                self.category.value, filtered,
+            )
+
         self._mark_used(selected)
         logger.debug(
             "L1 navigation [%s]: %d page(s) — %s",
@@ -256,9 +316,21 @@ class PageSelector:
         """
         Level 2: among remaining pages, select those whose text body
         contains category keywords.
+        Pages belonging to the opposing category are excluded.
         """
         available = self._available()
         selected = [p for p in available if _matches_content(p, self.keywords)]
+
+        # Filter out opposing-category pages
+        before = len(selected)
+        selected = [p for p in selected if not self._is_opposing_page(p)]
+        filtered = before - len(selected)
+        if filtered:
+            logger.debug(
+                "L2 [%s]: filtered %d opposing page(s)",
+                self.category.value, filtered,
+            )
+
         self._mark_used(selected)
         logger.debug(
             "L2 content [%s]: %d page(s) — %s",
@@ -271,8 +343,20 @@ class PageSelector:
     def select_remaining(self) -> List[PageContent]:
         """
         Level 3: return all pages not yet sent for this category.
+        Pages belonging to the opposing category are excluded.
         """
         remaining = self._available()
+
+        # Filter out opposing-category pages
+        before = len(remaining)
+        remaining = [p for p in remaining if not self._is_opposing_page(p)]
+        filtered = before - len(remaining)
+        if filtered:
+            logger.debug(
+                "L3 [%s]: filtered %d opposing page(s)",
+                self.category.value, filtered,
+            )
+
         self._mark_used(remaining)
         logger.debug(
             "L3 remaining [%s]: %d page(s) — %s",
