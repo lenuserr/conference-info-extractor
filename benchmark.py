@@ -224,6 +224,7 @@ def run_benchmark(
                 "hallucinations_caught": len(hallucination_warnings),
                 "warnings": warnings,
                 "data": data,
+                "sources": result.get("sources", {}),
             }
             report["results"].append(entry)
 
@@ -233,9 +234,29 @@ def run_benchmark(
             with open(result_path, "w", encoding="utf-8") as f:
                 json.dump(entry, f, indent=2, ensure_ascii=False)
 
+            # Save failures separately if any
+            site_failures = result.get("failures", [])
+            if site_failures:
+                failures_dir = os.path.join(outdir, "failures", _sanitize_name(model))
+                os.makedirs(failures_dir, exist_ok=True)
+                fail_path = os.path.join(failures_dir, f"{url_name}.json")
+                with open(fail_path, "w", encoding="utf-8") as f:
+                    json.dump({
+                        "url": url,
+                        "model": model,
+                        "backend": backend,
+                        "failures": site_failures,
+                    }, f, indent=2, ensure_ascii=False)
+                logger.warning(
+                    "%d LLM parse failure(s) for %s, saved to %s",
+                    len(site_failures), url, fail_path,
+                )
+
             # Print progress
             if status == "ok":
-                print(f"  -> {fill_pct}% filled, {len(hallucination_warnings)} hallucinations caught, {elapsed}s")
+                fail_count = len(site_failures)
+                extra = f", {fail_count} parse fail(s)" if fail_count else ""
+                print(f"  -> {fill_pct}% filled, {len(hallucination_warnings)} hallucinations caught{extra}, {elapsed}s")
             else:
                 print(f"  -> ERROR: {error} ({elapsed}s)")
 

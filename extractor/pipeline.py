@@ -102,24 +102,40 @@ _IS_COMPLETE: Dict[Category, Callable[[Dict[str, Any]], bool]] = {
 # Helpers: merge results within a category
 # ---------------------------------------------------------------------------
 
-def _merge_other(base: Dict[str, Any], extra: Dict[str, Any]) -> Dict[str, Any]:
+_OTHER_FIELDS = (
+    "full_name", "acronym", "edition_number",
+    "start_date", "end_date",
+    "city", "country",
+    "submission_deadline", "notification_date", "camera_ready_date",
+    "publisher", "series",
+)
+
+
+def _merge_other(
+    base: Dict[str, Any],
+    extra: Dict[str, Any],
+    sources: Dict[str, str],
+    level: str,
+) -> Dict[str, Any]:
     merged = dict(base)
-    for key in (
-        "full_name", "acronym", "edition_number",
-        "start_date", "end_date",
-        "city", "country",
-        "submission_deadline", "notification_date", "camera_ready_date",
-        "publisher", "series",
-    ):
+    for key in _OTHER_FIELDS:
         if not merged.get(key) and extra.get(key):
             merged[key] = extra[key]
+            sources[key] = level
     return merged
 
 
-def _merge_list(base: Dict[str, Any], extra: Dict[str, Any], key: str) -> Dict[str, Any]:
+def _merge_list(
+    base: Dict[str, Any],
+    extra: Dict[str, Any],
+    key: str,
+    sources: Dict[str, str],
+    level: str,
+) -> Dict[str, Any]:
     merged = dict(base)
     if not merged.get(key) and extra.get(key):
         merged[key] = extra[key]
+        sources[key] = level
     return merged
 
 
@@ -127,19 +143,36 @@ def _merge_category(
     category: Category,
     base: Dict[str, Any],
     extra: Dict[str, Any],
+    sources: Dict[str, str],
+    level: str,
 ) -> Dict[str, Any]:
     if not base:
+        if extra:
+            # First result — record sources for all non-empty fields
+            if category == Category.OTHER:
+                for key in _OTHER_FIELDS:
+                    if extra.get(key):
+                        sources.setdefault(key, level)
+            elif category == Category.TOPICS:
+                if extra.get("topics"):
+                    sources.setdefault("topics", level)
+            elif category == Category.SPEAKERS:
+                if extra.get("keynote_speakers"):
+                    sources.setdefault("keynote_speakers", level)
+            elif category == Category.COMMITTEE:
+                if extra.get("program_committee"):
+                    sources.setdefault("program_committee", level)
         return extra or {}
     if not extra:
         return base
     if category == Category.OTHER:
-        return _merge_other(base, extra)
+        return _merge_other(base, extra, sources, level)
     elif category == Category.TOPICS:
-        return _merge_list(base, extra, "topics")
+        return _merge_list(base, extra, "topics", sources, level)
     elif category == Category.SPEAKERS:
-        return _merge_list(base, extra, "keynote_speakers")
+        return _merge_list(base, extra, "keynote_speakers", sources, level)
     elif category == Category.COMMITTEE:
-        return _merge_list(base, extra, "program_committee")
+        return _merge_list(base, extra, "program_committee", sources, level)
     return base
 
 
@@ -157,6 +190,7 @@ def _run_extract(
     vllm_extra_args: Optional[List[str]],
     prompts_dir: Optional[str] = None,
     all_warnings: Optional[List[str]] = None,
+    all_failures: Optional[List[Dict[str, Any]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """Call the LLM extraction function, then validate against context."""
     fn = _EXTRACT_FN[category]
@@ -167,6 +201,7 @@ def _run_extract(
         base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         prompts_dir=prompts_dir,
+        all_failures=all_failures,
     )
     if raw is None:
         return None
@@ -287,12 +322,17 @@ def _extract_from_contexts(
     base_url: str,
     vllm_extra_args: Optional[List[str]],
     prompts_dir: Optional[str] = None,
-) -> Tuple[Dict[str, Any], List[str]]:
+) -> Tuple[Dict[str, Any], List[str], Dict[str, str], List[Dict[str, Any]]]:
     """
     Core extraction logic: run 4 categories × (targeted + brute-force)
     using pre-built context strings.
 
-    Returns (data, warnings).
+    Returns (data, warnings, sources, failures).
+    ``sources`` maps field names to the level that filled them
+    (e.g. ``{"full_name": "L1", "topics": "bruteforce"}``).
+    ``failures`` is a list of dicts with failed LLM parse attempts,
+    each containing ``url``, ``category``, ``level``, ``reason``,
+    ``prompt``, ``raw_response``.
     """
     llm_kwargs = dict(
         model=model, backend=backend, base_url=base_url,
@@ -301,6 +341,8 @@ def _extract_from_contexts(
 
     category_results: Dict[Category, Dict[str, Any]] = {}
     warnings: List[str] = []
+    sources: Dict[str, str] = {}  # field_name -> level
+    failures: List[Dict[str, Any]] = []  # failed LLM attempts
 
     for category in Category:
         cat_key = category.value
@@ -318,11 +360,19 @@ def _extract_from_contexts(
                 continue
 
             logger.info("Algo1 %s [%s]: %d chars", level, cat_key, len(ctx))
+            n_before = len(failures)
             r = _run_extract(
-                category, ctx, all_warnings=warnings, **llm_kwargs,
+                category, ctx,
+                all_warnings=warnings, all_failures=failures,
+                **llm_kwargs,
             )
+            # Enrich any new failures with context
+            for f in failures[n_before:]:
+                f["url"] = url
+                f["category"] = cat_key
+                f["level"] = level
             if r:
-                targeted = _merge_category(category, targeted, r)
+                targeted = _merge_category(category, targeted, r, sources, level)
                 if has_data(targeted):
                     logger.info("Algo1 %s [%s]: sufficient data found", level, cat_key)
                     break
@@ -340,14 +390,21 @@ def _extract_from_contexts(
             bf_ctx = cat_contexts.get("bruteforce", "")
             if bf_ctx:
                 logger.info("Algo2 [%s]: %d chars", cat_key, len(bf_ctx))
+                n_before = len(failures)
                 r = _run_extract(
-                    category, bf_ctx, all_warnings=warnings, **llm_kwargs,
+                    category, bf_ctx,
+                    all_warnings=warnings, all_failures=failures,
+                    **llm_kwargs,
                 )
+                for f in failures[n_before:]:
+                    f["url"] = url
+                    f["category"] = cat_key
+                    f["level"] = "bruteforce"
                 if r:
                     bruteforce = r
 
         # Merge: targeted priority, brute-force fills gaps
-        merged = _merge_category(category, targeted, bruteforce)
+        merged = _merge_category(category, targeted, bruteforce, sources, "bruteforce")
         category_results[category] = merged
 
         if not has_data(merged):
@@ -389,7 +446,10 @@ def _extract_from_contexts(
             if c.get("name", "").strip().lower() not in overlap
         ]
 
-    return data, warnings
+    logger.info("Field sources: %s", sources)
+    if failures:
+        logger.warning("%d LLM parse failure(s) for %s", len(failures), url)
+    return data, warnings, sources, failures
 
 
 # ---------------------------------------------------------------------------
@@ -426,7 +486,7 @@ def extract_conference(
     logger.info("Fetched %d page(s) for %s", len(site.pages), url)
 
     contexts = build_all_contexts(site)
-    data, warnings = _extract_from_contexts(
+    data, warnings, sources, failures = _extract_from_contexts(
         url, contexts,
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
@@ -435,6 +495,8 @@ def extract_conference(
     return {
         "data": data,
         "warnings": warnings,
+        "sources": sources,
+        "failures": failures,
         "meta": {
             "model": model,
             "backend": backend,
@@ -481,7 +543,7 @@ def extract_from_prepared(
             for level, level_data in cat_data.items()
         }
 
-    data, warnings = _extract_from_contexts(
+    data, warnings, sources, failures = _extract_from_contexts(
         url, contexts,
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args, prompts_dir=prompts_dir,
@@ -490,6 +552,8 @@ def extract_from_prepared(
     return {
         "data": data,
         "warnings": warnings,
+        "sources": sources,
+        "failures": failures,
         "meta": {
             "model": model,
             "backend": backend,
