@@ -112,7 +112,7 @@ def main():
         help="Output directory (default: results/)",
     )
     parser.add_argument(
-        "--backend", "-b", default=DEFAULT_BACKEND, choices=["ollama", "vllm"],
+        "--backend", "-b", default=DEFAULT_BACKEND, choices=["ollama", "vllm", "claude"],
     )
     parser.add_argument("--models", nargs="+", default=None)
     parser.add_argument("--models-file", default=None)

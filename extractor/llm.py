@@ -1,6 +1,5 @@
 """
-LLM-based extraction via local inference backends (Ollama or vLLM).
-No paid APIs — everything runs locally.
+LLM-based extraction via local or cloud inference backends.
 
 Uses chain-of-extraction: split into four focused passes to reduce
 hallucinations. Each pass receives a category-specific page context
@@ -15,6 +14,7 @@ Pass 4 — "committee": program committee / chairs / organizers
 Supported backends:
   - ollama  (default): Ollama API at http://localhost:11434
   - vllm:              vLLM OpenAI-compatible server at http://localhost:8000
+  - claude:            Anthropic Claude API (requires ANTHROPIC_API_KEY env var)
 """
 
 from __future__ import annotations
@@ -40,6 +40,7 @@ DEFAULT_MODEL = "mistral:latest"
 DEFAULT_BACKEND = "ollama"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
 DEFAULT_VLLM_URL = "http://localhost:8000"
+DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-20250514"
 
 # ---------------------------------------------------------------------------
 # vLLM server auto-management
@@ -532,6 +533,56 @@ def _call_vllm(
 
 
 # ---------------------------------------------------------------------------
+# Backend: Claude (Anthropic API)
+# ---------------------------------------------------------------------------
+
+def _call_claude(
+    prompt: str,
+    model: str,
+    temperature: float = 0.1,
+) -> Optional[str]:
+    """Send a prompt to Claude via the Anthropic API.
+
+    Requires the ``anthropic`` package and the ``ANTHROPIC_API_KEY``
+    environment variable.  The *prompt* is sent as a single user message.
+    """
+    try:
+        import anthropic
+    except ImportError:
+        raise ImportError(
+            "The 'anthropic' package is required for the claude backend. "
+            "Install it with: pip install anthropic"
+        )
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "ANTHROPIC_API_KEY environment variable is not set. "
+            "Set it with: export ANTHROPIC_API_KEY=sk-ant-..."
+        )
+
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        message = client.messages.create(
+            model=model,
+            max_tokens=4096,
+            temperature=temperature,
+            messages=[
+                {"role": "user", "content": prompt},
+            ],
+        )
+        # Extract text from the response
+        text_parts = [
+            block.text for block in message.content
+            if hasattr(block, "text")
+        ]
+        return "\n".join(text_parts) if text_parts else None
+    except Exception as exc:
+        logger.error("Claude API call failed: %s", exc)
+        return None
+
+
+# ---------------------------------------------------------------------------
 # Unified call dispatcher
 # ---------------------------------------------------------------------------
 
@@ -548,8 +599,10 @@ def _call_llm(
         return _call_ollama(prompt, model, base_url, temperature)
     elif backend == "vllm":
         return _call_vllm(prompt, model, base_url, temperature, vllm_extra_args=vllm_extra_args)
+    elif backend == "claude":
+        return _call_claude(prompt, model, temperature)
     else:
-        raise ValueError(f"Unknown backend: {backend!r}. Use 'ollama' or 'vllm'.")
+        raise ValueError(f"Unknown backend: {backend!r}. Use 'ollama', 'vllm', or 'claude'.")
 
 
 # ---------------------------------------------------------------------------
@@ -607,6 +660,8 @@ def get_default_url(backend: str) -> str:
     """Return the default server URL for a given backend."""
     if backend == "vllm":
         return DEFAULT_VLLM_URL
+    if backend == "claude":
+        return "https://api.anthropic.com"  # not used directly, but kept for consistency
     return DEFAULT_OLLAMA_URL
 
 

@@ -355,7 +355,7 @@ Examples:
         """,
     )
     parser.add_argument(
-        "--backend", "-b", default=DEFAULT_BACKEND, choices=["ollama", "vllm"],
+        "--backend", "-b", default=DEFAULT_BACKEND, choices=["ollama", "vllm", "claude"],
         help=f"Inference backend (default: {DEFAULT_BACKEND})",
     )
     parser.add_argument(
