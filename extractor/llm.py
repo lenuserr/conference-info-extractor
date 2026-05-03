@@ -227,11 +227,15 @@ def ensure_vllm_server(
     # into a fresh POSIX session/process group, so _stop_vllm_server can
     # signal the whole group at once and reliably free GPU memory when we
     # switch models between benchmark entries. (No-op on Windows.)
+    env = os.environ.copy()
+    env["VLLM_USE_FLASHINFER_SAMPLER"] = "0"
+
     _vllm_process = subprocess.Popen(
         cmd,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
         start_new_session=True,
+        env=env,
     )
     _vllm_current_model = model
     _vllm_current_args = args_tuple
