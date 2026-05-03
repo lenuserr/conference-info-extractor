@@ -76,6 +76,29 @@ _HAS_DATA: Dict[Category, Callable[[Dict[str, Any]], bool]] = {
 
 
 # ---------------------------------------------------------------------------
+# Completeness checks — stricter than _HAS_DATA, used to skip brute-force
+# ---------------------------------------------------------------------------
+
+def _is_other_complete(result: Dict[str, Any]) -> bool:
+    """All key OTHER fields are filled — no need for brute-force."""
+    if not result:
+        return False
+    has_name = bool(result.get("full_name"))
+    has_dates = bool(result.get("start_date") and result.get("end_date"))
+    has_venue = bool(result.get("city") and result.get("country"))
+    has_deadline = bool(result.get("submission_deadline"))
+    return has_name and has_dates and has_venue and has_deadline
+
+
+_IS_COMPLETE: Dict[Category, Callable[[Dict[str, Any]], bool]] = {
+    Category.OTHER: _is_other_complete,
+    Category.TOPICS: lambda r: _has_list_data(r, "topics"),
+    Category.SPEAKERS: lambda r: _has_list_data(r, "keynote_speakers"),
+    Category.COMMITTEE: lambda r: _has_list_data(r, "program_committee"),
+}
+
+
+# ---------------------------------------------------------------------------
 # Helpers: merge results within a category
 # ---------------------------------------------------------------------------
 
@@ -304,16 +327,24 @@ def _extract_from_contexts(
                     logger.info("Algo1 %s [%s]: sufficient data found", level, cat_key)
                     break
 
-        # Algorithm 2: brute-force
-        bf_ctx = cat_contexts.get("bruteforce", "")
+        # Algorithm 2: brute-force (skip if targeted already found everything)
+        is_complete = _IS_COMPLETE[category]
         bruteforce: Dict[str, Any] = {}
-        if bf_ctx:
-            logger.info("Algo2 [%s]: %d chars", cat_key, len(bf_ctx))
-            r = _run_extract(
-                category, bf_ctx, all_warnings=warnings, **llm_kwargs,
+
+        if is_complete(targeted):
+            logger.info(
+                "Algo1 [%s]: complete data found, skipping brute-force",
+                cat_key,
             )
-            if r:
-                bruteforce = r
+        else:
+            bf_ctx = cat_contexts.get("bruteforce", "")
+            if bf_ctx:
+                logger.info("Algo2 [%s]: %d chars", cat_key, len(bf_ctx))
+                r = _run_extract(
+                    category, bf_ctx, all_warnings=warnings, **llm_kwargs,
+                )
+                if r:
+                    bruteforce = r
 
         # Merge: targeted priority, brute-force fills gaps
         merged = _merge_category(category, targeted, bruteforce)
