@@ -379,15 +379,19 @@ are associated with, NOT their country. Use null if not mentioned.
 - "country": The country of the speaker's affiliation (not nationality), e.g. "United States", \
 "Germany", "Japan". Use full English country names. Use null if not mentioned on the page.
 
-CRITICAL: Do NOT include program committee members, general chairs, track chairs,
-organizers, or reviewers here. Speakers and committee members are ALWAYS listed
-in different sections of the website. If someone is listed under "Committee",
-"Organizing", "Chairs", or similar headings — they are NOT a speaker.
-
-Only extract people who are explicitly listed as keynote speakers, invited speakers,
-plenary speakers, or tutorial presenters.
-
-Return [] if no keynote/invited speakers are listed in the text.
+CRITICAL RULES:
+1. Do NOT include program committee members, general chairs, track chairs,
+   organizers, or reviewers here. Speakers and committee members are ALWAYS listed
+   in different sections of the website. If someone is listed under "Committee",
+   "Organizing", "Chairs", or similar headings — they are NOT a speaker.
+2. Only extract people who are EXPLICITLY listed as keynote speakers, invited speakers,
+   plenary speakers, or tutorial presenters WITH THEIR NAMES clearly stated.
+3. If speakers are announced but names are not yet listed (e.g. "Keynote speakers
+   to be announced", "To be announced soon", "TBA", "Coming soon", "To be confirmed"),
+   return an EMPTY list [].
+4. If the text does not mention any speakers at all, return an EMPTY list [].
+5. It is MUCH BETTER to return an empty list than to guess or pick random names
+   from the text. An empty list is a valid and correct answer.
 
 Required JSON structure:
 {{
