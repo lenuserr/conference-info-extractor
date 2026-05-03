@@ -472,7 +472,7 @@ def _call_ollama(
         response = client.generate(
             model=model,
             prompt=prompt,
-            options={"temperature": temperature, "num_predict": 2048},
+            options={"temperature": temperature, "num_predict": 8192},
         )
         return response.get("response", "")
     except ImportError:
@@ -488,7 +488,7 @@ def _call_ollama(
                 "model": model,
                 "prompt": prompt,
                 "stream": False,
-                "options": {"temperature": temperature, "num_predict": 2048},
+                "options": {"temperature": temperature, "num_predict": 8192},
             },
             timeout=180,
         )
@@ -519,7 +519,7 @@ def _call_vllm(
             json={
                 "model": model,
                 "prompt": prompt,
-                "max_tokens": 2048,
+                "max_tokens": 8192,
                 "temperature": temperature,
                 "stop": ["\n\n\n"],
             },
