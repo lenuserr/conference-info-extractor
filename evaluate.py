@@ -38,7 +38,12 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 def _load_results(directory: str) -> Dict[str, Dict[str, Any]]:
-    """Load all JSON result files from a directory. Returns {filename: data}."""
+    """Load all JSON result files from a directory. Returns {filename: data}.
+
+    The ``data`` dict is augmented with ``_elapsed_sec`` and ``_sources``
+    from the top-level entry so that timing and level-usage information
+    are available during evaluation.
+    """
     results = {}
     for name in sorted(os.listdir(directory)):
         if not name.endswith(".json"):
@@ -46,7 +51,10 @@ def _load_results(directory: str) -> Dict[str, Dict[str, Any]]:
         path = os.path.join(directory, name)
         with open(path, encoding="utf-8") as f:
             entry = json.load(f)
-        results[name] = entry.get("data", {})
+        data = entry.get("data", {})
+        data["_elapsed_sec"] = entry.get("elapsed_sec")
+        data["_sources"] = entry.get("sources", {})
+        results[name] = data
     return results
 
 
@@ -339,13 +347,17 @@ def evaluate_site(
     fuzzy_threshold: int = 75,
 ) -> Dict[str, Any]:
     """Evaluate all 5 categories for a single site."""
-    return {
+    result = {
         "dates": eval_dates(golden, pred),
         "venue": eval_venue(golden, pred, threshold=fuzzy_threshold),
         "topics": eval_topics(golden, pred, threshold=fuzzy_threshold - 5),
         "keynote_speakers": eval_speakers(golden, pred, threshold=fuzzy_threshold),
         "program_committee": eval_committee(golden, pred, threshold=fuzzy_threshold),
     }
+    elapsed = pred.get("_elapsed_sec")
+    if elapsed is not None:
+        result["elapsed_sec"] = elapsed
+    return result
 
 
 def aggregate(site_results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
@@ -378,8 +390,16 @@ def aggregate(site_results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     cm_country = sum(r["program_committee"]["country_accuracy"] for r in site_results.values()) / n
     cm_role = sum(r["program_committee"]["role_accuracy"] for r in site_results.values()) / n
 
+    # Timing: average elapsed seconds per site
+    elapsed_vals = [
+        r["elapsed_sec"] for r in site_results.values()
+        if "elapsed_sec" in r and r["elapsed_sec"] is not None
+    ]
+    avg_elapsed = round(sum(elapsed_vals) / len(elapsed_vals), 2) if elapsed_vals else None
+
     return {
         "sites_evaluated": n,
+        "avg_elapsed_sec": avg_elapsed,
         "dates": {"accuracy": round(dates_acc, 4)},
         "venue": {"accuracy": round(venue_acc, 4)},
         "topics": {
@@ -474,6 +494,17 @@ def print_report(
     lines.append(f"    affiliation accuracy:   {agg['program_committee']['affiliation_accuracy']:.1%}")
     lines.append(f"    country accuracy:       {agg['program_committee']['country_accuracy']:.1%}")
     lines.append(f"    role accuracy:          {agg['program_committee']['role_accuracy']:.1%}")
+    avg_t = agg.get("avg_elapsed_sec")
+    if avg_t is not None:
+        lines.append(f"  avg time per site:       {avg_t:.1f}s")
+    ls = agg.get("level_stats", {})
+    if ls.get("total_fields", 0) > 0:
+        parts = []
+        for level in ("L1", "L2", "L3", "bruteforce"):
+            c = ls.get(level, 0)
+            if c > 0:
+                parts.append(f"{level}={c} ({ls.get(f'{level}_pct', 0):.0f}%)")
+        lines.append(f"  level usage:             {', '.join(parts)}")
     lines.append("=" * 80)
 
     return "\n".join(lines)
@@ -517,7 +548,22 @@ def print_comparison(
 
 def _comparison_rows() -> List[Tuple[str, Any]]:
     """Shared row definitions for comparison tables."""
+
+    def _level_pct(a: Dict, level: str) -> str:
+        ls = a.get("level_stats", {})
+        if ls.get("total_fields", 0) == 0:
+            return "N/A"
+        return f"{ls.get(f'{level}_pct', 0):.0f}%"
+
     return [
+        ("Avg time/site (s)",
+         lambda a: f"{a['avg_elapsed_sec']:.1f}" if a.get("avg_elapsed_sec") is not None else "N/A"),
+        ("Level L1 usage",
+         lambda a: _level_pct(a, "L1")),
+        ("Level L2 usage",
+         lambda a: _level_pct(a, "L2")),
+        ("Level L3 usage",
+         lambda a: _level_pct(a, "L3")),
         ("Dates accuracy",
          lambda a: f"{a['dates']['accuracy']:.1%}"),
         ("Venue accuracy",
@@ -595,6 +641,42 @@ def save_comparison_markdown(
 # Evaluate one model against golden
 # ---------------------------------------------------------------------------
 
+def _compute_level_stats(pred: Dict[str, Dict[str, Any]], filenames: List[str]) -> Dict[str, Any]:
+    """
+    Compute how often each level (L1, L2, L3, bruteforce) is used as
+    the source for filled fields.
+
+    Returns::
+
+        {
+            "total_fields": 120,
+            "L1": 85,  "L1_pct": 70.8,
+            "L2": 20,  "L2_pct": 16.7,
+            "L3": 10,  "L3_pct": 8.3,
+            "bruteforce": 5,  "bruteforce_pct": 4.2,
+        }
+    """
+    counts: Dict[str, int] = {}
+    total = 0
+    for fname in filenames:
+        sources = pred[fname].get("_sources", {})
+        for field, level in sources.items():
+            counts[level] = counts.get(level, 0) + 1
+            total += 1
+
+    stats: Dict[str, Any] = {"total_fields": total}
+    for level in ("L1", "L2", "L3", "bruteforce"):
+        c = counts.get(level, 0)
+        stats[level] = c
+        stats[f"{level}_pct"] = round(c / total * 100, 1) if total > 0 else 0.0
+    # Any other levels not in the standard set
+    for level, c in sorted(counts.items()):
+        if level not in ("L1", "L2", "L3", "bruteforce"):
+            stats[level] = c
+            stats[f"{level}_pct"] = round(c / total * 100, 1) if total > 0 else 0.0
+    return stats
+
+
 def _evaluate_model(
     golden: Dict[str, Dict[str, Any]],
     pred_dir: str,
@@ -623,6 +705,11 @@ def _evaluate_model(
         )
 
     agg = aggregate(site_results)
+
+    # Level usage stats
+    level_stats = _compute_level_stats(pred, common)
+    agg["level_stats"] = level_stats
+
     return site_results, agg
 
 
