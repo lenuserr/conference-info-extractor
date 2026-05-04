@@ -499,41 +499,7 @@ def print_comparison(
     lines.append(header)
     lines.append("-" * 100)
 
-    # Rows
-    rows = [
-        ("dates accuracy",
-         lambda a: f"{a['dates']['accuracy']:.1%}"),
-        ("venue accuracy",
-         lambda a: f"{a['venue']['accuracy']:.1%}"),
-        ("topics P",
-         lambda a: f"{a['topics']['precision']:.2f}"),
-        ("topics R",
-         lambda a: f"{a['topics']['recall']:.2f}"),
-        ("topics F1",
-         lambda a: f"{a['topics']['f1']:.2f}"),
-        ("speakers P",
-         lambda a: f"{a['keynote_speakers']['precision']:.2f}"),
-        ("speakers R",
-         lambda a: f"{a['keynote_speakers']['recall']:.2f}"),
-        ("speakers F1",
-         lambda a: f"{a['keynote_speakers']['f1']:.2f}"),
-        ("  speakers aff",
-         lambda a: f"{a['keynote_speakers']['affiliation_accuracy']:.1%}"),
-        ("  speakers country",
-         lambda a: f"{a['keynote_speakers']['country_accuracy']:.1%}"),
-        ("committee P",
-         lambda a: f"{a['program_committee']['precision']:.2f}"),
-        ("committee R",
-         lambda a: f"{a['program_committee']['recall']:.2f}"),
-        ("committee F1",
-         lambda a: f"{a['program_committee']['f1']:.2f}"),
-        ("  committee aff",
-         lambda a: f"{a['program_committee']['affiliation_accuracy']:.1%}"),
-        ("  committee country",
-         lambda a: f"{a['program_committee']['country_accuracy']:.1%}"),
-        ("  committee role",
-         lambda a: f"{a['program_committee']['role_accuracy']:.1%}"),
-    ]
+    rows = _comparison_rows()
 
     for label, fn in rows:
         vals = []
@@ -547,6 +513,82 @@ def print_comparison(
 
     lines.append("=" * 100)
     return "\n".join(lines)
+
+
+def _comparison_rows() -> List[Tuple[str, Any]]:
+    """Shared row definitions for comparison tables."""
+    return [
+        ("Dates accuracy",
+         lambda a: f"{a['dates']['accuracy']:.1%}"),
+        ("Venue accuracy",
+         lambda a: f"{a['venue']['accuracy']:.1%}"),
+        ("Topics P",
+         lambda a: f"{a['topics']['precision']:.2f}"),
+        ("Topics R",
+         lambda a: f"{a['topics']['recall']:.2f}"),
+        ("Topics F1",
+         lambda a: f"{a['topics']['f1']:.2f}"),
+        ("Speakers P",
+         lambda a: f"{a['keynote_speakers']['precision']:.2f}"),
+        ("Speakers R",
+         lambda a: f"{a['keynote_speakers']['recall']:.2f}"),
+        ("Speakers F1",
+         lambda a: f"{a['keynote_speakers']['f1']:.2f}"),
+        ("Speakers aff",
+         lambda a: f"{a['keynote_speakers']['affiliation_accuracy']:.1%}"),
+        ("Speakers country",
+         lambda a: f"{a['keynote_speakers']['country_accuracy']:.1%}"),
+        ("Committee P",
+         lambda a: f"{a['program_committee']['precision']:.2f}"),
+        ("Committee R",
+         lambda a: f"{a['program_committee']['recall']:.2f}"),
+        ("Committee F1",
+         lambda a: f"{a['program_committee']['f1']:.2f}"),
+        ("Committee aff",
+         lambda a: f"{a['program_committee']['affiliation_accuracy']:.1%}"),
+        ("Committee country",
+         lambda a: f"{a['program_committee']['country_accuracy']:.1%}"),
+        ("Committee role",
+         lambda a: f"{a['program_committee']['role_accuracy']:.1%}"),
+    ]
+
+
+def save_comparison_markdown(
+    model_aggregates: List[Tuple[str, Dict[str, Any]]],
+    path: str,
+    golden_dir: str,
+) -> None:
+    """Save comparison table as a Markdown file."""
+    names = [name for name, _ in model_aggregates]
+    rows = _comparison_rows()
+
+    lines = []
+    lines.append("# Model Comparison")
+    lines.append("")
+    lines.append(f"Golden: `{golden_dir}`")
+    lines.append("")
+
+    # Table header
+    header = "| Metric | " + " | ".join(names) + " |"
+    sep = "|:--" + "|--:" * len(names) + "|"
+    lines.append(header)
+    lines.append(sep)
+
+    # Table body
+    for label, fn in rows:
+        vals = []
+        for _, agg in model_aggregates:
+            try:
+                vals.append(fn(agg))
+            except (KeyError, TypeError):
+                vals.append("N/A")
+        row = f"| {label} | " + " | ".join(vals) + " |"
+        lines.append(row)
+
+    lines.append("")
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
 
 
 # ---------------------------------------------------------------------------
@@ -638,8 +680,9 @@ def main():
         comparison = print_comparison(model_aggs)
         print(comparison)
 
-    # Save JSON
+    # Save reports
     if args.output and all_reports:
+        # JSON report
         full_report = {
             "golden_dir": args.golden,
             "pred_dirs": args.pred,
@@ -654,7 +697,14 @@ def main():
         }
         with open(args.output, "w", encoding="utf-8") as f:
             json.dump(full_report, f, indent=2, ensure_ascii=False)
-        print(f"\nFull report saved to: {args.output}")
+        print(f"\nJSON report saved to: {args.output}")
+
+        # Markdown comparison (only for multi-model)
+        if not single_mode:
+            md_path = args.output.rsplit(".", 1)[0] + ".md"
+            model_aggs = [(name, r["aggregate"]) for name, r in all_reports.items()]
+            save_comparison_markdown(model_aggs, md_path, args.golden)
+            print(f"Markdown report saved to: {md_path}")
 
 
 if __name__ == "__main__":
