@@ -1,0 +1,469 @@
+{
+  "url": "https://aiapp2026.org/",
+  "model": "claude-opus-4-6",
+  "vllm_extra_args": [],
+  "backend": "claude",
+  "status": "ok",
+  "elapsed_sec": 101.1,
+  "pages_fetched": 7,
+  "warnings": [
+    "[hallucination] publisher = Computer Science Conference Proceedings",
+    "No data found for category: speakers"
+  ],
+  "data": {
+    "conference": {
+      "full_name": "International Conference on Artificial Intelligence and Applications",
+      "acronym": "AIAPP",
+      "url": "https://aiapp2026.org/",
+      "edition_number": 13
+    },
+    "dates": {
+      "start_date": "2026-05-16",
+      "end_date": "2026-05-17"
+    },
+    "venue": {
+      "city": "Zurich",
+      "country": "Switzerland"
+    },
+    "deadlines": {
+      "submission": "2026-05-02",
+      "notification": "2026-05-09",
+      "camera_ready": "2026-05-13"
+    },
+    "topics": [
+      "Artificial intelligence algorithms and theory",
+      "Machine learning, deep learning, and representation learning",
+      "Foundation models and large scale pre trained models",
+      "Self supervised, weakly supervised, and unsupervised learning",
+      "Reinforcement learning, multi agent RL, and decision making systems",
+      "Generative AI (diffusion models, GANs, autoregressive models)",
+      "Explainable, interpretable, and trustworthy AI",
+      "Responsible AI, fairness, ethics, and safety",
+      "Optimization methods for AI and machine learning",
+      "Knowledge representation, reasoning, and symbolic AI",
+      "Neuro symbolic and hybrid intelligent systems",
+      "Natural language processing, language understanding, and language generation",
+      "Speech processing and multimodal language vision models",
+      "Computer vision, image understanding, and visual recognition",
+      "3D vision, scene understanding, and embodied AI",
+      "Robotics, autonomous systems, and intelligent control",
+      "Planning, scheduling, and heuristic search",
+      "Cognitive computing and computational theories of intelligence",
+      "Information retrieval, search, and recommendation systems",
+      "Data mining, knowledge discovery, and large scale data analytics",
+      "Bioinformatics, computational biology, and AI for life sciences",
+      "AI for healthcare, medicine, and clinical decision support",
+      "AI for scientific discovery and simulation",
+      "Human AI interaction, collaboration, and user modeling",
+      "Affective computing and emotion aware systems",
+      "Edge AI, distributed AI, and efficient model deployment",
+      "Parallel and high performance computing for AI",
+      "Software and hardware architectures for AI acceleration",
+      "Neuromorphic computing and brain inspired AI",
+      "Semantic web, knowledge graphs, and linked data",
+      "Intelligent system architectures and agent based systems",
+      "Pervasive, ubiquitous, and ambient intelligence",
+      "Multimedia processing, cognitive informatics, and multimodal AI",
+      "Pattern recognition and statistical learning",
+      "Robotics vision integration and embodied perception",
+      "Mechatronics and intelligent automation",
+      "AI applications in engineering, finance, education, and industry",
+      "Emerging trends and future directions in artificial intelligence"
+    ],
+    "keynote_speakers": [],
+    "program_committee": [
+      {
+        "name": "Abdul Ghani Albaali",
+        "affiliation": "Princess Sumaya University for Technology",
+        "country": "Jordan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Abdullah Akinde",
+        "affiliation": "Austin Peay State University",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Addisson Salazar",
+        "affiliation": "Universitat Politecnica de Valencia",
+        "country": "Spain",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ahmadreza Mohebbi",
+        "affiliation": "University of Auckland",
+        "country": "New Zealand",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ali H. Wheeb",
+        "affiliation": "University of Baghdad",
+        "country": "Iraq",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Amina Chandad",
+        "affiliation": "ENCG Tangier",
+        "country": "Morocco",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Anjum Razzaque",
+        "affiliation": "Western Illinois University",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Antonio Abreu",
+        "affiliation": "Polytechnic University of Lisbon",
+        "country": "Portugal",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Asad Ullah",
+        "affiliation": "Xi'an Eurasia University",
+        "country": "China",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Chien-Chang Chou",
+        "affiliation": "National Kaohsiung University of Science and Technology",
+        "country": "Taiwan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Fatima Mohammed Rafie Younis",
+        "affiliation": "University of Mosul",
+        "country": "Iraq",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ferdib-Al-Islam",
+        "affiliation": "Northern University of Business and Technology Khulna",
+        "country": "Bangladesh",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Fidel Ahmad Ibrahim",
+        "affiliation": "Al Rasheed International Private University for Science & Technology",
+        "country": "Syria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Gihan Soliman",
+        "affiliation": "The Linnean Society for Mineral Cybernetics",
+        "country": "United Kingdom",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Grigorios N. Beligiannis",
+        "affiliation": "University of Patras",
+        "country": "Greece",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Haleema Azra",
+        "affiliation": "American College of Education",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Hesham N. Elmahdy",
+        "affiliation": "Cairo University",
+        "country": "Egypt",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ibrahim Hamzane",
+        "affiliation": "Cadi Ayyad University of Marrakech",
+        "country": "Morocco",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Jiajie Shen",
+        "affiliation": "Fudan University",
+        "country": "China",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Jiawei Zhang",
+        "affiliation": "Arizona State University",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Joao Manuel R. S. Tavares",
+        "affiliation": "Faculdade de Engenharia, Universidade do Porto (FEUP)",
+        "country": "Portugal",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Jose Silva",
+        "affiliation": "CINAMIL",
+        "country": "Portugal",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Juan Romelio Mendoza Sànchez",
+        "affiliation": "Universidad Nacional de Cajamarca",
+        "country": "Peru",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Kimani Joe",
+        "affiliation": "University in Nairobi",
+        "country": "Kenya",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Li Jing",
+        "affiliation": "Xiamen University",
+        "country": "Malaysia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Loc Nguyen",
+        "affiliation": "Loc Nguyen's Academic Network",
+        "country": "Vietnam",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Luisa Maria Arvide Cambra",
+        "affiliation": "University of Almeria",
+        "country": "Spain",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mazen Alzyoud",
+        "affiliation": "Al al-Bayt University",
+        "country": "Jordan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Maziar Amirhosseini",
+        "affiliation": "Iranian Research Institute for Information Science and Technology (IranDoc)",
+        "country": "Iran",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Michail Kalogiannakis",
+        "affiliation": "University of Thessaly",
+        "country": "Greece",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mirza Mujtaba Baig",
+        "affiliation": "University of the Cumberlands",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mohammad Hamdan",
+        "affiliation": "Yarmouk University",
+        "country": "Jordan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mohammed Alchaita",
+        "affiliation": "Al-Rasheed Private University for Science and Technology (RU)",
+        "country": "Syria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Muammar Makhlouf Mohammed",
+        "affiliation": "Sirte University (SU)",
+        "country": "Libya",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Mululu Chirwa",
+        "affiliation": "University of Zambia",
+        "country": "Zambia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Murtadha Ali Nsaif Shukur",
+        "affiliation": "Al-Furat Al-Awsat Technical University",
+        "country": "Iraq",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Nanzheng Xie",
+        "affiliation": "University of California",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Natalia Hrkotacova",
+        "affiliation": "Constantine the Philosopher University",
+        "country": "Slovakia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Nikitha Merilena Jonnada",
+        "affiliation": "University of the Cumberlands",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Nikos Loukeris",
+        "affiliation": "University of West Attica",
+        "country": "Greece",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Omar Chaieb",
+        "affiliation": "University Mohammed First - Oujda",
+        "country": "Morocco",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Pavel Loskot",
+        "affiliation": "ZJU-UIUC Institute",
+        "country": "China",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Rao Li",
+        "affiliation": "University of South Carolina Aiken",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Ray-I Chang",
+        "affiliation": "National Taiwan University",
+        "country": "Taiwan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Riham Hilal",
+        "affiliation": "Egypt Japan University of Science and Technology (E-JUST)",
+        "country": "Egypt",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Roy Hisar",
+        "affiliation": "Esa Unggul University",
+        "country": "Indonesia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Sajedeh Norozpour",
+        "affiliation": "Istanbul Gelisim University (IGU)",
+        "country": "Turkey",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Sathish Kumar Selvaperumal",
+        "affiliation": "Asia Pacific University of Technology and Innovation",
+        "country": "Malaysia",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Seyed Rohollah Mirhoseini",
+        "affiliation": "Islamic Azad University",
+        "country": "Iran",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Shang-Ming Zhou",
+        "affiliation": "University of Plymouth",
+        "country": "United Kingdom",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Shi Dong",
+        "affiliation": "Zhoukou Normal University",
+        "country": "China",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Shohel Arman",
+        "affiliation": "Daffodil International University",
+        "country": "Bangladesh",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Silvia Gaftandzhieva",
+        "affiliation": "University of Plovdiv Paisii Hilendarski",
+        "country": "Bulgaria",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Sungho Kim",
+        "affiliation": "Pacific States University (PSU) California",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Wael A. Altabey",
+        "affiliation": "Alexandria University",
+        "country": "Egypt",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Waheed Sabry",
+        "affiliation": "Military Technical College (MTC)",
+        "country": "Egypt",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Xiaochun Cheng",
+        "affiliation": "Swansea University",
+        "country": "United Kingdom",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Xiaoyan Dai",
+        "affiliation": "KYOCERA Corporation",
+        "country": "Japan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yas Alsultanny",
+        "affiliation": "Uruk University",
+        "country": "Iraq",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yew Kee Wong Eric",
+        "affiliation": "Hong Kong Chu Hai College",
+        "country": "China",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Yuan-Kai Wang",
+        "affiliation": "Fu Jen Catholic University",
+        "country": "Taiwan",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Zahiduzzaman Zahid",
+        "affiliation": "University of the Cumberlands",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Zhiyin Zhou",
+        "affiliation": "Trine University",
+        "country": "United States",
+        "role": "Program Committee Member"
+      },
+      {
+        "name": "Zigeng Wang",
+        "affiliation": "Walmart Global Tech",
+        "country": "United States",
+        "role": "Program Committee Member"
+      }
+    ],
+    "publication": {
+      "publisher": "Computer Science Conference Proceedings",
+      "series": "Computer Science & Information Technology (CS & IT)"
+    }
+  },
+  "fields_filled": 15,
+  "fields_total": 16,
+  "fill_pct": 93.8,
+  "hallucinations_caught": 1
+}

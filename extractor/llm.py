@@ -1,20 +1,20 @@
 """
-LLM-based extraction via local inference backends (Ollama or vLLM).
-No paid APIs — everything runs locally.
+LLM-based extraction via local or cloud inference backends.
 
-Uses chain-of-extraction: split into three focused passes to reduce
-hallucinations in small models (7-10B parameters). Each pass receives a
-target-specific page context built by ``extractor.content_selection``
-rather than the whole scraped site, so the LLM only sees text that's
-actually relevant to the task.
+Uses chain-of-extraction: split into four focused passes to reduce
+hallucinations. Each pass receives a category-specific page context
+built by ``extractor.content_selection`` rather than the whole scraped
+site, so the LLM only sees text that's actually relevant to the task.
 
-Pass 1 — "basic":     identity, dates, venue, deadlines, publication, topics
-Pass 2 — "speakers":  keynote / invited / plenary speakers
-Pass 3 — "committee": program committee / chairs / organizers
+Pass 1 — "other":     identity, dates, venue, deadlines, publication
+Pass 2 — "topics":    research topics / themes / tracks / scope
+Pass 3 — "speakers":  keynote / invited / plenary speakers
+Pass 4 — "committee": program committee / chairs / organizers
 
 Supported backends:
   - ollama  (default): Ollama API at http://localhost:11434
   - vllm:              vLLM OpenAI-compatible server at http://localhost:8000
+  - claude:            Anthropic Claude API (requires ANTHROPIC_API_KEY env var)
 """
 
 from __future__ import annotations
@@ -40,6 +40,7 @@ DEFAULT_MODEL = "mistral:latest"
 DEFAULT_BACKEND = "ollama"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
 DEFAULT_VLLM_URL = "http://localhost:8000"
+DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-20250514"
 
 # ---------------------------------------------------------------------------
 # vLLM server auto-management
@@ -226,11 +227,15 @@ def ensure_vllm_server(
     # into a fresh POSIX session/process group, so _stop_vllm_server can
     # signal the whole group at once and reliably free GPU memory when we
     # switch models between benchmark entries. (No-op on Windows.)
+    env = os.environ.copy()
+    env["VLLM_USE_FLASHINFER_SAMPLER"] = "0"
+
     _vllm_process = subprocess.Popen(
         cmd,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
         start_new_session=True,
+        env=env,
     )
     _vllm_current_model = model
     _vllm_current_args = args_tuple
@@ -271,20 +276,52 @@ def ensure_vllm_server(
 # Prompt templates
 # ---------------------------------------------------------------------------
 
-_BASIC_PROMPT = """\
+_OTHER_PROMPT = """\
 You are a precise data extraction assistant. Extract conference metadata from the text below.
 Return ONLY a valid JSON object — no markdown, no explanation, no extra text.
 
-If a field cannot be determined from the text, use null for scalars and [] for arrays.
-Dates must be in YYYY-MM-DD format. Country must be the full English name (e.g. "Spain", not "ES").
-edition_number is the numeric edition (e.g. 38 for "38th Annual Conference"), or null.
-"topics" is a list of research topics/themes/tracks covered by the conference
-(e.g. "machine learning", "privacy"). Return [] if none are listed.
+If a field cannot be determined from the text, use null. Only extract information that is \
+EXPLICITLY stated in the text. Do not guess or infer values that are not clearly written.
+
+Field descriptions:
+
+- "full_name": The complete official name of the conference, e.g. "International Conference \
+on Machine Learning", "IEEE Symposium on Security and Privacy". Do not include the year or \
+edition number in this field.
+- "acronym": The short abbreviation, e.g. "ICML", "IEEE S&P", "NeurIPS". Sometimes includes \
+the year like "ICML 2026" — include only the abbreviation without the year.
+- "edition_number": The numeric edition of the conference, e.g. 38 for "38th Annual \
+Conference", 15 for "15th International Workshop". Use null if not mentioned.
+- "start_date": The first day of the conference (not workshops or tutorials). Format: YYYY-MM-DD.
+- "end_date": The last day of the conference. Format: YYYY-MM-DD. If the conference is a \
+single day, end_date equals start_date.
+- "city": The city where the conference takes place, e.g. "Vancouver", "Tokyo". If the \
+conference is virtual/online with no physical location, use "Virtual Conference".
+- "country": The country where the conference takes place, full English name, e.g. "Canada", \
+"Japan", not "CA" or "JP". If virtual, use "Virtual Conference".
+- "submission_deadline": The deadline for paper submissions (often called "paper submission \
+deadline", "full paper deadline", "abstract deadline"). Format: YYYY-MM-DD. This is NOT the \
+conference start date.
+- "notification_date": The date when authors are notified of acceptance/rejection (often \
+called "notification of acceptance", "author notification"). Format: YYYY-MM-DD.
+- "camera_ready_date": The deadline for submitting the final camera-ready version of accepted \
+papers (often called "camera-ready deadline", "final paper submission"). Format: YYYY-MM-DD.
+- "publisher": The publisher of the conference proceedings, e.g. "Springer", "IEEE", "ACM", \
+"Elsevier". Use null if not mentioned.
+- "series": The publication series the proceedings appear in, e.g. "Lecture Notes in Computer \
+Science", "ACM International Conference Proceeding Series", "Communications in Computer and \
+Information Science". Use null if not mentioned.
+
+Important date parsing rules:
+- Conference websites use many different date formats. Examples: "May 21 ~ 22, 2026" (tilde \
+instead of dash), "21-22 May 2026", "May 21st-22nd, 2026", "2026/05/21", "June 15, 2026 \
+(extended)". Parse them all into YYYY-MM-DD.
+- Do NOT confuse submission deadlines with conference dates — they are different things.
 
 Required JSON structure:
 {{
-  "full_name": "string",
-  "acronym": "string",
+  "full_name": "string or null",
+  "acronym": "string or null",
   "edition_number": int or null,
   "start_date": "YYYY-MM-DD or null",
   "end_date": "YYYY-MM-DD or null",
@@ -294,7 +331,34 @@ Required JSON structure:
   "notification_date": "YYYY-MM-DD or null",
   "camera_ready_date": "YYYY-MM-DD or null",
   "publisher": "string or null",
-  "series": "string or null",
+  "series": "string or null"
+}}
+
+--- TEXT START ---
+{text}
+--- TEXT END ---
+
+JSON:"""
+
+_TOPICS_PROMPT = """\
+You are a precise data extraction assistant. From the conference text below,
+extract ONLY the list of research topics, themes, tracks, or scope areas.
+Return ONLY valid JSON — no markdown, no explanation, no extra text.
+
+These are the subject areas that the conference calls for papers on, often
+listed under headings like "Topics", "Scope", "Tracks", "Areas of Interest",
+"Call for Papers", etc.
+
+Each topic should be a short phrase (e.g. "machine learning", "network security",
+"natural language processing"). Do not include full sentences or descriptions.
+
+Only extract topics that are EXPLICITLY listed in the text. Do not invent or
+generalize topics.
+
+Return [] if no topics are listed in the text.
+
+Required JSON structure:
+{{
   "topics": ["string", ...]
 }}
 
@@ -309,13 +373,29 @@ You are a precise data extraction assistant. From the conference text below,
 extract ONLY the list of keynote / invited / plenary speakers. Return ONLY
 valid JSON — no markdown, no explanation, no extra text.
 
-Each speaker entry:
-  {{"name": "string", "affiliation": "string or null", "country": "string or null"}}
+Field descriptions:
 
-Do NOT include program committee members, general chairs, track chairs, or
-reviewers here — those belong to a separate extraction pass.
+- "name": The speaker's full name as written on the website, e.g. "Yoshua Bengio", \
+"Prof. Dr. Maria Garcia". Include titles (Prof., Dr.) only if prominently displayed.
+- "affiliation": The speaker's organization — university, company, or research lab, \
+e.g. "MIT", "Google DeepMind", "Max Planck Institute". This is the institution they \
+are associated with, NOT their country. Use null if not mentioned.
+- "country": The country of the speaker's affiliation (not nationality), e.g. "United States", \
+"Germany", "Japan". Use full English country names. Use null if not mentioned on the page.
 
-Return [] if no keynote/invited speakers are listed in the text.
+CRITICAL RULES:
+1. Do NOT include program committee members, general chairs, track chairs,
+   organizers, or reviewers here. Speakers and committee members are ALWAYS listed
+   in different sections of the website. If someone is listed under "Committee",
+   "Organizing", "Chairs", or similar headings — they are NOT a speaker.
+2. Only extract people who are EXPLICITLY listed as keynote speakers, invited speakers,
+   plenary speakers, or tutorial presenters WITH THEIR NAMES clearly stated.
+3. If speakers are announced but names are not yet listed (e.g. "Keynote speakers
+   to be announced", "To be announced soon", "TBA", "Coming soon", "To be confirmed"),
+   return an EMPTY list [].
+4. If the text does not mention any speakers at all, return an EMPTY list [].
+5. It is MUCH BETTER to return an empty list than to guess or pick random names
+   from the text. An empty list is a valid and correct answer.
 
 Required JSON structure:
 {{
@@ -335,19 +415,32 @@ You are a precise data extraction assistant. From the conference text below,
 extract ONLY the Program Committee / Organizing Committee / Chairs and related
 roles. Return ONLY valid JSON — no markdown, no explanation, no extra text.
 
+Field descriptions:
+
+- "name": The person's full name as written on the website, e.g. "John Smith", \
+"Prof. Maria Garcia".
+- "affiliation": The person's organization — university, company, or research lab, \
+e.g. "Stanford University", "Microsoft Research", "INRIA". This is the institution \
+they are associated with, NOT their country. Use null if not mentioned.
+- "country": The country of the person's affiliation (not nationality), e.g. "United States", \
+"France", "China". Use full English country names. Use null if not mentioned.
+- "role": The person's explicit role on the committee. Examples: "General Chair", \
+"General Co-Chair", "Program Chair", "Program Co-Chair", "TPC Chair", "Track Chair", \
+"Workshop Chair", "Publicity Chair", "Finance Chair", "Web Chair", "Local Arrangement Chair", \
+"Steering Committee Member", "Advisory Board Member", "PC Member", "Reviewer". \
+Use the role exactly as written on the website. Use null if the person is listed under \
+a committee section but no specific role is given (e.g. just a list of names under \
+"Program Committee").
+
 Roles that belong here: Program Committee (PC) members, Technical Program
 Committee (TPC) members, Organizing Committee members, General Chairs,
 Program Chairs, Track Chairs, Workshop Chairs, Publicity Chairs, Reviewers,
-Steering Committee, and similar.
+Steering Committee, Advisory Board, and similar organizational roles.
 
-Each entry:
-  {{"name": "string", "affiliation": "string or null", "country": "string or null", "role": "string or null"}}
-
-"role" is the person's explicit role on the committee (e.g. "General Chair",
-"Program Chair", "PC Member"). Use null if no specific role is mentioned.
-
-Do NOT include keynote / invited speakers here unless the text also lists
-them as committee members.
+CRITICAL: Do NOT include keynote / invited / plenary speakers here. Speakers
+and committee members are ALWAYS listed in different sections of the website.
+If someone is listed under "Keynote", "Invited Speakers", "Plenary", or
+similar headings — they are NOT a committee member.
 
 Return [] if no committee members are listed in the text.
 
@@ -383,7 +476,7 @@ def _call_ollama(
         response = client.generate(
             model=model,
             prompt=prompt,
-            options={"temperature": temperature, "num_predict": 2048},
+            options={"temperature": temperature, "num_predict": 8192},
         )
         return response.get("response", "")
     except ImportError:
@@ -399,7 +492,7 @@ def _call_ollama(
                 "model": model,
                 "prompt": prompt,
                 "stream": False,
-                "options": {"temperature": temperature, "num_predict": 2048},
+                "options": {"temperature": temperature, "num_predict": 8192},
             },
             timeout=180,
         )
@@ -430,7 +523,7 @@ def _call_vllm(
             json={
                 "model": model,
                 "prompt": prompt,
-                "max_tokens": 2048,
+                "max_tokens": 8192,
                 "temperature": temperature,
                 "stop": ["\n\n\n"],
             },
@@ -444,6 +537,56 @@ def _call_vllm(
         return None
     except Exception as exc:
         logger.error("vLLM call failed: %s", exc)
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Backend: Claude (Anthropic API)
+# ---------------------------------------------------------------------------
+
+def _call_claude(
+    prompt: str,
+    model: str,
+    temperature: float = 0.1,
+) -> Optional[str]:
+    """Send a prompt to Claude via the Anthropic API.
+
+    Requires the ``anthropic`` package and the ``ANTHROPIC_API_KEY``
+    environment variable.  The *prompt* is sent as a single user message.
+    """
+    try:
+        import anthropic
+    except ImportError:
+        raise ImportError(
+            "The 'anthropic' package is required for the claude backend. "
+            "Install it with: pip install anthropic"
+        )
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "ANTHROPIC_API_KEY environment variable is not set. "
+            "Set it with: export ANTHROPIC_API_KEY=sk-ant-..."
+        )
+
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        message = client.messages.create(
+            model=model,
+            max_tokens=4096,
+            temperature=temperature,
+            messages=[
+                {"role": "user", "content": prompt},
+            ],
+        )
+        # Extract text from the response
+        text_parts = [
+            block.text for block in message.content
+            if hasattr(block, "text")
+        ]
+        return "\n".join(text_parts) if text_parts else None
+    except Exception as exc:
+        logger.error("Claude API call failed: %s", exc)
         return None
 
 
@@ -464,8 +607,10 @@ def _call_llm(
         return _call_ollama(prompt, model, base_url, temperature)
     elif backend == "vllm":
         return _call_vllm(prompt, model, base_url, temperature, vllm_extra_args=vllm_extra_args)
+    elif backend == "claude":
+        return _call_claude(prompt, model, temperature)
     else:
-        raise ValueError(f"Unknown backend: {backend!r}. Use 'ollama' or 'vllm'.")
+        raise ValueError(f"Unknown backend: {backend!r}. Use 'ollama', 'vllm', or 'claude'.")
 
 
 # ---------------------------------------------------------------------------
@@ -523,6 +668,8 @@ def get_default_url(backend: str) -> str:
     """Return the default server URL for a given backend."""
     if backend == "vllm":
         return DEFAULT_VLLM_URL
+    if backend == "claude":
+        return "https://api.anthropic.com"  # not used directly, but kept for consistency
     return DEFAULT_OLLAMA_URL
 
 
@@ -599,7 +746,7 @@ def _run_pass(
     return None
 
 
-def extract_basic(
+def extract_other(
     text: str,
     model: str = DEFAULT_MODEL,
     backend: str = DEFAULT_BACKEND,
@@ -608,14 +755,37 @@ def extract_basic(
     prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
-    Pass 1: identity, dates, venue, deadlines, publication, topics.
+    Pass 1: identity, dates, venue, deadlines, publication.
 
-    ``text`` should be the BASIC-target context built by
-    ``content_selection.build_context_for_target(site, Target.BASIC)``.
+    ``text`` should be the OTHER-category context built by
+    ``PageSelector(site, Category.OTHER)``.
     """
     return _run_pass(
-        _BASIC_PROMPT, text,
-        pass_name="1 (basic)",
+        _OTHER_PROMPT, text,
+        pass_name="1 (other)",
+        model=model, backend=backend, base_url=base_url,
+        vllm_extra_args=vllm_extra_args,
+        prompts_dir=prompts_dir,
+    )
+
+
+def extract_topics(
+    text: str,
+    model: str = DEFAULT_MODEL,
+    backend: str = DEFAULT_BACKEND,
+    base_url: Optional[str] = None,
+    vllm_extra_args: Optional[List[str]] = None,
+    prompts_dir: Optional[str] = None,
+) -> Optional[Dict[str, Any]]:
+    """
+    Pass 2: research topics / themes / tracks / scope.
+
+    ``text`` should be the TOPICS-category context built by
+    ``PageSelector(site, Category.TOPICS)``.
+    """
+    return _run_pass(
+        _TOPICS_PROMPT, text,
+        pass_name="2 (topics)",
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         prompts_dir=prompts_dir,
@@ -631,14 +801,14 @@ def extract_speakers(
     prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
-    Pass 2: keynote / invited / plenary speakers only.
+    Pass 3: keynote / invited / plenary speakers only.
 
-    ``text`` should be the SPEAKERS-target context built by
-    ``content_selection.build_context_for_target(site, Target.SPEAKERS)``.
+    ``text`` should be the SPEAKERS-category context built by
+    ``PageSelector(site, Category.SPEAKERS)``.
     """
     return _run_pass(
         _SPEAKERS_PROMPT, text,
-        pass_name="2 (speakers)",
+        pass_name="3 (speakers)",
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         list_wrap_key="keynote_speakers",
@@ -655,14 +825,14 @@ def extract_committee(
     prompts_dir: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """
-    Pass 3: program committee / chairs / organizing committee.
+    Pass 4: program committee / chairs / organizing committee.
 
-    ``text`` should be the COMMITTEE-target context built by
-    ``content_selection.build_context_for_target(site, Target.COMMITTEE)``.
+    ``text`` should be the COMMITTEE-category context built by
+    ``PageSelector(site, Category.COMMITTEE)``.
     """
     return _run_pass(
         _COMMITTEE_PROMPT, text,
-        pass_name="3 (committee)",
+        pass_name="4 (committee)",
         model=model, backend=backend, base_url=base_url,
         vllm_extra_args=vllm_extra_args,
         list_wrap_key="program_committee",

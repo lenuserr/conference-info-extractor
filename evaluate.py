@@ -1,62 +1,17 @@
 #!/usr/bin/env python3
 """
-Evaluate benchmark results against a gold dataset.
+Evaluate model results against a golden dataset.
+
+Compares extracted data on 5 dimensions:
+  - dates:             exact match of start_date, end_date
+  - venue:             fuzzy match of city, country
+  - topics:            precision / recall / F1 over topic lists
+  - keynote_speakers:  match by name, then check affiliation & country
+  - program_committee: match by name, then check affiliation, country & role
 
 Usage:
-    # Evaluate a finished benchmark run (gold as a directory of per-conference files)
-    python evaluate.py --results results/ --gold gold/
-
-    # ...or as a single JSON file containing a list of conference entries
-    python evaluate.py --results results/ --gold gold/golden_dataset.json
-
-    # Write a JSON report alongside the text one
-    python evaluate.py --results results/ --gold gold/ --json-out eval.json
-
-    # Show per-example field-level diff for debugging
-    python evaluate.py --results results/ --gold gold/ --debug
-
-Gold layout — ``--gold`` accepts either:
-  - a directory of ``*.json`` files, one per conference, or
-  - a single ``.json`` file containing the same shape.
-
-Each JSON file may hold a single conference dict **or** a list of such
-dicts, so ``gold/golden_dataset.json`` with a top-level array of
-conference entries is supported.
-
-Per-conference shape:
-
-    {
-      "url": "https://neurips.cc",
-      "ground_truth": {
-        "conference": {"full_name": "...", "acronym": "NeurIPS", "edition_number": 38},
-        "dates":       {"start_date": "2024-12-10", "end_date": "2024-12-15"},
-        "venue":       {"city": "Vancouver", "country": "Canada"},
-        "deadlines":   {"submission": "2024-05-22", "notification": null, "camera_ready": null},
-        "topics":            ["machine learning", "deep learning"],
-        "keynote_speakers":  [{"name": "Yoshua Bengio", "affiliation": null, "country": null}],
-        "program_committee": [{"name": "Jane Doe", "affiliation": "MIT", "country": "United States", "role": "PC Member"}],
-        "publication":       {"publisher": null, "series": null}
-      },
-      "aliases": {
-        "conference.full_name": ["Conference on Neural Information Processing Systems"],
-        "venue.city": ["Vancouver, BC"]
-      },
-      "notes": "verified against https://neurips.cc/Conferences/2024 on 2026-04-10"
-    }
-
-Semantics:
-  - ``null`` / ``[]`` in ground_truth means "this field is not present on
-    the site" (verified by the annotator). The eval then distinguishes
-    misses from correct abstentions.
-  - ``aliases`` are optional extra acceptable surface forms for fuzzy
-    string fields.
-
-Results directory layout (produced by benchmark.py):
-
-    results/<sanitized_model>/<sanitized_url>.json
-
-Each file is a benchmark ``entry`` dict with keys ``url``, ``model``,
-``status``, ``data``, etc. Evaluation joins entries to gold by URL.
+    python evaluate.py --golden results/claude/ --pred results/mistral_latest/
+    python evaluate.py --golden results/claude/ --pred results/qwen3_4b/ --fuzzy-threshold 75
 """
 
 from __future__ import annotations
@@ -68,285 +23,689 @@ import os
 import sys
 from typing import Any, Dict, List, Tuple
 
-from eval.metrics import (
-    ExampleResult,
-    ModelMetrics,
-    _is_fetch_failure,
-    aggregate,
-    evaluate_one,
-)
-from eval.report import format_summary, model_metrics_to_dict
+from thefuzz import fuzz
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s: %(message)s",
+    datefmt="%H:%M:%S",
+)
 logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Loading
+# Helpers
 # ---------------------------------------------------------------------------
 
-def _normalize_url(url: str) -> str:
-    """Canonical form for URL matching (strip scheme, trailing slash, www.)."""
-    if not url:
-        return ""
-    u = url.strip().lower()
-    u = u.replace("https://", "").replace("http://", "")
-    if u.startswith("www."):
-        u = u[4:]
-    u = u.rstrip("/")
-    return u
-
-
-def _load_gold_file(path: str, gold: Dict[str, Dict[str, Any]]) -> None:
-    """
-    Load one gold JSON file into ``gold`` (keyed by normalized URL).
-
-    The file may contain a single conference dict or a list of them —
-    this lets users keep all gold data in a single file like
-    ``gold/golden_dataset.json`` as well as the per-conference layout.
-    """
-    try:
-        with open(path, encoding="utf-8") as f:
-            doc = json.load(f)
-    except json.JSONDecodeError as exc:
-        logger.warning("Skipping malformed gold file %s: %s", path, exc)
-        return
-
-    if isinstance(doc, dict):
-        entries = [doc]
-    elif isinstance(doc, list):
-        entries = [e for e in doc if isinstance(e, dict)]
-        skipped = len(doc) - len(entries)
-        if skipped:
-            logger.warning(
-                "Gold file %s: skipped %d non-dict element(s) in top-level list",
-                path, skipped,
-            )
-    else:
-        logger.warning(
-            "Gold file %s: top-level must be a dict or list, got %s — skipping",
-            path, type(doc).__name__,
-        )
-        return
-
-    for entry in entries:
-        url = entry.get("url")
-        if not url:
-            logger.warning("Gold entry in %s has no 'url' field, skipping", path)
-            continue
-        gold[_normalize_url(url)] = entry
-
-
-def load_gold(gold_path: str) -> Dict[str, Dict[str, Any]]:
-    """
-    Load gold dataset from ``gold_path``, keyed by normalized URL.
-
-    ``gold_path`` may be either a directory (every ``*.json`` inside is
-    loaded) or a single ``.json`` file. Each loaded file may contain a
-    single conference dict or a list of them.
-    """
-    gold: Dict[str, Dict[str, Any]] = {}
-
-    if os.path.isfile(gold_path):
-        _load_gold_file(gold_path, gold)
-        return gold
-
-    if not os.path.isdir(gold_path):
-        raise FileNotFoundError(f"Gold path not found: {gold_path}")
-
-    for name in sorted(os.listdir(gold_path)):
+def _load_results(directory: str) -> Dict[str, Dict[str, Any]]:
+    """Load all JSON result files from a directory. Returns {filename: data}."""
+    results = {}
+    for name in sorted(os.listdir(directory)):
         if not name.endswith(".json"):
             continue
-        _load_gold_file(os.path.join(gold_path, name), gold)
-    return gold
+        path = os.path.join(directory, name)
+        with open(path, encoding="utf-8") as f:
+            entry = json.load(f)
+        results[name] = entry.get("data", {})
+    return results
 
 
-def load_results(results_dir: str) -> Dict[str, List[Dict[str, Any]]]:
+def _fuzzy_match(a: str, b: str, threshold: int = 75) -> bool:
+    """Check if two strings are a fuzzy match."""
+    if not a or not b:
+        return False
+    a_lower = a.strip().lower()
+    b_lower = b.strip().lower()
+    if a_lower == b_lower:
+        return True
+    if len(a_lower) < 30 or len(b_lower) < 30:
+        return fuzz.partial_ratio(a_lower, b_lower) >= threshold
+    return fuzz.token_set_ratio(a_lower, b_lower) >= threshold
+
+
+# ---------------------------------------------------------------------------
+# Per-category evaluation
+# ---------------------------------------------------------------------------
+
+def eval_dates(golden: Dict, pred: Dict) -> Dict[str, Any]:
+    """Evaluate dates: exact match for start_date and end_date."""
+    g = golden.get("dates", {})
+    p = pred.get("dates", {})
+
+    results = {}
+    for field in ("start_date", "end_date"):
+        gv = g.get(field)
+        pv = p.get(field)
+
+        if gv is None and pv is None:
+            results[field] = "both_null"
+        elif gv is None:
+            results[field] = "extra"      # model produced value, golden has none
+        elif pv is None:
+            results[field] = "missing"    # model missed it
+        elif gv == pv:
+            results[field] = "correct"
+        else:
+            results[field] = "wrong"
+
+    correct = sum(1 for v in results.values() if v in ("correct", "both_null"))
+    total = len(results)
+    return {
+        "fields": results,
+        "accuracy": correct / total if total > 0 else 1.0,
+    }
+
+
+def eval_venue(golden: Dict, pred: Dict, threshold: int = 75) -> Dict[str, Any]:
+    """Evaluate venue: fuzzy match for city and country."""
+    g = golden.get("venue", {})
+    p = pred.get("venue", {})
+
+    results = {}
+    for field in ("city", "country"):
+        gv = g.get(field)
+        pv = p.get(field)
+
+        if gv is None and pv is None:
+            results[field] = "both_null"
+        elif gv is None:
+            results[field] = "extra"
+        elif pv is None:
+            results[field] = "missing"
+        elif _fuzzy_match(gv, pv, threshold):
+            results[field] = "correct"
+        else:
+            results[field] = "wrong"
+
+    correct = sum(1 for v in results.values() if v in ("correct", "both_null"))
+    total = len(results)
+    return {
+        "fields": results,
+        "accuracy": correct / total if total > 0 else 1.0,
+    }
+
+
+def eval_topics(
+    golden: Dict, pred: Dict, threshold: int = 70,
+) -> Dict[str, Any]:
     """
-    Walk ``results/<model_dir>/*.json`` and group the benchmark entries by
-    their ``model`` field (not by directory name — directory is sanitized).
-    """
-    by_model: Dict[str, List[Dict[str, Any]]] = {}
-    if not os.path.isdir(results_dir):
-        raise FileNotFoundError(f"Results directory not found: {results_dir}")
+    Evaluate topics: precision / recall / F1 with fuzzy matching.
 
-    for sub in sorted(os.listdir(results_dir)):
-        sub_path = os.path.join(results_dir, sub)
-        if not os.path.isdir(sub_path):
-            continue
-        for name in sorted(os.listdir(sub_path)):
-            if not name.endswith(".json"):
+    Uses many-to-one matching to handle topic granularity differences:
+      1. Greedy 1-to-1 pass: each pred topic matches the best unused golden topic.
+      2. Absorption pass: unmatched pred topics are checked against ALL golden
+         topics (including already matched ones).  If a pred topic is a fuzzy
+         sub-part of a golden topic, it is "absorbed" — not counted as a false
+         positive.  This prevents precision penalties when the model splits
+         one golden topic into several finer-grained pred topics.
+
+    Recall is based on 1-to-1 matches only (how many golden topics were found).
+    Precision counts both 1-to-1 matches and absorbed topics as true positives.
+    """
+    g_topics: List[str] = golden.get("topics", [])
+    p_topics: List[str] = pred.get("topics", [])
+
+    if not g_topics and not p_topics:
+        return {"precision": 1.0, "recall": 1.0, "f1": 1.0,
+                "golden_count": 0, "pred_count": 0, "matched": 0,
+                "absorbed": 0}
+
+    if not g_topics:
+        return {"precision": 0.0, "recall": 1.0, "f1": 0.0,
+                "golden_count": 0, "pred_count": len(p_topics), "matched": 0,
+                "absorbed": 0}
+
+    if not p_topics:
+        return {"precision": 1.0, "recall": 0.0, "f1": 0.0,
+                "golden_count": len(g_topics), "pred_count": 0, "matched": 0,
+                "absorbed": 0}
+
+    # Pass 1: greedy 1-to-1 matching (each golden used at most once)
+    g_used = [False] * len(g_topics)
+    p_matched = [False] * len(p_topics)
+
+    for pi, pt in enumerate(p_topics):
+        best_idx = -1
+        best_score = 0
+        for i, gt in enumerate(g_topics):
+            if g_used[i]:
                 continue
-            path = os.path.join(sub_path, name)
+            score = fuzz.token_set_ratio(pt.lower(), gt.lower())
+            if score > best_score:
+                best_score = score
+                best_idx = i
+        if best_idx >= 0 and best_score >= threshold:
+            g_used[best_idx] = True
+            p_matched[pi] = True
+
+    matched = sum(p_matched)
+
+    # Pass 2: absorption — unmatched pred topics that are sub-parts of
+    # any golden topic (including already matched ones).
+    absorbed = 0
+    for pi, pt in enumerate(p_topics):
+        if p_matched[pi]:
+            continue
+        pt_lower = pt.lower().strip()
+        for gt in g_topics:
+            gt_lower = gt.lower().strip()
+            # Check if pred is a substring of golden
+            if pt_lower in gt_lower:
+                absorbed += 1
+                break
+            # Fuzzy containment: partial_ratio checks if one string
+            # is approximately contained in the other
+            if fuzz.partial_ratio(pt_lower, gt_lower) >= threshold:
+                absorbed += 1
+                break
+
+    # Precision: matched + absorbed count as true positives
+    tp_precision = matched + absorbed
+    precision = tp_precision / len(p_topics) if p_topics else 0.0
+    # Recall: only 1-to-1 matches count (did we find each golden topic?)
+    recall = matched / len(g_topics) if g_topics else 0.0
+    f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+
+    return {
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(f1, 4),
+        "golden_count": len(g_topics),
+        "pred_count": len(p_topics),
+        "matched": matched,
+        "absorbed": absorbed,
+    }
+
+
+def _match_persons(
+    golden_list: List[Dict], pred_list: List[Dict],
+    name_threshold: int = 75,
+    field_threshold: int = 75,
+    extra_fields: Tuple[str, ...] = ("affiliation", "country"),
+) -> Dict[str, Any]:
+    """
+    Match two lists of person dicts by name (fuzzy).
+    For matched pairs, evaluate extra fields.
+
+    Returns precision/recall/F1 for name matching,
+    plus per-field accuracy for matched pairs.
+    """
+    if not golden_list and not pred_list:
+        result = {"precision": 1.0, "recall": 1.0, "f1": 1.0,
+                  "golden_count": 0, "pred_count": 0, "matched": 0}
+        for fld in extra_fields:
+            result[f"{fld}_accuracy"] = 1.0
+        return result
+
+    if not golden_list:
+        result = {"precision": 0.0, "recall": 1.0, "f1": 0.0,
+                  "golden_count": 0, "pred_count": len(pred_list), "matched": 0}
+        for fld in extra_fields:
+            result[f"{fld}_accuracy"] = 0.0
+        return result
+
+    if not pred_list:
+        result = {"precision": 1.0, "recall": 0.0, "f1": 0.0,
+                  "golden_count": len(golden_list), "pred_count": 0, "matched": 0}
+        for fld in extra_fields:
+            result[f"{fld}_accuracy"] = 0.0
+        return result
+
+    # Greedy match by name
+    g_used = [False] * len(golden_list)
+    matches: List[Tuple[Dict, Dict]] = []  # (golden, pred)
+
+    for pp in pred_list:
+        pname = (pp.get("name") or "").strip()
+        if not pname:
+            continue
+        best_idx = -1
+        best_score = 0
+        for i, gp in enumerate(golden_list):
+            if g_used[i]:
+                continue
+            gname = (gp.get("name") or "").strip()
+            if not gname:
+                continue
+            score = fuzz.token_set_ratio(pname.lower(), gname.lower())
+            if score > best_score:
+                best_score = score
+                best_idx = i
+        if best_idx >= 0 and best_score >= name_threshold:
+            g_used[best_idx] = True
+            matches.append((golden_list[best_idx], pp))
+
+    matched = len(matches)
+    precision = matched / len(pred_list) if pred_list else 0.0
+    recall = matched / len(golden_list) if golden_list else 0.0
+    f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
+
+    # Per-field accuracy for matched pairs
+    field_acc = {}
+    for fld in extra_fields:
+        if not matches:
+            field_acc[f"{fld}_accuracy"] = 0.0
+            continue
+        correct = 0
+        for gp, pp in matches:
+            gv = (gp.get(fld) or "").strip()
+            pv = (pp.get(fld) or "").strip()
+            if not gv and not pv:
+                correct += 1
+            elif gv and pv and _fuzzy_match(gv, pv, field_threshold):
+                correct += 1
+        field_acc[f"{fld}_accuracy"] = round(correct / len(matches), 4)
+
+    return {
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "f1": round(f1, 4),
+        "golden_count": len(golden_list),
+        "pred_count": len(pred_list),
+        "matched": matched,
+        **field_acc,
+    }
+
+
+def eval_speakers(golden: Dict, pred: Dict, threshold: int = 75) -> Dict[str, Any]:
+    """Evaluate keynote speakers: match by name, check affiliation & country."""
+    return _match_persons(
+        golden.get("keynote_speakers", []),
+        pred.get("keynote_speakers", []),
+        name_threshold=threshold,
+        field_threshold=threshold,
+        extra_fields=("affiliation", "country"),
+    )
+
+
+def eval_committee(golden: Dict, pred: Dict, threshold: int = 75) -> Dict[str, Any]:
+    """Evaluate program committee: match by name, check affiliation, country & role."""
+    return _match_persons(
+        golden.get("program_committee", []),
+        pred.get("program_committee", []),
+        name_threshold=threshold,
+        field_threshold=threshold,
+        extra_fields=("affiliation", "country", "role"),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Full evaluation
+# ---------------------------------------------------------------------------
+
+def evaluate_site(
+    golden: Dict[str, Any],
+    pred: Dict[str, Any],
+    fuzzy_threshold: int = 75,
+) -> Dict[str, Any]:
+    """Evaluate all 5 categories for a single site."""
+    return {
+        "dates": eval_dates(golden, pred),
+        "venue": eval_venue(golden, pred, threshold=fuzzy_threshold),
+        "topics": eval_topics(golden, pred, threshold=fuzzy_threshold - 5),
+        "keynote_speakers": eval_speakers(golden, pred, threshold=fuzzy_threshold),
+        "program_committee": eval_committee(golden, pred, threshold=fuzzy_threshold),
+    }
+
+
+def aggregate(site_results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    """Aggregate per-site results into overall metrics."""
+    n = len(site_results)
+    if n == 0:
+        return {}
+
+    # dates & venue: average accuracy
+    dates_acc = sum(r["dates"]["accuracy"] for r in site_results.values()) / n
+    venue_acc = sum(r["venue"]["accuracy"] for r in site_results.values()) / n
+
+    # topics: macro-average P/R/F1
+    topics_p = sum(r["topics"]["precision"] for r in site_results.values()) / n
+    topics_r = sum(r["topics"]["recall"] for r in site_results.values()) / n
+    topics_f1 = sum(r["topics"]["f1"] for r in site_results.values()) / n
+
+    # speakers: macro-average P/R/F1 + field accuracies
+    sp_p = sum(r["keynote_speakers"]["precision"] for r in site_results.values()) / n
+    sp_r = sum(r["keynote_speakers"]["recall"] for r in site_results.values()) / n
+    sp_f1 = sum(r["keynote_speakers"]["f1"] for r in site_results.values()) / n
+    sp_aff = sum(r["keynote_speakers"]["affiliation_accuracy"] for r in site_results.values()) / n
+    sp_country = sum(r["keynote_speakers"]["country_accuracy"] for r in site_results.values()) / n
+
+    # committee: macro-average P/R/F1 + field accuracies
+    cm_p = sum(r["program_committee"]["precision"] for r in site_results.values()) / n
+    cm_r = sum(r["program_committee"]["recall"] for r in site_results.values()) / n
+    cm_f1 = sum(r["program_committee"]["f1"] for r in site_results.values()) / n
+    cm_aff = sum(r["program_committee"]["affiliation_accuracy"] for r in site_results.values()) / n
+    cm_country = sum(r["program_committee"]["country_accuracy"] for r in site_results.values()) / n
+    cm_role = sum(r["program_committee"]["role_accuracy"] for r in site_results.values()) / n
+
+    return {
+        "sites_evaluated": n,
+        "dates": {"accuracy": round(dates_acc, 4)},
+        "venue": {"accuracy": round(venue_acc, 4)},
+        "topics": {
+            "precision": round(topics_p, 4),
+            "recall": round(topics_r, 4),
+            "f1": round(topics_f1, 4),
+        },
+        "keynote_speakers": {
+            "precision": round(sp_p, 4),
+            "recall": round(sp_r, 4),
+            "f1": round(sp_f1, 4),
+            "affiliation_accuracy": round(sp_aff, 4),
+            "country_accuracy": round(sp_country, 4),
+        },
+        "program_committee": {
+            "precision": round(cm_p, 4),
+            "recall": round(cm_r, 4),
+            "f1": round(cm_f1, 4),
+            "affiliation_accuracy": round(cm_aff, 4),
+            "country_accuracy": round(cm_country, 4),
+            "role_accuracy": round(cm_role, 4),
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+
+def print_report(
+    site_results: Dict[str, Dict[str, Any]],
+    agg: Dict[str, Any],
+    golden_dir: str,
+    pred_dir: str,
+) -> str:
+    """Build a human-readable report and return it as a string."""
+    lines = []
+    lines.append("=" * 80)
+    lines.append("EVALUATION REPORT")
+    lines.append(f"Golden: {golden_dir}")
+    lines.append(f"Pred:   {pred_dir}")
+    lines.append(f"Sites:  {agg.get('sites_evaluated', 0)}")
+    lines.append("=" * 80)
+
+    # --- Per-site details ---
+    lines.append("")
+    lines.append("PER-SITE RESULTS")
+    lines.append("-" * 80)
+
+    for filename, r in sorted(site_results.items()):
+        lines.append(f"\n  {filename}")
+
+        d = r["dates"]["fields"]
+        lines.append(f"    dates:      start={d['start_date']:<10s}  end={d['end_date']:<10s}  "
+                      f"acc={r['dates']['accuracy']:.0%}")
+
+        v = r["venue"]["fields"]
+        lines.append(f"    venue:      city={v['city']:<10s}  country={v['country']:<10s}  "
+                      f"acc={r['venue']['accuracy']:.0%}")
+
+        t = r["topics"]
+        absorbed_str = f"  absorbed={t.get('absorbed', 0)}" if t.get("absorbed", 0) > 0 else ""
+        lines.append(f"    topics:     P={t['precision']:.2f}  R={t['recall']:.2f}  F1={t['f1']:.2f}  "
+                      f"({t['matched']}/{t['golden_count']} golden, {t['pred_count']} pred){absorbed_str}")
+
+        s = r["keynote_speakers"]
+        lines.append(f"    speakers:   P={s['precision']:.2f}  R={s['recall']:.2f}  F1={s['f1']:.2f}  "
+                      f"({s['matched']}/{s['golden_count']} golden, {s['pred_count']} pred)  "
+                      f"aff={s['affiliation_accuracy']:.0%}  country={s['country_accuracy']:.0%}")
+
+        c = r["program_committee"]
+        lines.append(f"    committee:  P={c['precision']:.2f}  R={c['recall']:.2f}  F1={c['f1']:.2f}  "
+                      f"({c['matched']}/{c['golden_count']} golden, {c['pred_count']} pred)  "
+                      f"aff={c['affiliation_accuracy']:.0%}  country={c['country_accuracy']:.0%}  "
+                      f"role={c['role_accuracy']:.0%}")
+
+    # --- Aggregate ---
+    lines.append("")
+    lines.append("=" * 80)
+    lines.append("AGGREGATE (macro-average over sites)")
+    lines.append("-" * 80)
+    lines.append(f"  dates accuracy:          {agg['dates']['accuracy']:.1%}")
+    lines.append(f"  venue accuracy:          {agg['venue']['accuracy']:.1%}")
+    lines.append(f"  topics P/R/F1:           {agg['topics']['precision']:.2f} / "
+                  f"{agg['topics']['recall']:.2f} / {agg['topics']['f1']:.2f}")
+    lines.append(f"  speakers P/R/F1:         {agg['keynote_speakers']['precision']:.2f} / "
+                  f"{agg['keynote_speakers']['recall']:.2f} / {agg['keynote_speakers']['f1']:.2f}")
+    lines.append(f"    affiliation accuracy:   {agg['keynote_speakers']['affiliation_accuracy']:.1%}")
+    lines.append(f"    country accuracy:       {agg['keynote_speakers']['country_accuracy']:.1%}")
+    lines.append(f"  committee P/R/F1:        {agg['program_committee']['precision']:.2f} / "
+                  f"{agg['program_committee']['recall']:.2f} / {agg['program_committee']['f1']:.2f}")
+    lines.append(f"    affiliation accuracy:   {agg['program_committee']['affiliation_accuracy']:.1%}")
+    lines.append(f"    country accuracy:       {agg['program_committee']['country_accuracy']:.1%}")
+    lines.append(f"    role accuracy:          {agg['program_committee']['role_accuracy']:.1%}")
+    lines.append("=" * 80)
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Multi-model comparison table
+# ---------------------------------------------------------------------------
+
+def print_comparison(
+    model_aggregates: List[Tuple[str, Dict[str, Any]]],
+) -> str:
+    """Build a side-by-side comparison table for multiple models."""
+    lines = []
+    lines.append("=" * 100)
+    lines.append("MODEL COMPARISON")
+    lines.append("=" * 100)
+
+    # Header
+    names = [name for name, _ in model_aggregates]
+    col_w = max(16, max(len(n) for n in names) + 2)
+    header = f"{'Metric':<30s}" + "".join(f"{n:>{col_w}s}" for n in names)
+    lines.append(header)
+    lines.append("-" * 100)
+
+    rows = _comparison_rows()
+
+    for label, fn in rows:
+        vals = []
+        for _, agg in model_aggregates:
             try:
-                with open(path, encoding="utf-8") as f:
-                    entry = json.load(f)
-            except json.JSONDecodeError as exc:
-                logger.warning("Skipping malformed result file %s: %s", path, exc)
-                continue
-            if not isinstance(entry, dict) or "model" not in entry:
-                continue
-            by_model.setdefault(entry["model"], []).append(entry)
-    return by_model
+                vals.append(fn(agg))
+            except (KeyError, TypeError):
+                vals.append("N/A")
+        line = f"{label:<30s}" + "".join(f"{v:>{col_w}s}" for v in vals)
+        lines.append(line)
+
+    lines.append("=" * 100)
+    return "\n".join(lines)
+
+
+def _comparison_rows() -> List[Tuple[str, Any]]:
+    """Shared row definitions for comparison tables."""
+    return [
+        ("Dates accuracy",
+         lambda a: f"{a['dates']['accuracy']:.1%}"),
+        ("Venue accuracy",
+         lambda a: f"{a['venue']['accuracy']:.1%}"),
+        ("Topics P",
+         lambda a: f"{a['topics']['precision']:.2f}"),
+        ("Topics R",
+         lambda a: f"{a['topics']['recall']:.2f}"),
+        ("Topics F1",
+         lambda a: f"{a['topics']['f1']:.2f}"),
+        ("Speakers P",
+         lambda a: f"{a['keynote_speakers']['precision']:.2f}"),
+        ("Speakers R",
+         lambda a: f"{a['keynote_speakers']['recall']:.2f}"),
+        ("Speakers F1",
+         lambda a: f"{a['keynote_speakers']['f1']:.2f}"),
+        ("Speakers aff",
+         lambda a: f"{a['keynote_speakers']['affiliation_accuracy']:.1%}"),
+        ("Speakers country",
+         lambda a: f"{a['keynote_speakers']['country_accuracy']:.1%}"),
+        ("Committee P",
+         lambda a: f"{a['program_committee']['precision']:.2f}"),
+        ("Committee R",
+         lambda a: f"{a['program_committee']['recall']:.2f}"),
+        ("Committee F1",
+         lambda a: f"{a['program_committee']['f1']:.2f}"),
+        ("Committee aff",
+         lambda a: f"{a['program_committee']['affiliation_accuracy']:.1%}"),
+        ("Committee country",
+         lambda a: f"{a['program_committee']['country_accuracy']:.1%}"),
+        ("Committee role",
+         lambda a: f"{a['program_committee']['role_accuracy']:.1%}"),
+    ]
+
+
+def save_comparison_markdown(
+    model_aggregates: List[Tuple[str, Dict[str, Any]]],
+    path: str,
+    golden_dir: str,
+) -> None:
+    """Save comparison table as a Markdown file."""
+    names = [name for name, _ in model_aggregates]
+    rows = _comparison_rows()
+
+    lines = []
+    lines.append("# Model Comparison")
+    lines.append("")
+    lines.append(f"Golden: `{golden_dir}`")
+    lines.append("")
+
+    # Table header
+    header = "| Metric | " + " | ".join(names) + " |"
+    sep = "|:--" + "|--:" * len(names) + "|"
+    lines.append(header)
+    lines.append(sep)
+
+    # Table body
+    for label, fn in rows:
+        vals = []
+        for _, agg in model_aggregates:
+            try:
+                vals.append(fn(agg))
+            except (KeyError, TypeError):
+                vals.append("N/A")
+        row = f"| {label} | " + " | ".join(vals) + " |"
+        lines.append(row)
+
+    lines.append("")
+
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
 
 
 # ---------------------------------------------------------------------------
-# Evaluation driver
+# Evaluate one model against golden
 # ---------------------------------------------------------------------------
 
-def evaluate_model(
-    model: str,
-    entries: List[Dict[str, Any]],
-    gold: Dict[str, Dict[str, Any]],
-    debug: bool = False,
-) -> Tuple[ModelMetrics, List[ExampleResult]]:
-    """
-    Run ``evaluate_one`` for every entry that has a matching gold file.
-    Returns aggregated metrics plus the per-example results.
+def _evaluate_model(
+    golden: Dict[str, Dict[str, Any]],
+    pred_dir: str,
+    fuzzy_threshold: int,
+) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, Any]]:
+    """Evaluate a single model directory. Returns (site_results, aggregate)."""
+    pred = _load_results(pred_dir)
 
-    Entries with a failed fetch (warnings contain "Could not fetch any
-    pages") or an extraction crash (status != "ok") are excluded from
-    the scoring pass — they leave the model without input, so counting
-    their empty predictions as misses would unfairly tank recall.
-    ``aggregate`` still sees these entries via ``matched_entries`` so
-    it can report ``fetch_failures`` and ``errors`` counts alongside
-    the scored metrics.
-    """
-    per_example: List[ExampleResult] = []
-    matched_entries: List[Dict[str, Any]] = []  # all gold-matched entries
-    missing: List[str] = []        # entries that had no gold at all
-    fetch_failed: List[str] = []   # gold-matched but scraper got nothing
-    crashed: List[str] = []        # gold-matched but extract_conference raised
+    common = sorted(set(golden.keys()) & set(pred.keys()))
+    if not common:
+        logger.warning("No matching files for %s", pred_dir)
+        return {}, {}
 
-    for entry in entries:
-        url = entry.get("url", "?")
-        key = _normalize_url(url)
-        if key not in gold:
-            missing.append(url)
-            continue
-        matched_entries.append(entry)
-
-        if entry.get("status") == "error":
-            crashed.append(url)
-            continue
-        if _is_fetch_failure(entry):
-            fetch_failed.append(url)
-            continue
-
-        gold_doc = gold[key]
-        ex = evaluate_one(gold_doc, entry, aliases=gold_doc.get("aliases"))
-        per_example.append(ex)
-
-    metrics = aggregate(model, per_example, entries=matched_entries)
-
-    if debug:
-        print(f"\n--- DEBUG: {model} ---")
-        for ex in per_example:
-            print(f"  {ex.url}")
-            for fr in ex.fields:
-                if fr.outcome is not None:
-                    if fr.outcome.value not in ("tp", "tn"):
-                        print(f"    {fr.path:<28} {fr.outcome.value:<10} gold={fr.gold!r}  pred={fr.pred!r}")
-                else:
-                    if fr.fp or fr.fn:
-                        print(
-                            f"    {fr.path:<28} list  "
-                            f"tp={fr.tp} fp={fr.fp} fn={fr.fn}"
-                        )
-        if missing:
-            print(f"  (skipped {len(missing)} URL(s) with no gold: {missing})")
-        if fetch_failed:
-            print(f"  (excluded {len(fetch_failed)} URL(s) with fetch failures: {fetch_failed})")
-        if crashed:
-            print(f"  (excluded {len(crashed)} URL(s) that crashed: {crashed})")
-
+    missing = set(golden.keys()) - set(pred.keys())
     if missing:
-        logger.info("%s: %d URL(s) had no gold — excluded from metrics", model, len(missing))
-    if fetch_failed:
-        logger.info(
-            "%s: %d URL(s) excluded from metrics due to fetch failures: %s",
-            model, len(fetch_failed), fetch_failed,
-        )
-    if crashed:
-        logger.info(
-            "%s: %d URL(s) excluded from metrics due to extraction crashes: %s",
-            model, len(crashed), crashed,
+        logger.warning(
+            "%s: %d golden file(s) have no match: %s",
+            pred_dir, len(missing), sorted(missing)[:5],
         )
 
-    return metrics, per_example
+    site_results = {}
+    for filename in common:
+        site_results[filename] = evaluate_site(
+            golden[filename], pred[filename],
+            fuzzy_threshold=fuzzy_threshold,
+        )
+
+    agg = aggregate(site_results)
+    return site_results, agg
 
 
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
-def main() -> int:
+def main():
     parser = argparse.ArgumentParser(
-        description="Evaluate benchmark results against a gold dataset",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="Evaluate model results against a golden dataset",
     )
-    parser.add_argument("--results", default="results", help="benchmark results directory")
     parser.add_argument(
-        "--gold", default="gold",
-        help="gold dataset directory or a single JSON file "
-             "(e.g. gold/golden_dataset.json)",
+        "--golden", "-g", required=True,
+        help="Directory with golden (reference) result JSON files",
     )
-    parser.add_argument("--json-out", default=None, help="write JSON report to this path")
-    parser.add_argument("--text-out", default=None, help="write text report to this path (default: stdout only)")
-    parser.add_argument("--debug", action="store_true", help="print per-example field-level diffs")
-    parser.add_argument("--verbose", "-v", action="store_true")
+    parser.add_argument(
+        "--pred", "-p", nargs="+", required=True,
+        help="One or more directories with predicted result JSON files",
+    )
+    parser.add_argument(
+        "--fuzzy-threshold", type=int, default=75,
+        help="Fuzzy matching threshold (default: 75)",
+    )
+    parser.add_argument(
+        "--output", "-o", default=None,
+        help="Save full report as JSON to this path",
+    )
     args = parser.parse_args()
 
-    logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
-        format="%(levelname)s: %(message)s",
-    )
+    golden = _load_results(args.golden)
+    if not golden:
+        print(f"ERROR: no JSON files found in {args.golden}")
+        sys.exit(1)
 
-    try:
-        gold = load_gold(args.gold)
-    except FileNotFoundError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 2
-    if not gold:
-        print(f"ERROR: no gold entries found in {args.gold}", file=sys.stderr)
-        return 2
-    print(f"Loaded {len(gold)} gold example(s) from {args.gold}")
+    single_mode = len(args.pred) == 1
+    all_reports = {}
 
-    try:
-        by_model = load_results(args.results)
-    except FileNotFoundError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 2
-    if not by_model:
-        print(f"ERROR: no result entries found in {args.results}/", file=sys.stderr)
-        return 2
-    print(f"Loaded entries for {len(by_model)} model(s) from {args.results}/")
+    for pred_dir in args.pred:
+        site_results, agg = _evaluate_model(golden, pred_dir, args.fuzzy_threshold)
+        if not site_results:
+            print(f"\nWARNING: no matching files for {pred_dir}, skipping\n")
+            continue
 
-    all_metrics: List[ModelMetrics] = []
-    for model in sorted(by_model):
-        metrics, _ = evaluate_model(model, by_model[model], gold, debug=args.debug)
-        all_metrics.append(metrics)
+        model_name = os.path.basename(pred_dir.rstrip("/"))
+        all_reports[model_name] = {"site_results": site_results, "aggregate": agg}
 
-    summary = format_summary(all_metrics)
-    print(summary)
+        # In single mode, print the full per-site report
+        if single_mode:
+            report = print_report(site_results, agg, args.golden, pred_dir)
+            print(report)
 
-    if args.text_out:
-        with open(args.text_out, "w", encoding="utf-8") as f:
-            f.write(summary)
-        print(f"Text report: {args.text_out}")
+    # In multi mode, print comparison table
+    if not single_mode and all_reports:
+        model_aggs = [(name, r["aggregate"]) for name, r in all_reports.items()]
+        comparison = print_comparison(model_aggs)
+        print(comparison)
 
-    if args.json_out:
-        payload = {
-            "gold_dir": args.gold,
-            "results_dir": args.results,
-            "n_gold": len(gold),
-            "models": [model_metrics_to_dict(m) for m in all_metrics],
+    # Save reports
+    if args.output and all_reports:
+        # JSON report
+        full_report = {
+            "golden_dir": args.golden,
+            "pred_dirs": args.pred,
+            "fuzzy_threshold": args.fuzzy_threshold,
+            "models": {
+                name: {
+                    "aggregate": r["aggregate"],
+                    "per_site": r["site_results"],
+                }
+                for name, r in all_reports.items()
+            },
         }
-        with open(args.json_out, "w", encoding="utf-8") as f:
-            json.dump(payload, f, indent=2, ensure_ascii=False)
-        print(f"JSON report: {args.json_out}")
+        with open(args.output, "w", encoding="utf-8") as f:
+            json.dump(full_report, f, indent=2, ensure_ascii=False)
+        print(f"\nJSON report saved to: {args.output}")
 
-    return 0
+        # Markdown comparison (only for multi-model)
+        if not single_mode:
+            md_path = args.output.rsplit(".", 1)[0] + ".md"
+            model_aggs = [(name, r["aggregate"]) for name, r in all_reports.items()]
+            save_comparison_markdown(model_aggs, md_path, args.golden)
+            print(f"Markdown report saved to: {md_path}")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

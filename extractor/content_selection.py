@@ -1,31 +1,35 @@
 """
-Target-aware page selection and context building.
+Category-aware page selection with 3-level fallback.
 
-The scraper fetches a conference site's main page plus a handful of
-keyword-discovered subpages. That's a wide net — we typically end up with
-5-8 pages of mixed content. Handing all of that to the LLM for every
-extraction task is noisy and encourages hallucinations, especially for
-narrow list fields like ``keynote_speakers`` and ``program_committee``.
+The scraper downloads the main page and all discovered subpages once.
+This module then selects, per extraction *category*, which pages to
+send to the LLM — progressing through three levels of broadening
+search if earlier levels come up empty or the LLM returns gaps.
 
-This module selects, per extraction *target*, only the pages most likely
-to contain that target's information and builds a compact LLM-ready
-context string from them. The main page is almost always kept as a
-baseline — conference home pages tend to carry identity, dates, and
-venue info regardless of what other subpages exist.
+Levels:
+  1. **Navigation** — match keywords against link_text + URL path only
+     (the cheapest signal: how the site labels each page in its menu).
+  2. **Content** — match keywords against the full text of every page
+     (catches pages whose URL/link_text was uninformative but whose
+     body contains the relevant information).
+  3. **Remaining** — return every page not yet sent for this category
+     (last-resort brute-force within the targeted algorithm).
 
-Adding a new target is one entry in :data:`TARGET_LEXICONS` (and
-optionally :data:`MAX_PAGES_PER_TARGET`). The pipeline picks it up by
-calling :func:`build_context_for_target` for the new target and wiring
-a matching extraction pass.
+The main page is always included at level 1, regardless of keyword
+matches — conference home pages nearly always carry identity, dates,
+and venue information.
+
+A parallel brute-force algorithm (algorithm 2) independently sends
+*all* pages to the LLM. Its results are merged with algorithm 1's
+output at the pipeline level — this module only handles selection.
 """
 
 from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Sequence, Set, Tuple
 from urllib.parse import urlparse
 
 from .scraper import PageContent, SiteContent
@@ -34,81 +38,70 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Targets
+# Categories
 # ---------------------------------------------------------------------------
 
-class Target(str, Enum):
+class Category(str, Enum):
     """
-    Extraction target categories. Each target drives its own LLM pass and
-    its own page selection. The enum value doubles as a short log label.
+    Extraction categories.  Each category gets its own LLM prompt and
+    its own page-selection pass (with up to 3 fallback levels).
     """
+    OTHER = "other"          # conference name, dates, venue, deadlines, publication
+    TOPICS = "topics"        # topics / scope / tracks
+    SPEAKERS = "speakers"    # keynote speakers
+    COMMITTEE = "committee"  # program committee / organizing committee
 
-    BASIC = "basic"          # identity, dates, venue, deadlines, publication, topics
-    SPEAKERS = "speakers"    # keynote_speakers
-    COMMITTEE = "committee"  # program_committee
 
+# Keywords per category.  Derived from real subpage URL analysis across
+# 3,626 conference sites (72,239 subpages).
+#
+# Level 1 matches these against link_text and URL path (navigation).
+# Level 2 matches these against page body text (content search).
+# Categories that can be confused with each other.
+# When selecting pages for a category, pages that match the OPPOSING
+# category's navigation keywords are excluded — unless the page ALSO
+# matches the current category's keywords (shared page).
+_OPPOSING_CATEGORY: Dict[Category, Category] = {
+    Category.SPEAKERS: Category.COMMITTEE,
+    Category.COMMITTEE: Category.SPEAKERS,
+}
 
-# Keywords per target, applied to URL path, page title, and the text head.
-# Keep them lowercased — the scorer normalizes whitespace/hyphens/underscores
-# before comparing, so ``"call for papers"`` matches ``"call-for-papers"`` in
-# a URL path or ``"Call For Papers"`` in a title.
-TARGET_LEXICONS: Dict[Target, Tuple[str, ...]] = {
-    Target.BASIC: (
+CATEGORY_KEYWORDS: Dict[Category, Tuple[str, ...]] = {
+    Category.OTHER: (
         # Dates / deadlines
-        "important dates", "dates", "deadline", "schedule",
-        # Call for papers
-        "call for papers", "call", "cfp", "submission", "submit", "papers",
+        "program", "programme", "schedule",
+        "important dates", "importantdates", "important_dates",
+        "dates", "deadlines", "calendar",
         # Venue / location
-        "venue", "location", "travel", "hotel", "accommodation",
-        # Publication
-        "publication", "proceedings", "indexing", "journal", "publisher",
-        # Topics / scope
-        "topic", "track", "theme", "area", "scope",
-        # General anchors — conference home/about pages often carry identity
-        "about", "home", "overview",
+        "venue", "conference venue", "location",
+        "travel", "accommodation", "accomodation",
+        "hotel", "hotels", "visa",
     ),
-    Target.SPEAKERS: (
-        "keynote", "invited speaker", "invited", "speaker", "plenary",
-        # "program" pages frequently list speakers alongside the agenda
-        "program",
+    Category.TOPICS: (
+        "cfp", "call for papers", "call_for_paper", "call_for_papers",
+        "callforpapers", "topics", "scope",
+        "submission", "papers",
     ),
-    Target.COMMITTEE: (
-        "committee", "program committee", "tpc", "organizing",
-        "organizer", "chair", "chairs", "reviewer", "board",
-        "people", "team",
+    Category.SPEAKERS: (
+        "keynote", "keynotes", "keynote speakers",
+        "speaker", "speakers",
+        "invited", "invited speakers",
+        "plenary", "panel", "panels", "tutorials",
+    ),
+    Category.COMMITTEE: (
+        "committee", "committees",
+        "organizing committee", "program committee",
+        "technical program committee",
+        "organization", "organizers",
+        "team", "people", "chairs", "board",
+        "editorial policy", "editorialpolicy",
     ),
 }
 
 
-# How many pages to include per target (main page counts toward the limit).
-MAX_PAGES_PER_TARGET: Dict[Target, int] = {
-    Target.BASIC: 6,
-    Target.SPEAKERS: 3,
-    Target.COMMITTEE: 3,
-}
-
-
-# Minimum per-target score required for a non-main page to be included.
-# Main page is always kept (see ``include_main`` below). We'd rather show
-# the LLM a smaller well-matched context than dilute it with unrelated
-# pages — even for BASIC, pages scoring 0 on the (deliberately wide)
-# BASIC lexicon are almost certainly irrelevant (committee, registration,
-# sponsors, past-events, etc.).
-_MIN_SCORE = 1
-
-
 # ---------------------------------------------------------------------------
-# Classification
+# Normalization
 # ---------------------------------------------------------------------------
-
-@dataclass
-class PageClassification:
-    """A page plus its per-target scores (for selection and debugging)."""
-
-    page: PageContent
-    is_main: bool
-    scores: Dict[Target, int] = field(default_factory=dict)
-
 
 # Replace hyphens/underscores/slashes with spaces so multi-word keywords
 # like "call for papers" match "call-for-papers" in URLs.
@@ -123,156 +116,264 @@ def _normalize(s: str) -> str:
     return _WS_RE.sub(" ", s).strip()
 
 
-def _score_page(page: PageContent, keywords: Sequence[str]) -> int:
-    """
-    Score ``page`` against ``keywords`` with a simple weighted sum.
+# ---------------------------------------------------------------------------
+# Matching helpers
+# ---------------------------------------------------------------------------
 
-    Weights:
-      - URL path:   3 per match
-      - Title:      2 per match
-      - Text head:  1 per match  (first 500 chars of cleaned page text)
-
-    Keywords and the fields they're compared against are normalized the
-    same way, so ``"call for papers"`` matches ``call-for-papers`` paths,
-    ``Call For Papers`` titles, and ``"Call for Papers ..."`` text.
+def _matches_navigation(page: PageContent, keywords: Sequence[str]) -> bool:
     """
+    Level 1 check: does the page's link_text or URL path contain any
+    of the keywords?  This is the cheapest and most reliable signal —
+    it's how the site itself labels the page in its navigation.
+    """
+    link = _normalize(page.link_text)
     path = _normalize(urlparse(page.url).path)
-    title = _normalize(page.title)
-    head = _normalize(page.text[:500])
-
-    score = 0
-    for raw_kw in keywords:
-        kw = _normalize(raw_kw)
-        if not kw:
+    for kw in keywords:
+        nkw = _normalize(kw)
+        if not nkw:
             continue
-        if kw in path:
-            score += 3
-        if kw in title:
-            score += 2
-        if kw in head:
-            score += 1
-    return score
+        if nkw in link or nkw in path:
+            return True
+    return False
 
 
-def classify_pages(site: SiteContent) -> List[PageClassification]:
-    """Score every page in ``site`` against every :class:`Target`."""
-    main_url = site.root_url
-    classified: List[PageClassification] = []
-    for page in site.pages:
-        scores = {
-            target: _score_page(page, lex)
-            for target, lex in TARGET_LEXICONS.items()
-        }
-        classified.append(
-            PageClassification(
-                page=page,
-                is_main=(page.url == main_url),
-                scores=scores,
-            )
-        )
-    return classified
+def _matches_content(page: PageContent, keywords: Sequence[str]) -> bool:
+    """
+    Level 2 check: does the page's text body contain any of the keywords?
+    Searches the full page text (not just the head) for broader recall.
+    """
+    text = _normalize(page.text)
+    for kw in keywords:
+        nkw = _normalize(kw)
+        if not nkw:
+            continue
+        if nkw in text:
+            return True
+    return False
 
 
 # ---------------------------------------------------------------------------
-# Selection + context building
+# Context building
 # ---------------------------------------------------------------------------
-
-def select_pages(
-    site: SiteContent,
-    target: Target,
-    *,
-    max_pages: Optional[int] = None,
-    include_main: bool = True,
-) -> List[PageContent]:
-    """
-    Return the pages most relevant for ``target``, ranked by per-target score.
-
-    Main page is always kept first (when ``include_main`` is True) —
-    conference home pages typically carry identity, venue, and date info
-    even when more specific pages exist.
-
-    Non-main pages must score at least ``_MIN_SCORE`` on the target's
-    lexicon to be included. This is deliberate: an unrelated page (e.g.
-    a sponsors list when we're looking for speakers) only adds noise, and
-    the LLM does noticeably better on a smaller, focused context than on
-    a padded-with-slop one.
-    """
-    if not site.pages:
-        return []
-
-    classifications = classify_pages(site)
-    limit = (
-        max_pages
-        if max_pages is not None
-        else MAX_PAGES_PER_TARGET.get(target, 5)
-    )
-
-    main_classes = [c for c in classifications if c.is_main]
-    other_classes = [c for c in classifications if not c.is_main]
-    other_classes = [
-        c for c in other_classes if c.scores.get(target, 0) >= _MIN_SCORE
-    ]
-    other_classes.sort(
-        key=lambda c: c.scores.get(target, 0),
-        reverse=True,
-    )
-
-    selected: List[PageContent] = []
-    slots = limit
-    if include_main and main_classes:
-        selected.append(main_classes[0].page)
-        slots -= 1
-    if slots > 0:
-        selected.extend(c.page for c in other_classes[:slots])
-    return selected
-
 
 def build_context(pages: Sequence[PageContent]) -> str:
     """
-    Concatenate pages into the ``=== PAGE: url ===``-framed text block
-    that the LLM prompts expect.
+    Concatenate pages into the LLM-ready context block.
+
+    Format per page::
+
+        === PAGE: https://conf.org/committee/ ===
+        Link: PROGRAM COMMITTEE
+        Title: Conference 2026 - Program Committee
+        <page text>
+
+    The ``Link:`` line is the anchor text from the <a> tag that led to
+    this page — invaluable context for the LLM to understand what kind
+    of page it's reading.  Omitted for the main page (no inbound link).
     """
     parts: List[str] = []
     for p in pages:
-        parts.append(f"=== PAGE: {p.url} ===\n{p.title}\n{p.text}")
+        header = f"=== PAGE: {p.url} ==="
+        if p.link_text:
+            header += f"\nLink: {p.link_text}"
+        header += f"\nTitle: {p.title}"
+        parts.append(f"{header}\n{p.text}")
     return "\n\n".join(parts)
 
 
-def build_context_for_target(
-    site: SiteContent,
-    target: Target,
-    *,
-    max_pages: Optional[int] = None,
-) -> str:
+# ---------------------------------------------------------------------------
+# PageSelector — stateful 3-level selector per category
+# ---------------------------------------------------------------------------
+
+class PageSelector:
     """
-    Convenience wrapper: pick target-relevant pages and build the LLM
-    context string in one call. Emits a debug log with the chosen URLs.
+    Stateful page selector for a single category.
+
+    Tracks which pages have already been sent to the LLM so that each
+    subsequent level only returns new, unseen pages.  The main page is
+    always included at level 1.
+
+    Usage::
+
+        selector = PageSelector(site, Category.COMMITTEE)
+
+        # Level 1: navigation (link_text + URL path)
+        pages_1 = selector.select_by_navigation()
+        ctx_1 = selector.build_context(pages_1)
+        # ... send to LLM, check result ...
+
+        # Level 2: content (keyword search in page text)
+        pages_2 = selector.select_by_content()
+        ctx_2 = selector.build_context(pages_2)
+        # ... send to LLM ...
+
+        # Level 3: everything remaining
+        pages_3 = selector.select_remaining()
+        ctx_3 = selector.build_context(pages_3)
     """
-    pages = select_pages(site, target, max_pages=max_pages)
-    if logger.isEnabledFor(logging.DEBUG):
-        logger.debug(
-            "Context for %s: %d page(s) — %s",
-            target.value,
-            len(pages),
-            [p.url for p in pages],
+
+    def __init__(self, site: SiteContent, category: Category) -> None:
+        self.site = site
+        self.category = category
+        self.keywords = CATEGORY_KEYWORDS[category]
+        self._used_urls: Set[str] = set()
+
+        # Opposing category setup (speakers ↔ committee)
+        opposing = _OPPOSING_CATEGORY.get(category)
+        self._opposing_keywords: Tuple[str, ...] = (
+            CATEGORY_KEYWORDS[opposing] if opposing else ()
         )
-    return build_context(pages)
 
+    @property
+    def main_page(self) -> PageContent | None:
+        """The main (root) page, if present."""
+        for p in self.site.pages:
+            if p.url == self.site.root_url:
+                return p
+        return None
 
-def describe_selection(
-    site: SiteContent,
-) -> Dict[Target, List[Tuple[str, int]]]:
-    """
-    For debugging: return ``target → [(url, score), ...]`` sorted by score
-    descending. Useful when a site produces unexpected selection results
-    and you want to see the raw scores.
-    """
-    classifications = classify_pages(site)
-    result: Dict[Target, List[Tuple[str, int]]] = {}
-    for target in Target:
-        pairs = [
-            (c.page.url, c.scores.get(target, 0)) for c in classifications
-        ]
-        pairs.sort(key=lambda p: p[1], reverse=True)
-        result[target] = pairs
-    return result
+    def _mark_used(self, pages: List[PageContent]) -> None:
+        for p in pages:
+            self._used_urls.add(p.url)
+
+    def _available(self) -> List[PageContent]:
+        """Pages not yet returned by any level."""
+        return [p for p in self.site.pages if p.url not in self._used_urls]
+
+    def _is_opposing_page(self, page: PageContent) -> bool:
+        """
+        Check if a page belongs to the opposing category.
+
+        Two-level check:
+        1. Navigation (strict): if link_text/URL matches opposing keywords
+           and does NOT match ours — exclude.
+        2. Content (soft): if navigation is ambiguous but content matches
+           opposing keywords and does NOT match ours — exclude.
+
+        If the page matches BOTH categories at either level (e.g. a
+        single page listing both speakers and committee), it is kept.
+        """
+        if not self._opposing_keywords:
+            return False
+
+        # Level 1: navigation — strict
+        opp_nav = _matches_navigation(page, self._opposing_keywords)
+        own_nav = _matches_navigation(page, self.keywords)
+
+        if opp_nav and not own_nav:
+            return True
+        if opp_nav and own_nav:
+            return False  # shared page by navigation
+
+        # Level 2: content — soft (only if navigation was inconclusive)
+        opp_content = _matches_content(page, self._opposing_keywords)
+        if not opp_content:
+            return False
+        own_content = _matches_content(page, self.keywords)
+        if own_content:
+            return False  # shared page by content
+        return True
+
+    def select_by_navigation(self) -> List[PageContent]:
+        """
+        Level 1: select pages whose link_text or URL path matches
+        category keywords.  Main page is always included.
+        Pages belonging to the opposing category are excluded.
+        """
+        selected: List[PageContent] = []
+
+        # Always include main page
+        main = self.main_page
+        if main and main.url not in self._used_urls:
+            selected.append(main)
+
+        for page in self.site.pages:
+            if page.url in self._used_urls or page in selected:
+                continue
+            if _matches_navigation(page, self.keywords):
+                selected.append(page)
+
+        # Filter out opposing-category pages
+        before = len(selected)
+        selected = [p for p in selected if not self._is_opposing_page(p)]
+        filtered = before - len(selected)
+        if filtered:
+            logger.debug(
+                "L1 [%s]: filtered %d opposing page(s)",
+                self.category.value, filtered,
+            )
+
+        self._mark_used(selected)
+        logger.debug(
+            "L1 navigation [%s]: %d page(s) — %s",
+            self.category.value,
+            len(selected),
+            [p.url for p in selected],
+        )
+        return selected
+
+    def select_by_content(self) -> List[PageContent]:
+        """
+        Level 2: among remaining pages, select those whose text body
+        contains category keywords.
+        Pages belonging to the opposing category are excluded.
+        """
+        available = self._available()
+        selected = [p for p in available if _matches_content(p, self.keywords)]
+
+        # Filter out opposing-category pages
+        before = len(selected)
+        selected = [p for p in selected if not self._is_opposing_page(p)]
+        filtered = before - len(selected)
+        if filtered:
+            logger.debug(
+                "L2 [%s]: filtered %d opposing page(s)",
+                self.category.value, filtered,
+            )
+
+        self._mark_used(selected)
+        logger.debug(
+            "L2 content [%s]: %d page(s) — %s",
+            self.category.value,
+            len(selected),
+            [p.url for p in selected],
+        )
+        return selected
+
+    def select_remaining(self) -> List[PageContent]:
+        """
+        Level 3: return all pages not yet sent for this category.
+        Pages belonging to the opposing category are excluded.
+        """
+        remaining = self._available()
+
+        # Filter out opposing-category pages
+        before = len(remaining)
+        remaining = [p for p in remaining if not self._is_opposing_page(p)]
+        filtered = before - len(remaining)
+        if filtered:
+            logger.debug(
+                "L3 [%s]: filtered %d opposing page(s)",
+                self.category.value, filtered,
+            )
+
+        self._mark_used(remaining)
+        logger.debug(
+            "L3 remaining [%s]: %d page(s) — %s",
+            self.category.value,
+            len(remaining),
+            [p.url for p in remaining],
+        )
+        return remaining
+
+    def select_all(self) -> List[PageContent]:
+        """
+        Algorithm 2 (brute-force): return ALL pages regardless of
+        what was already used.  Does NOT mark pages as used — this
+        runs independently from the 3-level targeted algorithm.
+        """
+        return list(self.site.pages)
+
+    def build_context(self, pages: Sequence[PageContent]) -> str:
+        """Build LLM context string from a list of pages."""
+        return build_context(pages)
