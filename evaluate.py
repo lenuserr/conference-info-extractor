@@ -480,6 +480,111 @@ def print_report(
 
 
 # ---------------------------------------------------------------------------
+# Multi-model comparison table
+# ---------------------------------------------------------------------------
+
+def print_comparison(
+    model_aggregates: List[Tuple[str, Dict[str, Any]]],
+) -> str:
+    """Build a side-by-side comparison table for multiple models."""
+    lines = []
+    lines.append("=" * 100)
+    lines.append("MODEL COMPARISON")
+    lines.append("=" * 100)
+
+    # Header
+    names = [name for name, _ in model_aggregates]
+    col_w = max(16, max(len(n) for n in names) + 2)
+    header = f"{'Metric':<30s}" + "".join(f"{n:>{col_w}s}" for n in names)
+    lines.append(header)
+    lines.append("-" * 100)
+
+    # Rows
+    rows = [
+        ("dates accuracy",
+         lambda a: f"{a['dates']['accuracy']:.1%}"),
+        ("venue accuracy",
+         lambda a: f"{a['venue']['accuracy']:.1%}"),
+        ("topics P",
+         lambda a: f"{a['topics']['precision']:.2f}"),
+        ("topics R",
+         lambda a: f"{a['topics']['recall']:.2f}"),
+        ("topics F1",
+         lambda a: f"{a['topics']['f1']:.2f}"),
+        ("speakers P",
+         lambda a: f"{a['keynote_speakers']['precision']:.2f}"),
+        ("speakers R",
+         lambda a: f"{a['keynote_speakers']['recall']:.2f}"),
+        ("speakers F1",
+         lambda a: f"{a['keynote_speakers']['f1']:.2f}"),
+        ("  speakers aff",
+         lambda a: f"{a['keynote_speakers']['affiliation_accuracy']:.1%}"),
+        ("  speakers country",
+         lambda a: f"{a['keynote_speakers']['country_accuracy']:.1%}"),
+        ("committee P",
+         lambda a: f"{a['program_committee']['precision']:.2f}"),
+        ("committee R",
+         lambda a: f"{a['program_committee']['recall']:.2f}"),
+        ("committee F1",
+         lambda a: f"{a['program_committee']['f1']:.2f}"),
+        ("  committee aff",
+         lambda a: f"{a['program_committee']['affiliation_accuracy']:.1%}"),
+        ("  committee country",
+         lambda a: f"{a['program_committee']['country_accuracy']:.1%}"),
+        ("  committee role",
+         lambda a: f"{a['program_committee']['role_accuracy']:.1%}"),
+    ]
+
+    for label, fn in rows:
+        vals = []
+        for _, agg in model_aggregates:
+            try:
+                vals.append(fn(agg))
+            except (KeyError, TypeError):
+                vals.append("N/A")
+        line = f"{label:<30s}" + "".join(f"{v:>{col_w}s}" for v in vals)
+        lines.append(line)
+
+    lines.append("=" * 100)
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Evaluate one model against golden
+# ---------------------------------------------------------------------------
+
+def _evaluate_model(
+    golden: Dict[str, Dict[str, Any]],
+    pred_dir: str,
+    fuzzy_threshold: int,
+) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, Any]]:
+    """Evaluate a single model directory. Returns (site_results, aggregate)."""
+    pred = _load_results(pred_dir)
+
+    common = sorted(set(golden.keys()) & set(pred.keys()))
+    if not common:
+        logger.warning("No matching files for %s", pred_dir)
+        return {}, {}
+
+    missing = set(golden.keys()) - set(pred.keys())
+    if missing:
+        logger.warning(
+            "%s: %d golden file(s) have no match: %s",
+            pred_dir, len(missing), sorted(missing)[:5],
+        )
+
+    site_results = {}
+    for filename in common:
+        site_results[filename] = evaluate_site(
+            golden[filename], pred[filename],
+            fuzzy_threshold=fuzzy_threshold,
+        )
+
+    agg = aggregate(site_results)
+    return site_results, agg
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -492,8 +597,8 @@ def main():
         help="Directory with golden (reference) result JSON files",
     )
     parser.add_argument(
-        "--pred", "-p", required=True,
-        help="Directory with predicted (model) result JSON files",
+        "--pred", "-p", nargs="+", required=True,
+        help="One or more directories with predicted result JSON files",
     )
     parser.add_argument(
         "--fuzzy-threshold", type=int, default=75,
@@ -506,49 +611,46 @@ def main():
     args = parser.parse_args()
 
     golden = _load_results(args.golden)
-    pred = _load_results(args.pred)
-
     if not golden:
         print(f"ERROR: no JSON files found in {args.golden}")
         sys.exit(1)
 
-    # Match files
-    common = sorted(set(golden.keys()) & set(pred.keys()))
-    if not common:
-        print(f"ERROR: no matching filenames between golden and pred directories")
-        print(f"  Golden files: {sorted(golden.keys())[:5]}")
-        print(f"  Pred files:   {sorted(pred.keys())[:5]}")
-        sys.exit(1)
+    single_mode = len(args.pred) == 1
+    all_reports = {}
 
-    missing = set(golden.keys()) - set(pred.keys())
-    if missing:
-        logger.warning(
-            "%d golden file(s) have no match in pred: %s",
-            len(missing), sorted(missing)[:5],
-        )
+    for pred_dir in args.pred:
+        site_results, agg = _evaluate_model(golden, pred_dir, args.fuzzy_threshold)
+        if not site_results:
+            print(f"\nWARNING: no matching files for {pred_dir}, skipping\n")
+            continue
 
-    # Evaluate
-    site_results = {}
-    for filename in common:
-        site_results[filename] = evaluate_site(
-            golden[filename], pred[filename],
-            fuzzy_threshold=args.fuzzy_threshold,
-        )
+        model_name = os.path.basename(pred_dir.rstrip("/"))
+        all_reports[model_name] = {"site_results": site_results, "aggregate": agg}
 
-    agg = aggregate(site_results)
+        # In single mode, print the full per-site report
+        if single_mode:
+            report = print_report(site_results, agg, args.golden, pred_dir)
+            print(report)
 
-    # Print report
-    report = print_report(site_results, agg, args.golden, args.pred)
-    print(report)
+    # In multi mode, print comparison table
+    if not single_mode and all_reports:
+        model_aggs = [(name, r["aggregate"]) for name, r in all_reports.items()]
+        comparison = print_comparison(model_aggs)
+        print(comparison)
 
     # Save JSON
-    if args.output:
+    if args.output and all_reports:
         full_report = {
             "golden_dir": args.golden,
-            "pred_dir": args.pred,
+            "pred_dirs": args.pred,
             "fuzzy_threshold": args.fuzzy_threshold,
-            "aggregate": agg,
-            "per_site": site_results,
+            "models": {
+                name: {
+                    "aggregate": r["aggregate"],
+                    "per_site": r["site_results"],
+                }
+                for name, r in all_reports.items()
+            },
         }
         with open(args.output, "w", encoding="utf-8") as f:
             json.dump(full_report, f, indent=2, ensure_ascii=False)
